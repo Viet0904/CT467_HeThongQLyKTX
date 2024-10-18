@@ -10,7 +10,7 @@
                 <a class="nav-link color-text-gray" href="/../index.php">Trang chủ<span class="sr-only">(current)</span></a>
               </li>
               <li class="nav-item mx-2">
-                <a class="nav-link color-text-gray" href="/admin/index.php">Người quản trị</a>
+                <a class="nav-link color-text-gray" href="/public/admin/index.php">Người quản trị</a>
               </li>
               <li class="nav-item mx-2">
                 <a class="nav-link color-text-gray" href="/user/index.php">Người dùng</a>

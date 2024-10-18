@@ -1,65 +1,65 @@
 <?php
 // Khởi tạo phiên làm việc
-if (!isset($_SESSION)) {
-    session_start();
-}
+// if (!isset($_SESSION)) {
+//     session_start();
+// }
 
 // Kiểm tra xem vai trò đã được lưu trong session hay chưa
-if (isset($_SESSION['Role'])) {
-    $role = $_SESSION['Role'];
-    if ($role === 'user') {
-        header("Location: ./dashboard.php");
-        die();
-    } elseif ($role === 'admin') {
-        echo "<script>alert('Bạn không có quyền truy cập vào trang này.')
-        window.location.href='../../admin/dashboard.php';
-        </script>";
-        die();
-    }
-}
+// if (isset($_SESSION['Role'])) {
+//     $role = $_SESSION['Role'];
+//     if ($role === 'user') {
+//         header("Location: ./dashboard.php");
+//         die();
+//     } elseif ($role === 'admin') {
+//         echo "<script>alert('Bạn không có quyền truy cập vào trang này.')
+//         window.location.href='../../admin/dashboard.php';
+//         </script>";
+//         die();
+//     }
+// }
 
 // Bắt đầu nội dung trang
-ob_start();
+
 include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
 require __DIR__ . '/../../config/dbadmin.php';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST['EmailInput'];
-    $password = $_POST['password'];
-    try {
-        $query = "SELECT * FROM tblclient WHERE Email = :email";
-        $stmt = $dbh->prepare($query);
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-        $stmt->execute();
+// if ($_SERVER["REQUEST_METHOD"] == "POST") {
+//     $email = $_POST['EmailInput'];
+//     $password = $_POST['password'];
+//     try {
+//         $query = "SELECT * FROM tblclient WHERE Email = :email";
+//         $stmt = $dbh->prepare($query);
+//         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+//         $stmt->execute();
 
-        if ($stmt->rowCount() > 0) {
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
-            $hashedPassword = $user['Password'];
+//         if ($stmt->rowCount() > 0) {
+//             $user = $stmt->fetch(PDO::FETCH_ASSOC);
+//             $hashedPassword = $user['Password'];
 
-            // Sử dụng password_verify để kiểm tra mật khẩu
-            if (password_verify($password, $hashedPassword)) {
-                $_SESSION['ClientID'] = $user['ClientID'];
-                $_SESSION['Email'] = $user['Email'];
-                $_SESSION['ContactName'] = $user['ContactName'];
-                $_SESSION['Role'] = $user['Role'];
+//             // Sử dụng password_verify để kiểm tra mật khẩu
+//             if (password_verify($password, $hashedPassword)) {
+//                 $_SESSION['ClientID'] = $user['ClientID'];
+//                 $_SESSION['Email'] = $user['Email'];
+//                 $_SESSION['ContactName'] = $user['ContactName'];
+//                 $_SESSION['Role'] = $user['Role'];
 
-                echo "<script>alert('Đăng nhập thành công')
-                window.location.href = './dashboard.php';
-                </script>";
+//                 echo "<script>alert('Đăng nhập thành công')
+//                 window.location.href = './dashboard.php';
+//                 </script>";
 
-                exit();
-            } else {
-                echo "<script>alert('Tài khoản hoặc mật khẩu không chính xác. Vui lòng nhập lại.');</script>";
-            }
-        } else {
-            echo "<script>alert('Tài khoản hoặc mật khẩu không chính xác. Vui lòng nhập lại.');</script>";
-        }
-    } catch (PDOException $e) {
-        header('Location: /../../views/errors/404.php');
-        echo "Lỗi kết nối cơ sở dữ liệu: " . $e->getMessage();
-    }
-}
+//                 exit();
+//             } else {
+//                 echo "<script>alert('Tài khoản hoặc mật khẩu không chính xác. Vui lòng nhập lại.');</script>";
+//             }
+//         } else {
+//             echo "<script>alert('Tài khoản hoặc mật khẩu không chính xác. Vui lòng nhập lại.');</script>";
+//         }
+//     } catch (PDOException $e) {
+//         header('Location: /../../views/errors/404.php');
+//         echo "Lỗi kết nối cơ sở dữ liệu: " . $e->getMessage();
+//     }
+// }
 ?>
 
 

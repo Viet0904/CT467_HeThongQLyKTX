@@ -1,60 +1,59 @@
 <?php
 // Khởi tạo phiên làm việc
-if (!isset($_SESSION)) {
-    session_start();
-}
-// Kiểm tra xem vai trò đã được lưu trong session hay chưa
-if (isset($_SESSION['Role'])) {
-    $role = $_SESSION['Role'];
+// if (!isset($_SESSION)) {
+//     session_start();
+// }
+// // Kiểm tra xem vai trò đã được lưu trong session hay chưa
+// if (isset($_SESSION['Role'])) {
+//     $role = $_SESSION['Role'];
 
-    if ($role === 'admin') {
-        header("Location: ./dashboard.php");
-        die();
-    } elseif ($role === 'user') {
-        echo "<script>alert('Bạn không có quyền truy cập vào trang này.')
-        window.location.href='../../user/dashboard.php';
-        </script>";
-        die();
-    }
-}
+//     if ($role === 'admin') {
+//         header("Location: ./dashboard.php");
+//         die();
+//     } elseif ($role === 'user') {
+//         echo "<script>alert('Bạn không có quyền truy cập vào trang này.')
+//         window.location.href='../../user/dashboard.php';
+//         </script>";
+//         die();
+//     }
+// }
 
 // Bắt đầu nội dung trang
-ob_start();
 include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
 require_once __DIR__ . '/../../config/dbadmin.php';
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-    // Tìm tài khoản trong database
-    $query = "SELECT * FROM tbladmin WHERE UserName = :username";
-    $stmt = $dbh->prepare($query);
-    $stmt->bindParam(':username', $username, PDO::PARAM_STR);
-    $stmt->execute();
-    // Nếu có tồn tại UserName trong database
-    if ($stmt->rowCount() > 0) {
-        // Lấy thông tin tài khoản
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        // Lấy mật khẩu đã được mã hóa trong database
-        $hashedPassword = $user['Password'];
-        // Sử dụng password_verify để kiểm tra mật khẩu
-        if (password_verify($password, $hashedPassword)) {
-            // Lưu thông tin tài khoản vào session
-            $_SESSION['ID'] = $user['ID'];
-            $_SESSION['Email'] = $user['Email'];
-            $_SESSION['username'] = $username;
-            $_SESSION['Role'] = $user['Role'];
-            echo "<script>alert('Đăng nhập thành công.')
-                window.location.href='./dashboard.php';
-                </script>";
-            exit();
-        } else {
-            echo "<script>alert('Tài khoản hoặc mật khẩu không chính xác. Vui lòng nhập lại.');</script>";
-        }
-    } else {
-        echo "<script>alert('Tài khoản hoặc mật khẩu không chính xác. Vui lòng nhập lại.');</script>";
-    }
-}
+// if ($_SERVER["REQUEST_METHOD"] == "POST") {
+//     $username = $_POST['username'];
+//     $password = $_POST['password'];
+//     // Tìm tài khoản trong database
+//     $query = "SELECT * FROM tbladmin WHERE UserName = :username";
+//     $stmt = $dbh->prepare($query);
+//     $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+//     $stmt->execute();
+//     // Nếu có tồn tại UserName trong database
+//     if ($stmt->rowCount() > 0) {
+//         // Lấy thông tin tài khoản
+//         $user = $stmt->fetch(PDO::FETCH_ASSOC);
+//         // Lấy mật khẩu đã được mã hóa trong database
+//         $hashedPassword = $user['Password'];
+//         // Sử dụng password_verify để kiểm tra mật khẩu
+//         if (password_verify($password, $hashedPassword)) {
+//             // Lưu thông tin tài khoản vào session
+//             $_SESSION['ID'] = $user['ID'];
+//             $_SESSION['Email'] = $user['Email'];
+//             $_SESSION['username'] = $username;
+//             $_SESSION['Role'] = $user['Role'];
+//             echo "<script>alert('Đăng nhập thành công.')
+//                 window.location.href='./dashboard.php';
+//                 </script>";
+//             exit();
+//         } else {
+//             echo "<script>alert('Tài khoản hoặc mật khẩu không chính xác. Vui lòng nhập lại.');</script>";
+//         }
+//     } else {
+//         echo "<script>alert('Tài khoản hoặc mật khẩu không chính xác. Vui lòng nhập lại.');</script>";
+//     }
+// }
 ?>
 
 <body>
