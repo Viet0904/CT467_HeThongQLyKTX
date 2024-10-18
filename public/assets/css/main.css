@@ -1,0 +1,206 @@
+html,
+body {
+  font-family: "Roboto", sans-serif;
+  font-size: 100%;
+}
+
+/* CSS hình nền trang web */
+.image_main {
+  background-image: url("../images/xanh.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.width-50 {
+  width: 530px;
+  align-items: center;
+}
+
+.width-ql {
+  height: 400px;
+  width: 550px;
+}
+
+.width-qlkh {
+  height: 200px;
+  width: 1200px;
+}
+
+.width-icon {
+  width: 230px;
+}
+
+.width-form {
+  width: 460px;
+}
+
+.width-edit{
+  width: 320px;
+}
+
+.width-30-input{
+  width: 80px;
+}
+
+.height-frame {
+  height: 470px;
+}
+
+.padding-right {
+  padding-right: 0px;
+}
+
+.bg-blue {
+  background-color: #052963;
+}
+
+.bg-blue-1 {
+  background-color: #00c6d7;
+}
+
+.bg-gray {
+  background-color: #ccc;
+}
+
+.bg-lightblue:hover {
+  background-color: #0f3471;
+}
+
+.bg-blue-hover:hover{
+  background-image: url("../images/xanh.jpg");
+  color: #fff;
+}
+
+.color-icon:hover{
+  color: #1b4487;
+}
+
+.center-text-total{
+  text-align: center;
+}
+
+/* Cho màu chữ trắng nhạt */
+.color-text-gray {
+  color: rgba(255, 255, 255, 0.6); /* Màu trắng nhạt */
+  transition: color 0.3s; /* Thời gian chuyển đổi màu 0.3 giây */
+}
+
+.color-text-gray:hover {
+  color: #fff; /* Màu trắng đậm hơn */
+}
+
+/* Trang Dashboard admin */
+.stats-left {
+  float: left;
+  width: 70%;
+  text-align: center;
+  padding: 0.58em;
+}
+
+.stats-right {
+  float: right;
+  width: 30%;
+  text-align: center;
+  padding: 1.54em 1em;
+  border: none;
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  height: 37px;
+  padding: 14px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #777;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #ddd;
+  border-radius: 0;
+}
+
+::placeholder {
+  font-size: 1rem;
+}
+
+/* Trang sidebar*/
+.down {
+  text-align: center;
+  background: #fff;
+}
+
+a.tooltips {
+  position: relative;
+  display: inline;
+}
+
+.font-size-24 {
+  font-size: 24px;
+}
+
+a.tooltips span {
+  position: absolute;
+  width: 65px;
+  color: #ffffff;
+  background: #09367d;
+  height: 28px;
+  line-height: 30px;
+  text-align: center;
+  visibility: hidden;
+  font-size: 0.8em;
+}
+
+a.tooltips span:after {
+  visibility: visible; /* Đặt lại thuộc tính visibility để hiển thị tooltips */
+  bottom: 100%;
+  left: 50%;
+  margin-left: -8px;
+  width: 0;
+  height: 0;
+  border-bottom: 8px solid #09367d;
+  border-right: 8px solid transparent;
+  border-left: 8px solid transparent;
+}
+
+/* hiện ra tooltip-text sau khi hover*/
+a:hover.tooltips span {
+  visibility: visible;
+  opacity: 0.8;
+  top: 30px;
+  left: 50%;
+  margin-left: -38px;
+  z-index: 999;
+}
+
+/*  CSS phần loading trang web*/
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.spinner {
+  width: 100px;
+  height: 100px;
+  border: 6px solid rgba(255, 255, 255, 0.3);
+  border-top: 6px solid #fff;
+  border-radius: 50%;
+  animation: spin 0.5s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,39 @@
+/* PC */
+@media (min-width: 64em) {
+
+}
+
+/* Table and Mobile */
+@media (max-width: 63.9375em) {
+}
+
+/* Tablet */
+@media (min-width: 46.25em) and (max-width: 63.9375em) {
+    .place-nav{
+        display: contents;
+    }
+
+    .margin-bottom-button{
+        margin-bottom: 5px;
+    }
+
+    .width-ql-tb{
+        height: 220px;
+        width: 300px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 46.1875em) {
+    .width-sidebar{
+        width: 57px;;
+    }
+
+    .display-none-icon{
+        display: none;
+    }
+    
+    .display-col{
+        flex-flow: column;
+    }
+}
