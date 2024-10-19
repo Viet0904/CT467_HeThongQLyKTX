@@ -12,18 +12,18 @@ Truy cập <a href="http://localhost/phpmyadmin/">MYySQL</a> tạo CSDL tên htq
 ## Bước 4: Chỉnh cấu hình vhosts nếu cần thiết
 <p>Nếu bạn không muốn thêm dự án vào htdocs của XAMP thì cấu hình lại vhosts như sau</p>
 <p>Vào C:\xampp\apache\conf\extra\httpd-vhosts.conf</p>
-<p>
-  <VirtualHost *:80>  
-    DocumentRoot "D:/Workspace/CTU/QuanTriDuLieu/HeThongQlyKTX/public"  
-    ServerName htqlktx.localhost  
-    # Set access permission  
-    <Directory "D:/Workspace/CTU/QuanTriDuLieu/HeThongQlyKTX">  
-        Options Indexes FollowSymLinks Includes ExecCGI  
-        AllowOverride All  
-        Require all granted  
-    </Directory>  
-</VirtualHost>  
-</p>
+(
+  <VirtualHost *:80>  \\
+    DocumentRoot "D:/Workspace/CTU/QuanTriDuLieu/HeThongQlyKTX/public"  \\
+    ServerName htqlktx.localhost  \\
+    # Set access permission  \\
+    <Directory "D:/Workspace/CTU/QuanTriDuLieu/HeThongQlyKTX">  \\
+        Options Indexes FollowSymLinks Includes ExecCGI  \\
+        AllowOverride All  \\
+        Require all granted  \\
+    </Directory>  \\
+</VirtualHost>  \\
+)
 <p><b>Lưu ý: Chỉnh sửa lại đường dẫn theo bạn</b></p>
 
 ## Bước 5: Truy cập web
