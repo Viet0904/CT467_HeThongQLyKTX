@@ -28,165 +28,94 @@ include_once __DIR__ . '/../../partials/heading.php';
 require_once __DIR__ . '/../../config/dbadmin.php';
 ?>
 
-<!-- Nội dung trang dashboard -->
-
 <body>
-    <div class="container-fluid">
-        <div class="row flex-nowrap">
-            <?php
-            include_once __DIR__ . '/sidebar.php';
-            ?>
-            <div class="col py-5">
-                <div class="p-4 row">
-                    <div class="col text-center">
-                        <div class="width-icon">
-                            <div class="bg-blue stats-left">
-                                <h5 class="text-white">Tổng cộng</h5>
-                                <h4 class="text-white pt-2">Khách hàng</h4>
-                            </div>
-                            <div class="bg-gray stats-right">
-                                <?php
-                                $sql = "SELECT ClientID from tblclient ";
-                                $query = $dbh->prepare($sql);
-                                $query->execute();
-                                $tclients = $query->rowCount();
-                                ?>
-                                <label class="text-black" for="">
-                                    <?php echo htmlspecialchars($tclients); ?>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col text-center">
-                        <div class="width-icon">
-                            <div class="bg-blue-1 stats-left">
-                                <h5 class="text-white">Tổng cộng</h5>
-                                <h4 class="text-white pt-2">Dịch vụ</h4>
-                            </div>
-                            <div class="bg-gray stats-right">
-                                <?php
-                                $sql = "SELECT ID from tblservices ";
-                                $query = $dbh->prepare($sql);
-                                $query->execute();
-                                $tservices = $query->rowCount();
-                                ?>
-                                <label class="text-black" for="">
-                                    <?php echo htmlspecialchars($tservices); ?>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col text-center">
-                        <div class="width-icon">
-                            <div class="bg-blue stats-left">
-                                <h5 class="text-white">Hôm nay</h5>
-                                <?php
-                                $sql6 = "select  sum(tblservices.ServicePrice) as todaysale
-from tblinvoice join tblservices  on tblservices.ID=tblinvoice.ServiceId where date(PostingDate)=CURDATE()";
-
-                                $query6 = $dbh->prepare($sql6);
-                                $query6->execute();
-                                $results6 = $query6->fetchAll(PDO::FETCH_OBJ);
-                                $todays_sale_total = 0;
-                                foreach ($results6 as $row6) {
-                                    $todays_sale_total += $row6->todaysale;
-                                }
-                                ?>
-                                <h4 class="text-white pt-2">Doanh số($)</h4>
-                            </div>
-                            <div class="bg-gray stats-right">
-                                <label class="text-black" for="">
-                                    <?php echo htmlspecialchars($todays_sale_total); ?>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+    <!-- Nội dung trang dashboard -->
+    <!-- Phần Header trên cùng -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="border-bottom: 1px solid #dee2e6; margin-left: 250px;">
+        <div class="container-fluid">
+    
+            <!-- Tiêu đề hệ thống -->
+            <a class="navbar-brand ms-3 fs-6" href="#">School Dormitory Management System - Admin</a>
+    
+            <!-- Phần thông tin tài khoản người dùng -->
+            <div class="d-flex align-items-center position-relative me-3">
+                <img src="../public/images/user.jpg" class="rounded-circle" alt="User Avatar" width="40" height="40">
+                <span class="me-2 ms-2" id="userDropdown" style="cursor: pointer;" onclick="toggleDropdown()">Administrator Admin</span>
+                <span style="cursor: pointer; font-size: 12px;" onclick="toggleDropdown()">▼</span>
+    
+                <!-- Khung dropdown -->
+                <div id="dropdownMenu" class="dropdown-menu position-absolute p-0 ms-1" style="display: none;">
+                    <a class="dropdown-item py-2" href="#">Log Out</a>
                 </div>
-
-                <div class="px-4 row pt-5">
-                    <div class="col text-center pt-2">
-                        <div class="width-icon">
-                            <div class="bg-blue-1 stats-left">
-                                <h5 class="text-white">Hôm qua</h5>
-                                <?php
-                                $sql7 = "select  sum(tblservices.ServicePrice) as totalcost
- from tblinvoice join tblservices  on tblservices.ID=tblinvoice.ServiceId where date(PostingDate)=CURDATE()-1;";
-
-                                $query7 = $dbh->prepare($sql7);
-                                $query7->execute();
-                                $results7 = $query7->fetchAll(PDO::FETCH_OBJ);
-                                $yest_sale = 0;
-                                foreach ($results7 as $row7) {
-                                    $yest_sale += $row7->totalcost;
-                                }
-                                ?>
-                                <h4 class="text-white pt-2">Doanh số($)</h4>
-                            </div>
-                            <div class="bg-gray stats-right">
-                                <label class="text-black" for="">
-                                    <?php echo htmlspecialchars($yest_sale); ?>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col text-center pt-2">
-                        <div class="width-icon">
-                            <div class="bg-blue stats-left">
-                                <h5 class="text-white">Tuần trước </h5>
-                                <h4 class="text-white pt-2">Doanh số($)</h4>
-                            </div>
-                            <div class="bg-gray stats-right">
-                                <?php
-                                $sql8 = "select  sum(tblservices.ServicePrice) as totalcost
- from tblinvoice 
-  join tblservices  on tblservices.ID=tblinvoice.ServiceId where date(PostingDate)>=(DATE(NOW()) - INTERVAL 7 DAY);";
-
-                                $query8 = $dbh->prepare($sql8);
-                                $query8->execute();
-                                $results8 = $query8->fetchAll(PDO::FETCH_OBJ);
-                                $sevendays_sale = 0;
-                                foreach ($results8 as $row8) {
-                                    $sevendays_sale += $row8->totalcost;
-                                }
-                                ?>
-                                <label class="text-black" for="">
-                                    <?php echo htmlspecialchars($sevendays_sale); ?>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col text-center pt-2">
-                        <div class="width-icon">
-                            <div class="bg-blue-1 stats-left">
-                                <h5 class="text-white">Tổng cộng</h5>
-                                <h4 class="text-white pt-2">Doanh số($)</h4>
-                            </div>
-                            <div class="bg-gray stats-right">
-                                <?php
-                                $sql9 = "select  sum(tblservices.ServicePrice) as totalcost
- from tblinvoice join tblservices  on tblservices.ID=tblinvoice.ServiceId";
-                                $query9 = $dbh->prepare($sql9);
-                                $query9->execute();
-                                $results9 = $query9->fetchAll(PDO::FETCH_OBJ);
-                                $total_sale = 0;
-                                foreach ($results9 as $row9) {
-                                    $total_sale += $row9->totalcost;
-                                }
-                                ?>
-                                <label class="text-black" for="">
-                                    <?php echo htmlspecialchars($total_sale); ?>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+            </div>
+        </div>
+    </nav>
+    
+    
+    <!-- Nội dung chính của trang -->
+    <div class="content">
+        <div class="dashboard-header">Welcome, admin!</div>
+    
+        <!-- Dashboard cards - Hàng đầu tiên với 3 thẻ -->
+        <div style="margin-top: 30px; margin-left: 40px;">
+            <div class="row">
+                <div class="card">
+                    <i class="fas fa-building"></i>
+                    <div class="card-title">Total Dorms</div>
+                    <div class="card-number">4</div>
+                </div>
+                <div class="card">
+                    <i class="fas fa-door-open"></i>
+                    <div class="card-title">Total Rooms</div>
+                    <div class="card-number">6</div>
+                </div>
+                <div class="card">
+                    <i class="fas fa-users"></i>
+                    <div class="card-title">Registered Students</div>
+                    <div class="card-number">2</div>
+                </div>
+            </div>
+        
+        </div> 
+        
+        <!-- Dashboard cards - Hàng thứ hai với 2 thẻ -->
+        <div style="margin-top: 30px; margin-left: 40px;">
+            <div class="row">
+                <div class="card">
+                    <i class="fas fa-coins"></i>
+                    <div class="card-title">This Month Total Collection</div>
+                    <div class="card-number">$8,500.00</div>
+                </div>
+                <div class="card">
+                    <i class="fas fa-cogs"></i>
+                    <div class="card-title">Totals active Accounts</div>
+                    <div class="card-number">2</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <?php
-    include_once __DIR__ . '/../../partials/footer.php';
-    ?>
+    <script>
+        // Hàm mở và đóng dropdown
+        function toggleDropdown() {
+            var dropdown = document.getElementById("dropdownMenu");
+            if (dropdown.style.display === "none" || dropdown.style.display === "") {
+                dropdown.style.display = "block"; // Hiển thị dropdown
+            } else {
+                dropdown.style.display = "none"; // Ẩn dropdown
+            }
+        }
+    
+        // Đóng dropdown nếu click bên ngoài
+        window.onclick = function(event) {
+            if (!event.target.matches('#userDropdown') && !event.target.matches('.ms-1')) {
+                var dropdown = document.getElementById("dropdownMenu");
+                if (dropdown.style.display === "block") {
+                    dropdown.style.display = "none";
+                }
+            }
+        }
+    </script>
 </body>
 
 </html>
