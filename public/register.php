@@ -59,11 +59,11 @@
                                 <input type="checkbox" class="form-check-input" id="rememberMe">
                                 <label class="form-check-label" for="rememberMe">Ghi nhớ tôi</label>
                             </div>
-                            <a href="./register.php" class="text-decoration-none">Đăng ký</a>
+                            <a href="./index.php" class="text-decoration-none">Đăng nhập</a>
                         </div>
                         <button type="submit" class="btn btn-primary mt-3 w-100 mb-4" name="login">
                             <i class="fas fa-power-off"></i>
-                            <span href="" class="text-decoration-none text-white">Đăng nhập</span>
+                            <span href="" class="text-decoration-none text-white">Đăng ký</span>
                         </button>
                     </form>
                 </div>
