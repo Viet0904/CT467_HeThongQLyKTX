@@ -57,7 +57,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0-alpha1/js/bootstrap.min.js"></script>
-<script>
+<!-- <script>
     $(document).ready(function() {
         // Hiển thị overlay
         $('#overlay').fadeIn();
@@ -71,5 +71,5 @@
                 $('body').css('filter', 'none');
             }, 100);
         }, 30); // 0.03s
-    });
+    }); -->
 </script>

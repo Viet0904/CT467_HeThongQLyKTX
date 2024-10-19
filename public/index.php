@@ -1,116 +1,79 @@
-<?php
-include_once __DIR__ . '/../partials/header.php';
-include_once __DIR__ . '/../partials/heading.php';
-?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý khách hàng</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0-alpha1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <!-- Option 1: Include in HTML -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: url('./assets/images/cover.png') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+        }
+
+        #page-title {
+            text-shadow: 6px 4px 7px black;
+            font-size: 3.5em;
+            color: #fff4f4 !important;
+            background: #8080801c;
+        }
+    </style>
+</head>
 
 <body>
-    <div class="image_main">
-        <div class="container">
-            <main>
-                <div class="row py-5">
-                    <div class="col pt-5">
-                        <h5 class="text-white">CHÀO MỪNG BẠN ĐẾN VỚI !!</h5>
-                        <h1 class="text-white pt-2"><b>Hệ thống quản lý khách hàng</b></h1>
-                        <p class="text-white py-3">MyEitik là giải pháp hỗ trợ doanh nghiệp Việt Nam áp dụng
-                            công nghệ số hóa quy trình quản lý nguồn khách hàng, đồng thời nâng cao tiềm năng của doanh
-                            nghiệp
-                        </p>
-                        <a href="./about.php"
-                            class="text-decoration-none bg-white mt-3 mb-4 w-25 p-3 border rounded-2 bg-blue-hover">
-                            <span class="my-2 bg-blue-hover">Về chúng tôi</span>
-                        </a>
-                    </div>
-                    <div class="col pt-2 pb-5">
-                        <img src="./assets/images/ql.jpeg" alt="" class="width-ql width-ql-tb rounded-1">
-                    </div>
+    <h1 class="text-center text-white px-4 py-5" id="page-title">Hệ thống quản lí ký túc xá<b></b></h1>
+    <div class="container width-50 py-2">
+        <div class="modal-dialog rounded shadow-lg p-2 m-4 bg-body rounded ">
+            <div class="modal-content p-2">
+                <div class="modal-header text-center d-block">
+                    <h2 class="modal-title pt-3">
+                        Đăng nhập
+                    </h2>
                 </div>
-            </main>
-        </div>
-    </div>
 
-    <div class="container text-center py-5">
-        <div class="container w-50 text-center">
-            <h2 class="text-primary"><b>Mục tiêu</b></h2>
-            <p class="my-3">MyEitik là giải pháp hỗ trợ doanh nghiệp Việt Nam áp dụng công nghệ số hóa quy trình quản lý nguồn khách hàng, 
-                đồng thời nâng cao tiềm năng của doanh nghiệp</p>
-        </div>
-        <div class="row my-5">
-            <div class="col-6">
-                <div class="container border border-4 border-info w-75 text-center rounded-4 height-frame">
-                    <img src="./assets/images/eye.jpg" alt="">
-                    <h3 class="p-4 pb-0">Tầm nhìn của chúng tôi</h3>
-                    <p class="p-4">Trở thành nền tảng quản lý và gia tăng trải nghiệm khách hàng hàng đầu Việt Nam.</p>
-                </div>
-            </div>
-            <div class="col-6">
-                <div class="container border border-4 border-info w-75 text-center rounded-4 height-frame">
-                    <img src="./assets/images/group.jpg" alt="">
-                    <h3 class="p-4 pb-0">Sứ mệnh của chúng tôi</h3>
-                    <p class="p-4">Giúp doanh nghiệp giảm chi phí quản lý khách hàng và mang lại trải nghiệm hài lòng
-                        cho khách hàng, từ đó tối đa hoá hiệu suất, gia tăng sự gắn kết.</p>
+                <div id="login-form" class="modal-body">
+                    <form method="POST" name="login" id="login">
+                        <div class="form-group">
+                            <label for="usernameInput" class="pt-2">
+                                <i class="fas fa-user"></i> Tên admin:
+                            </label>
+                            <input class="form-control mt-1 border rounded-1" placeholder="Nhập tên Admin" id="usernameInput" name="username"></input>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="passwordInput" class="pt-4">
+                                <i class="fas fa-eye"></i> Mật khẩu:
+                            </label>
+                            <input type="password" class="form-control mt-1 border rounded-1" placeholder="Nhập mật khẩu" id="passwordInput" name="password"></input>
+                        </div>
+
+                        <div class="form-group form-check pt-4 d-flex justify-content-between align-items-center">
+                            <div>
+                                <input type="checkbox" class="form-check-input" id="rememberMe">
+                                <label class="form-check-label" for="rememberMe">Ghi nhớ tôi</label>
+                            </div>
+                            <a href="#" class="text-decoration-none">Đăng ký</a>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-3 w-100 mb-4" name="login">
+                            <i class="fas fa-power-off"></i>
+                            <span href="" class="text-decoration-none text-white">Đăng nhập</span>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="bg-secondary-subtle">
-    <div class="container bg-secondary-subtle">
-        <div class="pt-5">
-            <h2 class="text-primary text-center">Đánh giá</h2>
-        </div>
-        <div id="carouselExampleSlidesOnly" class="carousel slide w-75 container" data-bs-ride="carousel">
-            <div class="carousel-inner">
-                <div class="carousel-item active mb-5 mt-4">
-                    <div class="row">
-                        <div class="col-6">
-                            <img src="./assets/images/qlkh1.jpg" class="d-block" alt="...">
-                        </div>
-                        <div class="col-6 bg-white">
-                            <div class="p-5">
-                                <p class="text-left pt-5"><em>Cảm ơn MyEitik đã giúp chúng tôi quản lý khách hàng tốt hơn, và giúp chúng tôi tiết kiệm được nhiều thời gian hơn</em></p>
-                                <p class="pt-4 mb-0"><b>John Campbell</b></p>
-                                <p class="text-muted">CEO & Co-founder</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-item mb-5 mt-4">
-                    <div class="row">
-                        <div class="col-6">
-                            <img src="./assets/images/qlkh2.jpg" class="d-block" alt="...">
-                        </div>
-                        <div class="col-6 bg-white">
-                            <div class="p-5">
-                                <p class="text-left pt-5"><em>Trang web rất sáng tạo, nhờ có trang web này mà tôi có thể quản lý khách hàng của mình một cách dễ dàng hơn</em></p>
-                                <p class="pt-4 mb-0"><b>Jostdam</b></p>
-                                <p class="text-muted">CEO & Ann</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-item mb-5 mt-4">
-                    <div class="row">
-                        <div class="col-6">
-                            <img src="./assets/images/qlkh3.jpg" class="d-block" alt="...">
-                        </div>
-                        <div class="col-6 bg-white">
-                            <div class="p-5">
-                                <p class="text-left pt-5"><em>Tôi rất hài lòng với trang web này, một trang web quản lý khách hàng tuyệt vời, tôi sẽ giới thiệu cho bạn bè của tôi</em></p>
-                                <p class="pt-4 mb-0"><b>Yang Yang</b></p>
-                                <p class="text-muted">CEO & Co-founder</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-    
 
-    <?php
-    include_once __DIR__ . '/../partials/footer.php';
-    ?>
+
+    <!-- <script src="../assets/js/checklogin_admin.js"></script> -->
 </body>
 
 </html>
