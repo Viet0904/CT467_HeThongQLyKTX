@@ -2,10 +2,26 @@ body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background-color: #f4f6f9;
     display: flex;
     flex-direction: column;
+    background-size: cover;
+    height: 100vh;
 }
+
+/* CSS hình nền trang web */
+.image_main {
+    background-image: url("../images/cover.png");
+    background-size: cover; /* hiển thị vừa với kích thước của khung */
+    background-position: center; /* căn giữa theo chiều ngang và chiều dọc */
+}
+
+#page-title {
+    text-shadow: 6px 4px 7px black;
+    font-size: 3.5em;
+    color: #fff4f4 !important;
+    background: #8080801c;
+}
+
 .sidebar {
     width: 250px;
     height: 100vh;
