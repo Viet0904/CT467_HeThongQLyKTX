@@ -63,7 +63,7 @@
                         </div>
                         <button type="submit" class="btn btn-primary mt-3 w-100 mb-4" name="login">
                             <i class="fas fa-power-off"></i>
-                            <span href="./admin/dashboard.php" class="text-decoration-none text-white">Đăng nhập</span>
+                            <span href="" class="text-decoration-none text-white">Đăng nhập</span>
                         </button>
                     </form>
                 </div>
@@ -71,7 +71,7 @@
         </div>
     </div>
 
-
+    <a href="./admin/dashboard.php" class="text-decoration-none">Đăng ký</a>
 
     <!-- <script src="../assets/js/checklogin_admin.js"></script> -->
 </body>

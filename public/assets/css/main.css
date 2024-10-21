@@ -2,26 +2,8 @@ body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    background-size: cover;
-    height: 100vh;
+    background-color: #f4f6f9;
 }
-
-/* CSS hình nền trang web */
-.image_main {
-    background-image: url("../images/cover.png");
-    background-size: cover; /* hiển thị vừa với kích thước của khung */
-    background-position: center; /* căn giữa theo chiều ngang và chiều dọc */
-}
-
-#page-title {
-    text-shadow: 6px 4px 7px black;
-    font-size: 3.5em;
-    color: #fff4f4 !important;
-    background: #8080801c;
-}
-
 .sidebar {
     width: 250px;
     height: 100vh;
@@ -87,9 +69,8 @@ body {
 
 /* Phần chính của Dashboard */
 .content {
-  flex-grow: 1; /* Đảm bảo phần nội dung chiếm toàn bộ không gian có sẵn */
-  margin-left: 250px;
-  padding: 20px;
+    margin-left: 250px;
+    padding: 20px;
 }
 .dashboard-header {
     font-size: 24px;
@@ -126,14 +107,11 @@ color: white;
     display: flex;
     gap: 20px;
 }
-.row .card {
-    
-}
+
 /* Khung chứa mục con "Log Out" */
 .dropdown-menu {
     top: 100%; /* Đẩy xuống dưới avatar */
     right: 0;
-    display: none;
     background-color: white;
     border: 1px solid rgba(0, 0, 0, 0.1);
     padding: 10px;
@@ -153,12 +131,3 @@ color: white;
 .dropdown-menu .dropdown-item:hover {
     background-color: #f0f0f0;
 }
-
-.footer {
-background-color: #f4f4f4; 
-padding: 10px 0; 
-width: calc(100% - 250px); 
-margin-left: 250px; 
-box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); 
-}
-
