@@ -79,7 +79,6 @@ CREATE TABLE ThuePhong (
 CREATE TABLE TT_ThuePhong (
     MaHopDong VARCHAR(20),
     ThangNam DATE,
-    Attribute1 VARCHAR(255),  -- Thuộc tính bổ sung
     SoTien DECIMAL(15, 2),
     NgayThanhToan DATE,
     MaNhanVien VARCHAR(20),
