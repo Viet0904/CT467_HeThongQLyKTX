@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý khách hàng</title>
+    <title>Quản lý ktx</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0-alpha1/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
     <link rel="stylesheet" href="../assets/css/main.css">
@@ -63,7 +63,7 @@
                         </div>
                         <button type="submit" class="btn btn-primary mt-3 w-100 mb-4" name="login">
                             <i class="fas fa-power-off"></i>
-                            <span href="" class="text-decoration-none text-white">Đăng nhập</span>
+                            <span href="./admin/dashboard.php" class="text-decoration-none text-white">Đăng nhập</span>
                         </button>
                     </form>
                 </div>
