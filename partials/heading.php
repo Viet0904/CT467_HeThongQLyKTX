@@ -1,5 +1,5 @@
 <!-- Phần Header trên cùng -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light"
+<nav class="navbar navbar-expand-lg navbar-light bg-light py-1"
     style="border-bottom: 1px solid #dee2e6; margin-left: 250px;">
     <div class="container-fluid">
 

@@ -20,10 +20,10 @@ include_once __DIR__ . '/../../partials/heading.php';
                     <div class="modal-add-user">
                         <form>
                             <!-- School Details Section -->
-                            <h6 class="mt-2"><b>School Details</b></h6>
+                            <h6 class="mt-1"><b>School Details</b></h6>
                             <div class="row mb-3">
                                 <div class="col-md-4">
-                                    <label for="schoolID" class="form-label">School ID/Code</label>
+                                    <label for="schoolID" class="form-label"> School ID/Code</label>
                                     <input type="text" class="form-control" id="schoolID">
                                 </div>
                                 <div class="col-md-4">
