@@ -169,7 +169,7 @@ color: white;
 }
 
 /* Nội dung của modal */
-.modal-content {
+.modal-content-1 {
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
@@ -186,20 +186,25 @@ color: white;
     margin-left: 10px;
 }
 
-.modal-add-user {
-    max-width: 980px;
+.modal-user {
+    max-width: 1000px;
     margin: auto;
     background-color: white;
     padding: 20px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    position: relative;
+    top: -14px; /* Điều chỉnh để đè lên một phần của modal-header */
+    z-index: 2;
 }
 
-.modal-header {
+.modal-header-1 {
     background-color: #db3077;
     color: white;
     padding: 15px;
     margin-right: 7px;
-    height: 80px;
+    height: 78px;
+    position: relative;
+    z-index: 1;
 }
 
 .form-label {
@@ -207,3 +212,28 @@ color: white;
     font-size: 0.9rem;
 }
 
+.row-add {
+    gap: 0px;
+}
+
+.width-status{
+    width: 303px;
+}
+
+.status-toggle {
+    padding: 5px 15px;
+    border: 1px solid #ccc; /* Viền màu xám nhạt */
+    border-radius: 20px; /* Bo tròn góc */
+    background-color: #f8f9fa; /* Màu nền xám nhạt */
+    font-weight: bold;
+    font-size: 14px;
+    float: right;
+}
+
+.status-toggle span {
+    margin-right: 10px; /* Khoảng cách giữa văn bản và checkbox */
+}
+
+.status-toggle input[type="checkbox"] {
+    transform: scale(1.2); /* Tăng kích thước checkbox */
+}

@@ -122,7 +122,7 @@ include_once __DIR__ . '/../../partials/heading.php';
 
     <!-- Modal để thêm phòng mới -->
     <div id="addRoomModal" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
+        <div class="modal-content-1">
             <h5> <b>+ Add New Room</b></h5>
             <!-- Đường phân cách -->
             <hr style="border: none; border-top: 1px solid #a9a9a9; margin: 10px 0;">
@@ -166,7 +166,7 @@ include_once __DIR__ . '/../../partials/heading.php';
 
     <!-- Modal để hiển thị chi tiết phòng -->
     <div id="roomDetailsModal" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
+        <div class="modal-content-1">
             <h5><b>Room Details</b></h5>
             <!-- Đường phân cách -->
             <hr style="border: none; border-top: 1px solid #a9a9a9; margin: 10px 0;">
@@ -202,7 +202,7 @@ include_once __DIR__ . '/../../partials/heading.php';
 
     <!-- Modal để edit phòng -->
     <div id="editRoomModal" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
+        <div class="modal-content-1">
             <h5> <b> Update Room Details</b></h5>
             <!-- Đường phân cách -->
             <hr style="border: none; border-top: 1px solid #a9a9a9; margin: 10px 0;">
@@ -246,7 +246,7 @@ include_once __DIR__ . '/../../partials/heading.php';
 
     <!-- Modal để xác nhận xóa phòng -->
     <div id="deleteRoomModal" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
+        <div class="modal-content-1">
             <h5> <b>Are you sure you want to delete this room?</b></h5>
             <!-- Đường phân cách -->
             <hr style="border: none; border-top: 1px solid #a9a9a9; margin: 10px 0;">

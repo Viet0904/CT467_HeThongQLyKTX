@@ -14,84 +14,88 @@ include_once __DIR__ . '/../../partials/heading.php';
                 <!-- Nội dung chính -->
                 <div class="my-2" style="margin-left: 260px;">
                     <div class="modal-header-1">
-                        <h5 class="modal-title mt-2">Register New Student</h5>
+                        <h5 class="modal-title mt-2">Student Details</h5>
                     </div>
 
                     <div class="modal-user">
                         <form action="view_student.php" method="POST">
                             <!-- School Details Section -->
-                            <h5 class="mt-1"><b>School Details</b></h5>
-                            <div class="row row-add mb-3">
+                            <div class="row row-add">
                                 <div class="col-md-4">
-                                    <label for="schoolID" class="form-label"> School ID/Code</label>
-                                    <input type="text" class="form-control" id="schoolID">
+                                    <h5 class="mt-1"><b>School Details</b></h5>
                                 </div>
-                                <div class="col-md-4">
-                                    <label for="department" class="form-label">Department</label>
-                                    <input type="text" class="form-control" id="department">
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="course" class="form-label">Class</label>
-                                    <input type="text" class="form-control" id="course">
+                                <div class="col-md-8">
+                                    <div class="status-toggle">
+                                        <span>Active</span>
+                                        <input type="checkbox" checked disabled>
+                                    </div>
                                 </div>
                             </div>
+                            <div class="row row-add">
+                                <div class="col-md-4 ">
+                                    <label for="schoolID"> <b>School ID/Code</b></label>
+                                    <p class="mb-2 mt-1 mx-3">B2111837</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="course"><b>Class</b></label>
+                                    <p class="mb-2 mt-1 mx-3">Hg218732</p>
+                                </div>
+                            </div>
+                            <div class="row row-add">
+                                <div class="col-md-4">
+                                    <label for="department"><b>Department</b></label>
+                                    <p class="mt-1 mb-2 mx-3">Truong Cong Nghe Thong Tin & TT</p>
+                                </div>
+                            </div>
+
+                            <!-- Đường phân cách -->
+                            <hr style="border: none; border-top: 1px solid #a9a9a9; margin: 1px 0;">
 
                             <!-- Personal Information Section -->
-                            <h5><b>Personal Information</b></h5>
-                            <div class="row row-add mb-3">
+                            <h5 class="mt-3"><b>Personal Information</b></h5>
+                            <div class="row row-add">
                                 <div class="col-md-4">
-                                    <label for="firstName" class="form-label">First Name</label>
-                                    <input type="text" class="form-control" id="firstName">
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="middleName" class="form-label">Middle Name</label>
-                                    <input type="text" class="form-control" id="middleName" placeholder="optional">
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="lastName" class="form-label">Last Name</label>
-                                    <input type="text" class="form-control" id="lastName">
+                                    <label for="firstName"><b>Name</b></label>
+                                    <p class="mb-2 mt-1 mx-3">Pham Gia Khang</p>
                                 </div>
                             </div>
 
-                            <div class="row row-add mb-3">
+                            <div class="row row-add">
                                 <div class="col-md-4">
-                                    <label for="gender" class="form-label">Gender</label>
-                                    <select class="form-select" id="gender">
-                                        <option selected>Male</option>
-                                        <option value="Female">Female</option>
-                                        <option value="Other">Other</option>
-                                    </select>
+                                    <label for="gender"><b>Gender</b></label>
+                                    <p class="mb-2 mt-1 mx-3">Male</p>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="contact" class="form-label">Contact #</label>
-                                    <input type="text" class="form-control" id="contact">
+                                    <label for="contact"><b>Contact #</b></label>
+                                    <p class="mb-2 mt-1 mx-3">0937367183</p>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="email" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="email">
+                                    <label for="email"><b>Email</b></label>
+                                    <p class="mb-2 mt-1 mx-3">pkhang@gmail.com</p>
                                 </div>
                             </div>
 
-                            <div class="row row-add mb-3">
+                            <div class="row row-add">
                                 <div class="col-md-12">
-                                    <label for="address" class="form-label">Address</label>
-                                    <input type="text" class="form-control" id="address">
+                                    <label for="address"><b>Address</b></label>
+                                    <p class="mb-2 mt-1 mx-3">fakljfaklsfakls</p>
                                 </div>
                             </div>
-
-                            <div class="col-md-12">
-                                <label for="address" class="form-label">Status</label>
-                                <select class="form-select width-status" id="statusSelect">
-                                    <option selected>Active</option>
-                                    <option value="Inactive">Inactive</option>
-                                </select>
-                            </div>
-
 
                             <!-- Submit Button -->
-                            <div class="text-end">
-                                <button type="submit" class="btn btn-primary"
-                                    style="background-color: #db3077;">Register</button>
+                            <div class="row row-add">
+                                <div class="">
+                                    <button type="button" class="btn"
+                                        style="background-color: #db3077;"> <p >Edit</p></button>
+                                </div>
+                                <div class="">
+                                    <button type="button" class="btn btn-danger"
+                                        >Delete</button>
+                                </div>
+                                <div class="">
+                                    <button type="button" class="btn btn-secondary"
+                                        >Back</button>
+                                </div>
                             </div>
                         </form>
                     </div>
