@@ -18,31 +18,18 @@ include_once __DIR__ . '/../../partials/heading.php';
                     <div class="container-fluid py-3" style="padding: 20px;">
                         <!-- Phần header của List of Rooms -->
                         <div class="d-flex justify-content-between align-items-center">
-                            <h5>List of Accounts</h5>
-                            <a href="./manage_account.php" class="btn text-white"
-                                style="background-color: rgb(219, 48, 119);">
-                                <i class="fas fa-plus me-1"></i>Create New
-                            </a>
-
+                            <h5>Monthly Report</h5>
                         </div>
+                        <!-- Đường phân cách -->
+                        <hr style="border: none; border-top: 1px solid #282827; margin: 1px 0;">
 
-                        <!-- Phần tìm kiếm và số lượng hiển thị -->
-                        <div class="row mt-3">
-                            <div class="col-md-6">
-                                <label for="entries" class="form-label">Show</label>
-                                <select class="form-select form-select-sm w-auto d-inline-block" id="entries"
-                                    aria-label="Entries">
-                                    <option selected>10</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select>
-                                <span class="ms-2">entries</span>
-                            </div>
-                            <div class="col-md-6 text-end" style="margin-left: 527px">
-                                <label for="search" class="form-label me-2">Search:</label>
-                                <input type="search" class="form-control form-control-sm w-auto d-inline-block"
-                                    id="search">
+                        <div class="filter-box">
+                            <h4>Filter</h4>
+                            <div class="filter-container">
+                                <label for="filter-date" type="date">Choose Date</label>
+                                <input type="month" id="filter-date" value="2022-05">
+                                <button class="filter-btn">Filter</button>
+                                <button class="print-btn">Print</button>
                             </div>
                         </div>
 

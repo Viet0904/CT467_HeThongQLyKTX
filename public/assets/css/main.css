@@ -250,3 +250,56 @@ color: white;
 .button-view{
     width: 20px;
 }
+
+.filter-box {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.filter-box h4 {
+    margin-top: 0;
+}
+
+.filter-container {
+    display: flex;
+    align-items: center;
+}
+
+.filter-container label {
+    margin-right: 10px;
+}
+
+.filter-container input[type="text"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.filter-container input[type="date"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.filter-container button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.filter-btn {
+    background-color: #e83e8c;
+    color: white;
+    margin-right: 10px;
+}
+
+.print-btn {
+    background-color: #6c757d;
+    color: white;
+}

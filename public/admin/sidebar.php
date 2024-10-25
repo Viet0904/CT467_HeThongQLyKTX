@@ -11,7 +11,7 @@
 
         <!-- Reports Section -->
         <li class="section-header">Reports</li>
-        <li class="p-0 ms-1"><a href="#" class="py-2 ps-3"><i class="fas fa-chart-line"></i> Monthly Collection Report</a></li>
+        <li class="p-0 ms-1"><a href="report_price.php" class="py-2 ps-3"><i class="fas fa-chart-line"></i> Monthly Collection Report</a></li>
 
         <!-- Master List Section -->
         <li class="section-header">Master List</li>
