@@ -14,24 +14,16 @@ include_once __DIR__ . '/../../partials/heading.php';
                 <!-- Nội dung chính -->
                 <div class="my-2" style="margin-left: 260px;">
                     <div class="modal-header-1">
-                        <h5 class="modal-title mt-2">Student Details</h5>
+                        <h5 class="modal-title mt-2">Account Details</h5>
                     </div>
 
                     <div class="modal-user">
                         <form action="" method="POST">
                             <!-- School Details Section -->
-                            <div class="row row-add">
-                                <div class="col-md-4">
-                                    <h5 class="mt-1"><b>School Details</b></h5>
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="status-toggle">
-                                        <span>Active</span>
-                                        <input type="checkbox" checked disabled>
-                                    </div>
-                                </div>
+                            <div class="col-md-4">
+                                <h5 class="mt-1"><b>School Details</b></h5>
                             </div>
-                            <div class="row row-add">
+                            <div class="row row-add mt-2">
                                 <div class="col-md-4 ">
                                     <label for="schoolID"> <b>School ID/Code</b></label>
                                     <p class="mb-2 mt-1 mx-3">B2111837</p>
@@ -82,10 +74,42 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 </div>
                             </div>
 
+
+
+                        </form>
+                    </div>
+
+                    <div class="modal-user" style="margin-top: 20px">
+                        <form action="" method="POST">
+                            <!-- School Details Section -->
+                            <div class="col-md-4">
+                                <h5 class="mt-1"><b>Room Information</b></h5>
+                            </div>
+                            <!-- Đường phân cách -->
+                            <hr style="border: none; border-top: 1px solid #282827; margin: 1px 0;">
+                            <div class="col-md-4 mt-2">
+                                <label for="schoolID"> <b>Account Code</b></label>
+                                <p class="mb-2 mt-1 mx-3">Hf1333234</p>
+                            </div>
+
+                            <div class="row row-add">
+                                <div class="col-md-6">
+                                    <label for="gender"><b>Room</b></label>
+                                    <p class="mb-2 mt-1 mx-3">BB04115</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="contact"><b>Price</b></label>
+                                    <p class="mb-2 mt-1 mx-3">390.000</p>
+                                </div>
+                            </div>
+
+                            <!-- Đường phân cách -->
+                            <hr style="border: none; border-top: 1px solid #282827; margin: 1px 0;">
+
                             <!-- Submit Button -->
-                            <div class="row-add d-flex justify-content-center align-items-center">
+                            <div class="row-add d-flex justify-content-center align-items-center mt-3">
                                 <div class="mx-2 button-view">
-                                    <a href="manage_student.php" class="btn" style="background-color: #db3077;">
+                                    <a href="manage_account.php" class="btn" style="background-color: #db3077;">
                                         <p style="color: white" class="mb-0">Edit</p>
                                     </a>
                                 </div>
@@ -93,12 +117,9 @@ include_once __DIR__ . '/../../partials/heading.php';
                                     <a href="#" class="btn btn-danger">Delete</a>
                                 </div>
                                 <div class="mx-2 button-view">
-                                    <a href="student_list.php" class="btn btn-secondary">Back</a>
+                                    <a href="account_list.php" class="btn btn-secondary">Back</a>
                                 </div>
                             </div>
-
-
-
                         </form>
                     </div>
                 </div>

@@ -91,7 +91,7 @@ include_once __DIR__ . '/../../partials/heading.php';
                             <!-- Submit Button -->
                             <div class="text-end">
                                 <button type="submit" class="btn btn-primary"
-                                    style="background-color: #db3077;">Register</button>
+                                    style="background-color: #db3077;">Save</button>
                             </div>
                         </form>
                     </div>

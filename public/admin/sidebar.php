@@ -7,7 +7,7 @@
         <!-- Main Section -->
         <li class="section-header">Main</li>
         <li class="p-0 ms-1"><a href="./student_list.php" class="py-2 ps-3"><i class=" fas fa-users"></i> Student List</a></li>
-        <li class="p-0 ms-1"><a href="#" class="py-2 ps-3"><i class="fas fa-file-invoice-dollar"></i> Accounts</a></li>
+        <li class="p-0 ms-1"><a href="./account_list.php" class="py-2 ps-3"><i class="fas fa-file-invoice-dollar"></i> Accounts</a></li>
 
         <!-- Reports Section -->
         <li class="section-header">Reports</li>

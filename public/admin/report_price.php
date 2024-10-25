@@ -18,8 +18,8 @@ include_once __DIR__ . '/../../partials/heading.php';
                     <div class="container-fluid py-3" style="padding: 20px;">
                         <!-- Phần header của List of Rooms -->
                         <div class="d-flex justify-content-between align-items-center">
-                            <h5>List of Students</h5>
-                            <a href="./manage_student.php" class="btn text-white"
+                            <h5>List of Accounts</h5>
+                            <a href="./manage_account.php" class="btn text-white"
                                 style="background-color: rgb(219, 48, 119);">
                                 <i class="fas fa-plus me-1"></i>Create New
                             </a>
@@ -52,11 +52,10 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 <thead class="table-light">
                                     <tr>
                                         <th>#</th>
-                                        <th>Name</th>
-                                        <th>Student ID/Code</th>
-                                        <th>Class</th>
-                                        <th>Field of study</th>
-                                        <th>Department</th>
+                                        <th>Date created</th>
+                                        <th>Student ID</th>
+                                        <th>Student</th>
+                                        <th>Room</th>
                                         <th>Status</th>
                                         <th>Action</th>
 
@@ -65,11 +64,10 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 <tbody>
                                     <tr>
                                         <td>1</td>
-                                        <td>Pham Gia Khang</td>
+                                        <td>29/10/1032</td>
                                         <td>B2119292</td>
-                                        <td>AB24i82</td>
-                                        <td>Dentist</td>
-                                        <td>General medicine</td>
+                                        <td>Pham Gia Khang</td>
+                                        <td>BB03111</td>
                                         <td><span class="badge bg-success">Active</span></td>
                                         <td>
                                             <div class="dropdown position-relative">
@@ -81,7 +79,7 @@ include_once __DIR__ . '/../../partials/heading.php';
                                                     class="dropdown-menu position-absolute p-0"
                                                     style="display: none; min-width: 100px;">
                                                     <a class="dropdown-item py-2" href="view_student.php">View</a>
-                                                    <a class="dropdown-item py-2" href="manage_student.php">Edit</a>
+                                                    <a class="dropdown-item py-2" href="add_student.php">Edit</a>
                                                     <a class="dropdown-item py-2" href="#">Delete</a>
                                                 </div>
                                             </div>

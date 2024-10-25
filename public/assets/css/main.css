@@ -110,9 +110,7 @@ color: white;
     display: flex;
     gap: 20px;
 }
-.row .card {
-    
-}
+
 /* Khung chứa mục con "Log Out" */
 .dropdown-menu {
     top: 100%; /* Đẩy xuống dưới avatar */
@@ -197,6 +195,17 @@ color: white;
     z-index: 2;
 }
 
+.modal-account {
+    max-width: 1000px;
+    margin: auto;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    position: relative;
+    top: -5000px; /* Điều chỉnh để đè lên một phần của modal-header */
+    z-index: 2;
+}
+
 .modal-header-1 {
     background-color: #db3077;
     color: white;
@@ -236,4 +245,8 @@ color: white;
 
 .status-toggle input[type="checkbox"] {
     transform: scale(1.2); /* Tăng kích thước checkbox */
+}
+
+.button-view{
+    width: 20px;
 }
