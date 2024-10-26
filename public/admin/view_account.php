@@ -20,23 +20,25 @@ include_once __DIR__ . '/../../partials/heading.php';
                     <div class="modal-user">
                         <form action="" method="POST">
                             <!-- School Details Section -->
-                            <div class="col-md-4">
-                                <h5 class="mt-1"><b>School Details</b></h5>
+                            <div class="row row-add">
+                                <div class="col-md-4">
+                                    <h5 class="mt-1"><b>Chi tiết trường học</b></h5>
+                                </div>
                             </div>
-                            <div class="row row-add mt-2">
+                            <div class="row row-add">
                                 <div class="col-md-4 ">
-                                    <label for="schoolID"> <b>School ID/Code</b></label>
+                                    <label for="schoolID"> <b>Mã sinh viên</b></label>
                                     <p class="mb-2 mt-1 mx-3">B2111837</p>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="course"><b>Class</b></label>
+                                    <label for="course"><b>Lớp</b></label>
                                     <p class="mb-2 mt-1 mx-3">Hg218732</p>
                                 </div>
                             </div>
                             <div class="row row-add">
                                 <div class="col-md-4">
-                                    <label for="department"><b>Department</b></label>
-                                    <p class="mt-1 mb-2 mx-3">Truong Cong Nghe Thong Tin & TT</p>
+                                    <label for="department"><b>Khoa</b></label>
+                                    <p class="mt-1 mb-2 mx-3"> Cong Nghe Thong Tin & TT</p>
                                 </div>
                             </div>
 
@@ -44,21 +46,21 @@ include_once __DIR__ . '/../../partials/heading.php';
                             <hr style="border: none; border-top: 1px solid #a9a9a9; margin: 1px 0;">
 
                             <!-- Personal Information Section -->
-                            <h5 class="mt-3"><b>Personal Information</b></h5>
+                            <h5 class="mt-3"><b>Thông tin cá nhân</b></h5>
                             <div class="row row-add">
                                 <div class="col-md-4">
-                                    <label for="firstName"><b>Name</b></label>
+                                    <label for="firstName"><b>Tên</b></label>
                                     <p class="mb-2 mt-1 mx-3">Pham Gia Khang</p>
                                 </div>
                             </div>
 
                             <div class="row row-add">
                                 <div class="col-md-4">
-                                    <label for="gender"><b>Gender</b></label>
-                                    <p class="mb-2 mt-1 mx-3">Male</p>
+                                    <label for="gender"><b>Giới tính</b></label>
+                                    <p class="mb-2 mt-1 mx-3">Nam</p>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="contact"><b>Contact #</b></label>
+                                    <label for="contact"><b>Liên hệ #</b></label>
                                     <p class="mb-2 mt-1 mx-3">0937367183</p>
                                 </div>
                                 <div class="col-md-4">
@@ -69,7 +71,7 @@ include_once __DIR__ . '/../../partials/heading.php';
 
                             <div class="row row-add">
                                 <div class="col-md-12">
-                                    <label for="address"><b>Address</b></label>
+                                    <label for="address"><b>Địa chỉ</b></label>
                                     <p class="mb-2 mt-1 mx-3">fakljfaklsfakls</p>
                                 </div>
                             </div>
@@ -83,22 +85,22 @@ include_once __DIR__ . '/../../partials/heading.php';
                         <form action="" method="POST">
                             <!-- School Details Section -->
                             <div class="col-md-4">
-                                <h5 class="mt-1"><b>Room Information</b></h5>
+                                <h5 class="mt-1"><b>Thông tin phòng</b></h5>
                             </div>
                             <!-- Đường phân cách -->
                             <hr style="border: none; border-top: 1px solid #282827; margin: 1px 0;">
                             <div class="col-md-4 mt-2">
-                                <label for="schoolID"> <b>Account Code</b></label>
+                                <label for="schoolID"> <b>Mã tài khoản</b></label>
                                 <p class="mb-2 mt-1 mx-3">Hf1333234</p>
                             </div>
 
                             <div class="row row-add">
                                 <div class="col-md-6">
-                                    <label for="gender"><b>Room</b></label>
+                                    <label for="gender"><b>Phòng</b></label>
                                     <p class="mb-2 mt-1 mx-3">BB04115</p>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="contact"><b>Price</b></label>
+                                    <label for="contact"><b>Giá</b></label>
                                     <p class="mb-2 mt-1 mx-3">390.000</p>
                                 </div>
                             </div>
@@ -108,16 +110,16 @@ include_once __DIR__ . '/../../partials/heading.php';
 
                             <!-- Submit Button -->
                             <div class="row-add d-flex justify-content-center align-items-center mt-3">
-                                <div class="mx-2 button-view">
+                                <div class="mx-2">
                                     <a href="manage_account.php" class="btn" style="background-color: #db3077;">
-                                        <p style="color: white" class="mb-0">Edit</p>
+                                        <p style="color: white" class="mb-0">Sửa</p>
                                     </a>
                                 </div>
-                                <div class="mx-2 button-view">
-                                    <a href="#" class="btn btn-danger">Delete</a>
+                                <div class="mx-2">
+                                    <a href="#" class="btn btn-danger">Xoá</a>
                                 </div>
-                                <div class="mx-2 button-view">
-                                    <a href="account_list.php" class="btn btn-secondary">Back</a>
+                                <div class="mx-2">
+                                    <a href="account_list.php" class="btn btn-secondary">Trở về</a>
                                 </div>
                             </div>
                         </form>

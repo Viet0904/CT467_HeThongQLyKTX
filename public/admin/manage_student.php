@@ -14,56 +14,52 @@ include_once __DIR__ . '/../../partials/heading.php';
                 <!-- Nội dung chính -->
                 <div class="my-2" style="margin-left: 260px;">
                     <div class="modal-header-1">
-                        <h5 class="modal-title mt-2">Register New Student</h5>
+                        <h5 class="modal-title mt-2">Đăng ký sinh viên mới</h5>
                     </div>
 
                     <div class="modal-user">
                         <form action="view_student.php" method="POST">
                             <!-- School Details Section -->
-                            <h5 class="mt-1"><b>School Details</b></h5>
+                            <h5 class="mt-1"><b>Chi tiết trường học</b></h5>
                             <div class="row row-add mb-3">
                                 <div class="col-md-4">
-                                    <label for="schoolID" class="form-label"> School ID/Code</label>
+                                    <label for="schoolID" class="form-label"> Mã Sinh viên</label>
                                     <input type="text" class="form-control" id="schoolID">
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="department" class="form-label">Department</label>
+                                    <label for="department" class="form-label">Khoa</label>
                                     <input type="text" class="form-control" id="department">
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="course" class="form-label">Class</label>
+                                    <label for="course" class="form-label">Lớp</label>
                                     <input type="text" class="form-control" id="course">
                                 </div>
                             </div>
 
                             <!-- Personal Information Section -->
-                            <h5><b>Personal Information</b></h5>
+                            <h5><b>Thông tin cá nhân</b></h5>
                             <div class="row row-add mb-3">
                                 <div class="col-md-4">
-                                    <label for="firstName" class="form-label">First Name</label>
+                                    <label for="firstName" class="form-label">Tên riêng</label>
                                     <input type="text" class="form-control" id="firstName">
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="middleName" class="form-label">Middle Name</label>
-                                    <input type="text" class="form-control" id="middleName" placeholder="optional">
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="lastName" class="form-label">Last Name</label>
+                                    <label for="lastName" class="form-label">Họ</label>
                                     <input type="text" class="form-control" id="lastName">
                                 </div>
                             </div>
 
                             <div class="row row-add mb-3">
                                 <div class="col-md-4">
-                                    <label for="gender" class="form-label">Gender</label>
+                                    <label for="gender" class="form-label">Giới tính</label>
                                     <select class="form-select" id="gender">
-                                        <option selected>Male</option>
-                                        <option value="Female">Female</option>
-                                        <option value="Other">Other</option>
+                                        <option selected>Nam</option>
+                                        <option value="Female">Nữ</option>
+                                        <option value="Other">Khác</option>
                                     </select>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="contact" class="form-label">Contact #</label>
+                                    <label for="contact" class="form-label">Liên hệ #</label>
                                     <input type="text" class="form-control" id="contact">
                                 </div>
                                 <div class="col-md-4">
@@ -74,16 +70,16 @@ include_once __DIR__ . '/../../partials/heading.php';
 
                             <div class="row row-add mb-3">
                                 <div class="col-md-12">
-                                    <label for="address" class="form-label">Address</label>
+                                    <label for="address" class="form-label">Địa chỉ</label>
                                     <input type="text" class="form-control" id="address">
                                 </div>
                             </div>
 
                             <div class="col-md-12">
-                                <label for="address" class="form-label">Status</label>
+                                <label for="address" class="form-label">Trạng thái</label>
                                 <select class="form-select width-status" id="statusSelect">
-                                    <option selected>Active</option>
-                                    <option value="Inactive">Inactive</option>
+                                    <option selected>Hoạt động</option>
+                                    <option value="Inactive">Không hoạt động</option>
                                 </select>
                             </div>
 
@@ -91,7 +87,7 @@ include_once __DIR__ . '/../../partials/heading.php';
                             <!-- Submit Button -->
                             <div class="text-end">
                                 <button type="submit" class="btn btn-primary"
-                                    style="background-color: #db3077;">Save</button>
+                                    style="background-color: #db3077;">Lưu</button>
                             </div>
                         </form>
                     </div>

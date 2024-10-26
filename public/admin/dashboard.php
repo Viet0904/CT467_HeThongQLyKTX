@@ -15,22 +15,17 @@ include_once __DIR__ . '/../../partials/heading.php';
                 <div class="content">
                     <div class="dashboard-header">Welcome, admin!</div>
 
-                    <!-- Dashboard cards - Hàng đầu tiên với 3 thẻ -->
+                    <!-- Dashboard cards - Hàng đầu tiên với 2 thẻ -->
                     <div style="margin-top: 30px; margin-left: 40px;">
                         <div class="row">
                             <div class="card">
-                                <i class="fas fa-building"></i>
-                                <div class="card-title">Total Dorms</div>
-                                <div class="card-number">4</div>
-                            </div>
-                            <div class="card">
                                 <i class="fas fa-door-open"></i>
-                                <div class="card-title">Total Rooms</div>
+                                <div class="card-title">Tổng số phòng</div>
                                 <div class="card-number">6</div>
                             </div>
                             <div class="card">
                                 <i class="fas fa-users"></i>
-                                <div class="card-title">Registered Students</div>
+                                <div class="card-title">Tổng sinh viên</div>
                                 <div class="card-number">2</div>
                             </div>
                         </div>
@@ -42,12 +37,12 @@ include_once __DIR__ . '/../../partials/heading.php';
                         <div class="row">
                             <div class="card">
                                 <i class="fas fa-coins"></i>
-                                <div class="card-title">This Month Total Collection</div>
+                                <div class="card-title">Tổng doanh thu</div>
                                 <div class="card-number">$8,500.00</div>
                             </div>
                             <div class="card">
                                 <i class="fas fa-cogs"></i>
-                                <div class="card-title">Totals active Accounts</div>
+                                <div class="card-title">Tổng tài khoản hoạt động</div>
                                 <div class="card-number">2</div>
                             </div>
                         </div>
@@ -57,10 +52,7 @@ include_once __DIR__ . '/../../partials/heading.php';
         </div>
     </div>
 
-    <!-- footer -->
-    <?php
-    include_once __DIR__ . '/../../partials/footer.php';
-    ?>
+    
 
 <script>
     // Hàm mở và đóng dropdown

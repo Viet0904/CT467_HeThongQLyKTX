@@ -14,34 +14,34 @@ include_once __DIR__ . '/../../partials/heading.php';
                 <!-- Nội dung chính -->
                 <div class="my-2" style="margin-left: 260px;">
                     <div class="modal-header-1">
-                        <h5 class="modal-title mt-2">Create New Account</h5>
+                        <h5 class="modal-title mt-2">Tạo tài khoản mới</h5>
                     </div>
 
                     <div class="modal-user">
                         <form action="view_student.php" method="POST">
                             <!-- School Details Section -->
-                            <h6 class="mt-1"><b>Account</b></h6>
+                            <h6 class="mt-1"><b>Tài khoản</b></h6>
                             <div class="row row-add mb-3">
                                 <div class="col-md-6">
-                                    <label for="schoolID" class="form-label"> Student</label>
+                                    <label for="schoolID" class="form-label"> Sinh viên</label>
                                     <input type="text" class="form-control" id="schoolID" placeholder="Pham Gia Khang">
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="department" class="form-label">Room</label>
+                                    <label for="department" class="form-label">Phòng</label>
                                     <input type="text" class="form-control" id="department" placeholder="BB03211">
                                 </div>
                             </div>
 
                             <div class="row row-add mb-3">
                                 <div class="col-md-6">
-                                    <label for="schoolID" class="form-label"> Price</label>
+                                    <label for="schoolID" class="form-label"> Giá</label>
                                     <input type="text" class="form-control" id="schoolID" placeholder="0">
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="address" class="form-label">Status</label>
+                                    <label for="address" class="form-label">Trạng thái</label>
                                     <select class="form-select" id="statusSelect">
-                                        <option selected>Active</option>
-                                        <option value="Inactive">Inactive</option>
+                                        <option selected>Hoạt động</option>
+                                        <option value="Inactive">Không hoạt động</option>
                                     </select>
                                 </div>
                             </div>
@@ -49,7 +49,7 @@ include_once __DIR__ . '/../../partials/heading.php';
                             <!-- Submit Button -->
                             <div class="text-end">
                                 <a href="view_account.php" class="btn btn-primary" style="background-color: #db3077;">
-                                    Save
+                                    Lưu
                                 </a>
                             </div>
 
