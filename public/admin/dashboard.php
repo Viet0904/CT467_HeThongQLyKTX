@@ -57,10 +57,7 @@ include_once __DIR__ . '/../../partials/heading.php';
         </div>
     </div>
 
-    <!-- footer -->
-    <?php
-    include_once __DIR__ . '/../../partials/footer.php';
-    ?>
+    
 
 <script>
     // Hàm mở và đóng dropdown

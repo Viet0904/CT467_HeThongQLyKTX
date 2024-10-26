@@ -13,7 +13,7 @@ include_once __DIR__ . '/../../partials/heading.php';
             <div class="col px-0">
                 <!-- Nội dung chính -->
                 <div class=" mt-4"
-                    style="max-width: 1075px; margin-left: 273px; border: 1px solid #ddd; background-color: #f8f9fa; border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
+                    style="max-width: 1075px; margin-left: 273px; border: 1px solid #ddd; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
                     <div style="padding: 2px; background-color: rgb(219, 48, 119); border-radius: 6px;"></div>
                     <div class="container-fluid py-3" style="padding: 20px;">
                         <!-- Phần header của List of Rooms -->
@@ -23,12 +23,12 @@ include_once __DIR__ . '/../../partials/heading.php';
                         <!-- Đường phân cách -->
                         <hr style="border: none; border-top: 1px solid #282827; margin: 1px 0;">
 
-                        <div class="filter-box">
-                            <h4>Filter</h4>
+                        <div class="filter-box mt-4">
+                            <h5>Filter</h5>
                             <div class="filter-container">
                                 <label for="filter-date" type="date">Choose Date</label>
-                                <input type="month" id="filter-date" value="2022-05">
-                                <button class="filter-btn">Filter</button>
+                                <input type="month" id="filter-date" value="2022-05" style="width: 350px">
+                                <button class="filter-btn mx-2">Filter</button>
                                 <button class="print-btn">Print</button>
                             </div>
                         </div>
@@ -39,61 +39,32 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 <thead class="table-light">
                                     <tr>
                                         <th>#</th>
-                                        <th>Date created</th>
-                                        <th>Student ID</th>
+                                        <th>Datetime add</th>
+                                        <th>Account code</th>
                                         <th>Student</th>
                                         <th>Room</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
-
+                                        <th>Amount</th>           
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td>1</td>
                                         <td>29/10/1032</td>
-                                        <td>B2119292</td>
+                                        <td>752119292</td>
                                         <td>Pham Gia Khang</td>
                                         <td>BB03111</td>
-                                        <td><span class="badge bg-success">Active</span></td>
-                                        <td>
-                                            <div class="dropdown position-relative">
-                                                <button class="btn btn-outline-secondary dropdown-toggle" type="button"
-                                                    onclick="toggleActionDropdown('actionDropdownMenu1')">
-                                                    Action
-                                                </button>
-                                                <div id="actionDropdownMenu1"
-                                                    class="dropdown-menu position-absolute p-0"
-                                                    style="display: none; min-width: 100px;">
-                                                    <a class="dropdown-item py-2" href="view_student.php">View</a>
-                                                    <a class="dropdown-item py-2" href="add_student.php">Edit</a>
-                                                    <a class="dropdown-item py-2" href="#">Delete</a>
-                                                </div>
-                                            </div>
-                                        </td>
+                                        <td>390,000</td>
                                     </tr>
-                                    <!-- Thêm các dòng khác tương tự -->
+                                    <!-- Dòng mới thêm với 2 cột, cột đầu gộp 6 cột -->
+                                    <tr>
+                                        <td colspan="5" class="text-center">Total amount</td>
+                                        <td>11.650.000</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
 
-                        <!-- Phân trang -->
-                        <div class="d-flex justify-content-between align-items-center">
-                            <p class="mb-0">Showing 1 to 7 of 7 entries</p>
-                            <nav>
-                                <ul class="pagination pagination-sm mb-0">
-                                    <li class="page-item disabled">
-                                        <a class="page-link" href="#">Previous</a>
-                                    </li>
-                                    <li class="page-item active">
-                                        <a class="page-link" href="#">1</a>
-                                    </li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">Next</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
+
                     </div>
                 </div>
             </div>

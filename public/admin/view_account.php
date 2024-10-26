@@ -108,15 +108,15 @@ include_once __DIR__ . '/../../partials/heading.php';
 
                             <!-- Submit Button -->
                             <div class="row-add d-flex justify-content-center align-items-center mt-3">
-                                <div class="mx-2 button-view">
+                                <div class="mx-2">
                                     <a href="manage_account.php" class="btn" style="background-color: #db3077;">
                                         <p style="color: white" class="mb-0">Edit</p>
                                     </a>
                                 </div>
-                                <div class="mx-2 button-view">
+                                <div class="mx-2">
                                     <a href="#" class="btn btn-danger">Delete</a>
                                 </div>
-                                <div class="mx-2 button-view">
+                                <div class="mx-2">
                                     <a href="account_list.php" class="btn btn-secondary">Back</a>
                                 </div>
                             </div>

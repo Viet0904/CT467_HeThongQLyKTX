@@ -13,7 +13,7 @@ include_once __DIR__ . '/../../partials/heading.php';
             <div class="col px-0">
                 <!-- Nội dung chính -->
                 <div class=" mt-4"
-                    style="max-width: 1075px; margin-left: 273px; border: 1px solid #ddd; background-color: #f8f9fa; border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
+                    style="max-width: 1075px; margin-left: 273px; border: 1px solid #ddd; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
                     <div style="padding: 2px; background-color: rgb(219, 48, 119); border-radius: 6px;"></div>
                     <div class="container-fluid py-3" style="padding: 20px;">
                         <!-- Phần header của List of Rooms -->
