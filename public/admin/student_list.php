@@ -18,10 +18,10 @@ include_once __DIR__ . '/../../partials/heading.php';
                     <div class="container-fluid py-3" style="padding: 20px;">
                         <!-- Phần header của List of Rooms -->
                         <div class="d-flex justify-content-between align-items-center">
-                            <h5>List of Students</h5>
+                            <h5>Danh sách sinh viên</h5>
                             <a href="./manage_student.php" class="btn text-white"
                                 style="background-color: rgb(219, 48, 119);">
-                                <i class="fas fa-plus me-1"></i>Create New
+                                <i class="fas fa-plus me-1"></i>Tạo mới
                             </a>
 
                         </div>
@@ -29,7 +29,7 @@ include_once __DIR__ . '/../../partials/heading.php';
                         <!-- Phần tìm kiếm và số lượng hiển thị -->
                         <div class="row mt-3">
                             <div class="col-md-6">
-                                <label for="entries" class="form-label">Show</label>
+                                <label for="entries" class="form-label">Hiển thị</label>
                                 <select class="form-select form-select-sm w-auto d-inline-block" id="entries"
                                     aria-label="Entries">
                                     <option selected>10</option>
@@ -37,10 +37,10 @@ include_once __DIR__ . '/../../partials/heading.php';
                                     <option value="50">50</option>
                                     <option value="100">100</option>
                                 </select>
-                                <span class="ms-2">entries</span>
+                                <span class="ms-2">trang</span>
                             </div>
                             <div class="col-md-6 text-end" style="margin-left: 527px">
-                                <label for="search" class="form-label me-2">Search:</label>
+                                <label for="search" class="form-label me-2">Tìm kiếm:</label>
                                 <input type="search" class="form-control form-control-sm w-auto d-inline-block"
                                     id="search">
                             </div>
@@ -52,13 +52,13 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 <thead class="table-light">
                                     <tr>
                                         <th>#</th>
-                                        <th>Name</th>
-                                        <th>Student ID/Code</th>
-                                        <th>Class</th>
-                                        <th>Field of study</th>
-                                        <th>Department</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
+                                        <th>Tên</th>
+                                        <th>Mã số sinh viên</th>
+                                        <th>Lớp</th>
+                                        <th>Ngành học</th>
+                                        <th>Khoa</th>
+                                        <th>Trang thái</th>
+                                        <th>Hoạt động</th>
 
                                     </tr>
                                 </thead>
@@ -68,21 +68,21 @@ include_once __DIR__ . '/../../partials/heading.php';
                                         <td>Pham Gia Khang</td>
                                         <td>B2119292</td>
                                         <td>AB24i82</td>
-                                        <td>Dentist</td>
-                                        <td>General medicine</td>
-                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td>Bác sĩ</td>
+                                        <td>Y đa khoa</td>
+                                        <td><span class="badge bg-success">Hoạt động</span></td>
                                         <td>
                                             <div class="dropdown position-relative">
                                                 <button class="btn btn-outline-secondary dropdown-toggle" type="button"
                                                     onclick="toggleActionDropdown('actionDropdownMenu1')">
-                                                    Action
+                                                    Hoạt động
                                                 </button>
                                                 <div id="actionDropdownMenu1"
                                                     class="dropdown-menu position-absolute p-0"
                                                     style="display: none; min-width: 100px;">
-                                                    <a class="dropdown-item py-2" href="view_student.php">View</a>
-                                                    <a class="dropdown-item py-2" href="manage_student.php">Edit</a>
-                                                    <a class="dropdown-item py-2" href="#">Delete</a>
+                                                    <a class="dropdown-item py-2" href="view_student.php">Xem</a>
+                                                    <a class="dropdown-item py-2" href="manage_student.php">Sửa</a>
+                                                    <a class="dropdown-item py-2" href="#">Xoá</a>
                                                 </div>
                                             </div>
                                         </td>
@@ -94,17 +94,17 @@ include_once __DIR__ . '/../../partials/heading.php';
 
                         <!-- Phân trang -->
                         <div class="d-flex justify-content-between align-items-center">
-                            <p class="mb-0">Showing 1 to 7 of 7 entries</p>
+                            <p class="mb-0">Xem 1 đến 7 trong 7 trang</p>
                             <nav>
                                 <ul class="pagination pagination-sm mb-0">
                                     <li class="page-item disabled">
-                                        <a class="page-link" href="#">Previous</a>
+                                        <a class="page-link" href="#">Trước</a>
                                     </li>
                                     <li class="page-item active">
                                         <a class="page-link" href="#">1</a>
                                     </li>
                                     <li class="page-item">
-                                        <a class="page-link" href="#">Next</a>
+                                        <a class="page-link" href="#">Sau</a>
                                     </li>
                                 </ul>
                             </nav>

@@ -18,10 +18,10 @@ include_once __DIR__ . '/../../partials/heading.php';
                     <div class="container-fluid py-3" style="padding: 20px;">
                         <!-- Phần header của List of Rooms -->
                         <div class="d-flex justify-content-between align-items-center">
-                            <h5>List of Rooms</h5>
+                            <h5>Danh sách phòng</h5>
                             <a href="javascript:void(0);" class="btn text-white"
                                 style="background-color: rgb(219, 48, 119);" onclick="openAddRoom()">
-                                <i class="fas fa-plus me-1"></i>Create New
+                                <i class="fas fa-plus me-1"></i>Tạo mới
                             </a>
 
 
@@ -30,7 +30,7 @@ include_once __DIR__ . '/../../partials/heading.php';
                         <!-- Phần tìm kiếm và số lượng hiển thị -->
                         <div class="row mt-3">
                             <div class="col-md-6">
-                                <label for="entries" class="form-label">Show</label>
+                                <label for="entries" class="form-label">Hiển thị</label>
                                 <select class="form-select form-select-sm w-auto d-inline-block" id="entries"
                                     aria-label="Entries">
                                     <option selected>10</option>
@@ -38,10 +38,10 @@ include_once __DIR__ . '/../../partials/heading.php';
                                     <option value="50">50</option>
                                     <option value="100">100</option>
                                 </select>
-                                <span class="ms-2">entries</span>
+                                <span class="ms-2">trang</span>
                             </div>
                             <div class="col-md-6 text-end" style="margin-left: 527px">
-                                <label for="search" class="form-label me-2">Search:</label>
+                                <label for="search" class="form-label me-2">Tìm kiếm:</label>
                                 <input type="search" class="form-control form-control-sm w-auto d-inline-block"
                                     id="search">
                             </div>
@@ -53,62 +53,60 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 <thead class="table-light">
                                     <tr>
                                         <th>#</th>
-                                        <th>Date Created</th>
-                                        <th>Name</th>
-                                        <th>Slot</th>
-                                        <th>Available</th>
-                                        <th>Price</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
-
+                                        <th>Ngày tạo</th>
+                                        <th>Tên</th>
+                                        <th>Số chỗ</th>
+                                        <th>Có sẵn</th>
+                                        <th>Giá</th>
+                                        <th>Trạng thái</th>
+                                        <th>Hoạt động</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td>1</td>
                                         <td>2022-05-07 10:36</td>
-                                        <td>Room 101</td>
+                                        <td>BB02101</td>
                                         <td>4</td>
                                         <td>3</td>
                                         <td>3,500.00</td>
-                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td><span class="badge bg-success">Hoạt động</span></td>
                                         <td>
                                             <div class="dropdown position-relative">
                                                 <button class="btn btn-outline-secondary dropdown-toggle" type="button"
                                                     onclick="toggleActionDropdown('actionDropdownMenu1')">
-                                                    Action
+                                                    Hoạt động
                                                 </button>
                                                 <div id="actionDropdownMenu1"
                                                     class="dropdown-menu position-absolute p-0"
                                                     style="display: none; min-width: 100px;">
                                                     <a class="dropdown-item py-2" href="javascript:void(0);"
-                                                        onclick="openDetailsRoom()">View</a>
+                                                        onclick="openDetailsRoom()">Xem</a>
                                                     <a class="dropdown-item py-2" href="javascript:void(0);"
-                                                        onclick="openEditRoom()">Edit</a>
+                                                        onclick="openEditRoom()">Sửa</a>
                                                     <a class="dropdown-item py-2" href="javascript:void(0);"
-                                                        onclick="openDeleteRoom()">Delete</a>
+                                                        onclick="openDeleteRoom()">Xoá</a>
                                                 </div>
                                             </div>
                                         </td>
                                     </tr>
-                                    <!-- Thêm các dòng khác tương tự -->
                                 </tbody>
                             </table>
                         </div>
 
                         <!-- Phân trang -->
                         <div class="d-flex justify-content-between align-items-center">
-                            <p class="mb-0">Showing 1 to 7 of 7 entries</p>
+                            <p class="mb-0">Xem 1 đến 7 trong 7 trang</p>
                             <nav>
                                 <ul class="pagination pagination-sm mb-0">
                                     <li class="page-item disabled">
-                                        <a class="page-link" href="#">Previous</a>
+                                        <a class="page-link" href="#">Trước</a>
                                     </li>
                                     <li class="page-item active">
                                         <a class="page-link" href="#">1</a>
                                     </li>
                                     <li class="page-item">
-                                        <a class="page-link" href="#">Next</a>
+                                        <a class="page-link" href="#">Sau</a>
                                     </li>
                                 </ul>
                             </nav>
@@ -123,42 +121,42 @@ include_once __DIR__ . '/../../partials/heading.php';
     <!-- Modal để thêm phòng mới -->
     <div id="addRoomModal" class="modal-overlay" style="display: none;">
         <div class="modal-content-1">
-            <h5> <b>+ Add New Room</b></h5>
+            <h5> <b>+ Thêm phòng</b></h5>
             <!-- Đường phân cách -->
             <hr style="border: none; border-top: 1px solid #a9a9a9; margin: 10px 0;">
             <form>
                 <!-- Name -->
                 <div class="mb-3">
-                    <label for="roomName" class="form-label">Name</label>
+                    <label for="roomName" class="form-label">Tên</label>
                     <input type="text" class="form-control" id="roomName">
                 </div>
 
                 <!-- Beds -->
                 <div class="mb-3">
-                    <label for="beds" class="form-label">Bed/s</label>
+                    <label for="beds" class="form-label">Số giường</label>
                     <input type="number" class="form-control" id="beds">
                 </div>
 
                 <!-- Price per Month -->
                 <div class="mb-3">
-                    <label for="price" class="form-label">Price per Month</label>
+                    <label for="price" class="form-label">Giá/ tháng</label>
                     <input type="number" class="form-control" id="price">
                 </div>
 
                 <!-- Status -->
                 <div class="mb-3">
-                    <label for="statusSelect" class="form-label">Status</label>
+                    <label for="statusSelect" class="form-label">Trạng thái</label>
                     <select class="form-select" id="statusSelect">
-                        <option selected>Active</option>
-                        <option value="Inactive">Inactive</option>
+                        <option selected>Hoạt động</option>
+                        <option value="Inactive">Không hoạt động</option>
                     </select>
                 </div>
 
                 <!-- Nút Save và Cancel -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary"
-                        style="background-color: rgb(219, 48, 119);">Save</button>
-                    <button type="button" class="btn btn-secondary" onclick="closeAddRoom()">Cancel</button>
+                        style="background-color: rgb(219, 48, 119);">Lưu</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeAddRoom()">Trờ về</button>
                 </div>
             </form>
         </div>
@@ -167,35 +165,35 @@ include_once __DIR__ . '/../../partials/heading.php';
     <!-- Modal để hiển thị chi tiết phòng -->
     <div id="roomDetailsModal" class="modal-overlay" style="display: none;">
         <div class="modal-content-1">
-            <h5><b>Room Details</b></h5>
+            <h5><b>Chi tiết phòng</b></h5>
             <!-- Đường phân cách -->
             <hr style="border: none; border-top: 1px solid #a9a9a9; margin: 10px 0;">
 
             <!-- Hiển thị thông tin phòng -->
             <div class="mb-2">
-                <label class="form-label mb-0"><b>Name</b></label>
-                <p id="detailName" class="my-1">Sample Room 101</p>
+                <label class="form-label mb-0"><b>Tên</b></label>
+                <p id="detailName" class="my-1">BB02111</p>
             </div>
             <div class="mb-2">
-                <label class="form-label mb-0"><b>Bed/s</b></label>
+                <label class="form-label mb-0"><b>Số giường</b></label>
                 <p id="detailBeds" class="my-1">3</p>
             </div>
             <div class="mb-2">
-                <label class="form-label mb-0"><b>Available Slots</b></label>
+                <label class="form-label mb-0"><b>Giường trống</b></label>
                 <p id="detailSlots" class="my-1">3</p>
             </div>
             <div class="mb-2">
-                <label class="form-label mb-0"><b>Price per Month</b></label>
+                <label class="form-label mb-0"><b>Giá/ tháng</b></label>
                 <p id="detailPrice" class="my-1">4,500.00</p>
             </div>
             <div class="mb-2">
-                <label class="form-label mb-0"><b>Status</b></label>
-                <span id="detailStatus" class="my-1 badge bg-success">Active</span>
+                <label class="form-label mb-0"><b>Trạng thái</b></label>
+                <span id="detailStatus" class="my-1 badge bg-success">Hoạt động</span>
             </div>
 
             <!-- Nút đóng modal -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="closeDetailsRoom()">Close</button>
+                <button type="button" class="btn btn-secondary" onclick="closeDetailsRoom()">Đóng</button>
             </div>
         </div>
     </div>
@@ -203,42 +201,42 @@ include_once __DIR__ . '/../../partials/heading.php';
     <!-- Modal để edit phòng -->
     <div id="editRoomModal" class="modal-overlay" style="display: none;">
         <div class="modal-content-1">
-            <h5> <b> Update Room Details</b></h5>
+            <h5> <b> Cập nhật phòng</b></h5>
             <!-- Đường phân cách -->
             <hr style="border: none; border-top: 1px solid #a9a9a9; margin: 10px 0;">
             <form>
                 <!-- Name -->
                 <div class="mb-3">
-                    <label for="roomName" class="form-label">Name</label>
+                    <label for="roomName" class="form-label">Tên</label>
                     <input type="text" class="form-control" id="roomName" value="Room 1">
                 </div>
 
                 <!-- Beds -->
                 <div class="mb-3">
-                    <label for="beds" class="form-label">Bed/s</label>
+                    <label for="beds" class="form-label">Số giường</label>
                     <input type="number" class="form-control" id="beds" value="4">
                 </div>
 
                 <!-- Price per Month -->
                 <div class="mb-3">
-                    <label for="price" class="form-label">Price per Month</label>
+                    <label for="price" class="form-label">Giá / tháng</label>
                     <input type="number" class="form-control" id="price" value="3800">
                 </div>
 
                 <!-- Status -->
                 <div class="mb-3">
-                    <label for="statusSelect" class="form-label">Status</label>
+                    <label for="statusSelect" class="form-label">Trạng thái</label>
                     <select class="form-select" id="statusSelect">
-                        <option selected>Active</option>
-                        <option value="Inactive">Inactive</option>
+                        <option selected>Hoạt động</option>
+                        <option value="Inactive">Không hoạt động</option>
                     </select>
                 </div>
 
                 <!-- Nút Save và Cancel -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary"
-                        style="background-color: rgb(219, 48, 119);">Save</button>
-                    <button type="button" class="btn btn-secondary" onclick="closeEditRoom()">Cancel</button>
+                        style="background-color: rgb(219, 48, 119);">Lưu</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeEditRoom()">Trở về</button>
                 </div>
             </form>
         </div>
@@ -247,12 +245,12 @@ include_once __DIR__ . '/../../partials/heading.php';
     <!-- Modal để xác nhận xóa phòng -->
     <div id="deleteRoomModal" class="modal-overlay" style="display: none;">
         <div class="modal-content-1">
-            <h5> <b>Are you sure you want to delete this room?</b></h5>
+            <h5> <b>Bạn có chắc chắn muốn xoá phòng?</b></h5>
             <!-- Đường phân cách -->
             <hr style="border: none; border-top: 1px solid #a9a9a9; margin: 10px 0;">
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger">Delete</button>
-                <button type="button" class="btn btn-secondary" onclick="closeDeleteRoom()">Cancel</button>
+                <button type="button" class="btn btn-danger">Xoá</button>
+                <button type="button" class="btn btn-secondary" onclick="closeDeleteRoom()">Trở về</button>
             </div>
         </div>
     </div>

@@ -18,18 +18,17 @@ include_once __DIR__ . '/../../partials/heading.php';
                     <div class="container-fluid py-3" style="padding: 20px;">
                         <!-- Phần header của List of Rooms -->
                         <div class="d-flex justify-content-between align-items-center">
-                            <h5>Monthly Report</h5>
+                            <h5>Báo cáo tháng</h5>
                         </div>
                         <!-- Đường phân cách -->
                         <hr style="border: none; border-top: 1px solid #282827; margin: 1px 0;">
 
                         <div class="filter-box mt-4">
-                            <h5>Filter</h5>
+                            <h5>Lọc</h5>
                             <div class="filter-container">
-                                <label for="filter-date" type="date">Choose Date</label>
+                                <label for="filter-date" type="date">Chọn tháng</label>
                                 <input type="month" id="filter-date" value="2022-05" style="width: 350px">
-                                <button class="filter-btn mx-2">Filter</button>
-                                <button class="print-btn">Print</button>
+                                <button class="filter-btn mx-2">Lọc</button>
                             </div>
                         </div>
 
@@ -39,11 +38,11 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 <thead class="table-light">
                                     <tr>
                                         <th>#</th>
-                                        <th>Datetime add</th>
-                                        <th>Account code</th>
-                                        <th>Student</th>
-                                        <th>Room</th>
-                                        <th>Amount</th>           
+                                        <th>Ngày đóng</th>
+                                        <th>Mã khách hàng</th>
+                                        <th>Sinh viên</th>
+                                        <th>Phòng</th>
+                                        <th>Giá</th>           
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -57,7 +56,7 @@ include_once __DIR__ . '/../../partials/heading.php';
                                     </tr>
                                     <!-- Dòng mới thêm với 2 cột, cột đầu gộp 6 cột -->
                                     <tr>
-                                        <td colspan="5" class="text-center">Total amount</td>
+                                        <td colspan="5" class="text-center">Tổng tiền</td>
                                         <td>11.650.000</td>
                                     </tr>
                                 </tbody>
