@@ -29,7 +29,7 @@
 
 <body>
     <h1 class="text-center text-white px-4 py-5" id="page-title">Hệ thống quản lí ký túc xá<b></b></h1>
-    <div class="container width-50 py-2">
+    <div class="container w-50 py-2">
         <div class="modal-dialog rounded shadow-lg p-2 m-4 bg-body rounded ">
             <div class="modal-content p-2">
                 <div class="modal-header text-center d-block">
