@@ -4,7 +4,7 @@
 Truy cập <a href="http://localhost/phpmyadmin/">MYSQL</a> tạo CSDL tên htqlktx
 
 ## Bước 2: Tạo các bảng
-Insert file KTX.sql thì folder database
+Insert file Database.txt thì folder database
 
 ## Bước 3: Clone dự án về máy
 `git clone https://github.com/Viet0904/CT467_HeThongQLyKTX.git`
