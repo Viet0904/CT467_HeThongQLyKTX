@@ -87,7 +87,7 @@ CREATE TABLE SinhVien (
     SDT VARCHAR(10),
     Email VARCHAR(50),
     DiaChi VARCHAR(100),
-    GioiTinh Boolean,
+    GioiTinh VARCHAR(10),
     KhoaHoc INT,
     NgaySinh DATE,
     ChucVu VARCHAR(50),
@@ -101,8 +101,8 @@ CREATE TABLE SinhVien (
 -- Chèn dữ liệu mẫu vào bảng SinhVien
 INSERT INTO SinhVien (MaSinhVien, HoTen, SDT,Email, MaLop, DiaChi, GioiTinh, KhoaHoc, NgaySinh,ChucVu,MaDay, Password)
 VALUES
-('B2111908', 'Nguyễn Quốc Việt', '0123456789','vietb2111908@student.ctu.edu.vn' ,'HG21V7A1', 'An Giang', 1,  47, '9/4/2003', 'Thành Viên ANXK', 'AC05', '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
-('B2111893', 'Trương Huỳnh Tú Như', '0987654321','nhub211189@student.ctu.edu.vn'  ,'HG21V7A1', 'Bạc Liêu', 0, 47, '9/12/2003','Thành Viên ANXK','BB01', '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO');
+('B2111908', 'Nguyễn Quốc Việt', '0123456789','vietb2111908@student.ctu.edu.vn' ,'HG21V7A1', 'An Giang', 'Nam',  47, '9/4/2003', 'Thành Viên ANXK', 'AC05', '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
+('B2111893', 'Trương Huỳnh Tú Như', '0987654321','nhub211189@student.ctu.edu.vn'  ,'HG21V7A1', 'Bạc Liêu', 'Nữ', 47, '9/12/2003','Thành Viên ANXK','BB01', '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO');
 
 
 
