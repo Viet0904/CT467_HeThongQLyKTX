@@ -63,7 +63,7 @@
                         </div>
                         <button type="submit" class="btn btn-primary mt-3 w-100 mb-4" name="login">
                             <i class="fas fa-power-off"></i>
-                            <span href="" class="text-decoration-none text-white">Đăng nhập</span>
+                            <a href="./admin/account_list.php" class="text-decoration-none text-white">Đăng nhập</a>
                         </button>
                     </form>
                 </div>

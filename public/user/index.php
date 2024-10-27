@@ -1,114 +1,156 @@
 <?php
-// Khởi tạo phiên làm việc
-// if (!isset($_SESSION)) {
-//     session_start();
-// }
-
-// Kiểm tra xem vai trò đã được lưu trong session hay chưa
-// if (isset($_SESSION['Role'])) {
-//     $role = $_SESSION['Role'];
-//     if ($role === 'user') {
-//         header("Location: ./dashboard.php");
-//         die();
-//     } elseif ($role === 'admin') {
-//         echo "<script>alert('Bạn không có quyền truy cập vào trang này.')
-//         window.location.href='../../admin/dashboard.php';
-//         </script>";
-//         die();
-//     }
-// }
-
-// Bắt đầu nội dung trang
-
 include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
-require __DIR__ . '/../../config/dbadmin.php';
-
-// if ($_SERVER["REQUEST_METHOD"] == "POST") {
-//     $email = $_POST['EmailInput'];
-//     $password = $_POST['password'];
-//     try {
-//         $query = "SELECT * FROM tblclient WHERE Email = :email";
-//         $stmt = $dbh->prepare($query);
-//         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-//         $stmt->execute();
-
-//         if ($stmt->rowCount() > 0) {
-//             $user = $stmt->fetch(PDO::FETCH_ASSOC);
-//             $hashedPassword = $user['Password'];
-
-//             // Sử dụng password_verify để kiểm tra mật khẩu
-//             if (password_verify($password, $hashedPassword)) {
-//                 $_SESSION['ClientID'] = $user['ClientID'];
-//                 $_SESSION['Email'] = $user['Email'];
-//                 $_SESSION['ContactName'] = $user['ContactName'];
-//                 $_SESSION['Role'] = $user['Role'];
-
-//                 echo "<script>alert('Đăng nhập thành công')
-//                 window.location.href = './dashboard.php';
-//                 </script>";
-
-//                 exit();
-//             } else {
-//                 echo "<script>alert('Tài khoản hoặc mật khẩu không chính xác. Vui lòng nhập lại.');</script>";
-//             }
-//         } else {
-//             echo "<script>alert('Tài khoản hoặc mật khẩu không chính xác. Vui lòng nhập lại.');</script>";
-//         }
-//     } catch (PDOException $e) {
-//         header('Location: /../../views/errors/404.php');
-//         echo "Lỗi kết nối cơ sở dữ liệu: " . $e->getMessage();
-//     }
-// }
 ?>
 
-
 <body>
-    <div class="container width-50 py-2">
-        <div class="modal-dialog rounded shadow-lg p-2 m-4 bg-body rounded ">
-            <div class="modal-content p-2">
-                <div class="modal-header text-center d-block">
-                    <h2 class="modal-title pt-3">
-                        Đăng nhập
-                    </h2>
-                </div>
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <?php
+            include_once __DIR__ . '../../../partials/user/sidebar.php';
+            ?>
 
-                <div class="modal-body">
-                    <form method="POST" name="login" id="login">
-                        <div class="form-group">
-                            <label for="EmailInput" class="pt-2">
-                                <i class="fa-solid fa-envelope"></i> Email:
-                            </label>
-                            <input class="form-control mt-1 border rounded-1" placeholder="Nhập email của bạn" id="EmailInput" name="EmailInput"></input>
-                            <span id="emailError" style="color: red;"></span>
+            <div class="col px-0">
+                <!-- Nội dung chính -->
+                <div class=" mt-4"
+                    style="max-width: 1075px; margin-left: 273px; border: 1px solid #ddd; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
+                    <div style="padding: 2px; background-color: rgb(219, 48, 119); border-radius: 6px;"></div>
+                    <div class="container-fluid py-3" style="padding: 20px;">
+                        <!-- Phần header của List of Rooms -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5>Danh sách tài khoản</h5>
+                            <a href="./manage_account.php" class="btn text-white"
+                                style="background-color: rgb(219, 48, 119);">
+                                <i class="fas fa-plus me-1"></i>Tạo mới
+                            </a>
+
                         </div>
 
-                        <div class="form-group">
-                            <label for="passwordInput" class="pt-4">
-                                <i class="fas fa-eye"></i> Mật khẩu:
-                            </label>
-                            <input class="form-control mt-1 border rounded-1" placeholder="Nhập mật khẩu" id="passwordInput" name="password" type="password"></input>
+                        <!-- Phần tìm kiếm và số lượng hiển thị -->
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <label for="entries" class="form-label">Hiển thị</label>
+                                <select class="form-select form-select-sm w-auto d-inline-block" id="entries"
+                                    aria-label="Entries">
+                                    <option selected>10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                                <span class="ms-2">trang</span>
+                            </div>
+                            <div class="col-md-6 text-end" style="margin-left: 527px">
+                                <label for="search" class="form-label me-2">Tìm kiếm:</label>
+                                <input type="search" class="form-control form-control-sm w-auto d-inline-block"
+                                    id="search">
+                            </div>
                         </div>
 
+                        <!-- Bảng danh sách các học sinh -->
+                        <div class="table-responsive mt-3">
+                            <table class="table table-bordered table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Ngày tạo</th>
+                                        <th>Mã số sinh viên</th>
+                                        <th>Sinh viên</th>
+                                        <th>Phòng</th>
+                                        <th>Trạng thái</th>
+                                        <th>Hoạt động</th>
 
-                        <div class="form-group form-check pt-4">
-                            <input type="checkbox" class="form-check-input">
-                            <Label class="form-check-Label">Ghi nhớ tôi</Label>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>29/10/1032</td>
+                                        <td>B2119292</td>
+                                        <td>Pham Gia Khang</td>
+                                        <td>BB03111</td>
+                                        <td><span class="badge bg-success">Hoạt động</span></td>
+                                        <td>
+                                            <div class="dropdown position-relative">
+                                                <button class="btn btn-outline-secondary dropdown-toggle" type="button"
+                                                    onclick="toggleActionDropdown('actionDropdownMenu1')">
+                                                    Hoạt động
+                                                </button>
+                                                <div id="actionDropdownMenu1"
+                                                    class="dropdown-menu position-absolute p-0"
+                                                    style="display: none; min-width: 100px;">
+                                                    <a class="dropdown-item py-2" href="view_student.php">Xem</a>
+                                                    <a class="dropdown-item py-2" href="add_student.php">Sửa</a>
+                                                    <a class="dropdown-item py-2" href="#">Xoá</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <!-- Thêm các dòng khác tương tự -->
+                                </tbody>
+                            </table>
                         </div>
-                        <button type="submit" class="btn btn-primary mt-3 w-100 mb-4" name="login">
-                            <i class="fas fa-power-off"></i>
-                            <span href="" class="text-decoration-none text-white">Đăng nhập</span>
-                        </button>
-                    </form>
+
+                        <!-- Phân trang -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <p class="mb-0">Xem 1 đến 7 trong 7 trang</p>
+                            <nav>
+                                <ul class="pagination pagination-sm mb-0">
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#">Trước</a>
+                                    </li>
+                                    <li class="page-item active">
+                                        <a class="page-link" href="#">1</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#">Sau</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
                 </div>
             </div>
+
         </div>
     </div>
 
-    <?php
-    include_once __DIR__ . '/../../partials/footer.php';
-    ?>
-    <script src="../assets/js/checklogin_user.js"></script>
 </body>
+
+<!-- Bootstrap JS và Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz4fnFO9gybBogGzPztE1M5rZG/8Xlqh8fATrSWJZDmmW4Ll48dWkOVbCH"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+    integrity="sha384-shoIXUoVOFk60M7DuE4bfOY1pNIqcd9tPCSZrhTDQTXkNv8El+fEfXksqNhUNuUc"
+    crossorigin="anonymous"></script>
+
+<script>
+    // Hàm mở và đóng dropdown khi bấm tên admin
+    function toggleDropdown(event) {
+        event.stopPropagation(); // Ngăn chặn sự kiện click bên ngoài
+        var dropdown = document.getElementById("dropdownMenu");
+        dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block"; // Toggle dropdown
+    }
+
+    // Hàm mở và đóng dropdown khi bấm vào nút Action
+    function toggleActionDropdown(id) {
+        var dropdown = document.getElementById(id);
+        if (dropdown.style.display === "none" || dropdown.style.display === "") {
+            dropdown.style.display = "block"; // Hiển thị dropdown
+        } else {
+            dropdown.style.display = "none"; // Ẩn dropdown
+        }
+    }
+
+    // Đóng tất cả các dropdown nếu click bên ngoài
+    window.onclick = function(event) {
+        var dropdownMenu = document.getElementById("dropdownMenu");
+
+        // Đóng dropdown của tên admin nếu click bên ngoài
+        if (!event.target.matches('#userDropdown') && !event.target.matches('.ms-1') && !dropdownMenu.contains(event.target)) {
+            dropdownMenu.style.display = "none"; // Đảm bảo đóng dropdown
+        }
+    }
+</script>
 
 </html>
