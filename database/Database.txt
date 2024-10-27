@@ -5,13 +5,22 @@ CREATE TABLE KhuKTX (
 );
 
 
+INSERT INTO KhuKTX (MaKhuKTX, TenKhuKTX)
+VALUES
+('A', 'Khu Ký Túc Xá A'),
+('B', 'Khu Ký Túc Xá B'),
+('C', 'Khu Ký Túc Xá C');
+
+
 -- Tạo bảng Lop
 CREATE TABLE Lop (
     MaLop VARCHAR(10) PRIMARY KEY,
-    TenLop VARCHAR(50),
-    MaKhoa VARCHAR(10),
-    FOREIGN KEY (MaKhoa) REFERENCES Khoa(MaKhoa)
+    TenLop VARCHAR(50)
 );
+INSERT INTO Lop (MaLop, TenLop)
+VALUES
+('HG21V7A1', 'Công nghệ thông tin Hoà An'),
+('HG22V7A1', 'Công nghệ thông tin Hoà An');
 
 
 -- Tạo bảng Day
@@ -21,70 +30,6 @@ CREATE TABLE Day (
     MaKhuKTX VARCHAR(10),
     FOREIGN KEY (MaKhuKTX) REFERENCES KhuKTX(MaKhuKTX)
 );
-
-
--- Tạo bảng SinhVien
-CREATE TABLE SinhVien (
-    MaSinhVien VARCHAR(8) PRIMARY KEY,
-    HoTen VARCHAR(50),
-    SDT VARCHAR(10),
-    Email VARCHAR(50),
-    DiaChi VARCHAR(100),
-    GioiTinh Boolean,
-    KhoaHoc INT,
-    NgaySinh DATE,
-    ChucVu VARCHAR(50),
-    MaDay VARCHAR(10),
-    MaLop VARCHAR(10),
-    Password VARCHAR(255),
-    FOREIGN KEY (MaLop) REFERENCES Lop(MaLop),
-    FOREIGN KEY (MaDay) REFERENCES Day(MaDay)
-);
-
-
--- Tạo bảng NhanVien
-CREATE TABLE NhanVien (
-    MaNhanVien VARCHAR(8) PRIMARY KEY,
-    HoTen VARCHAR(50),
-    SDT VARCHAR(10),
-    GhiChu TEXT,
-    GioiTinh VARCHAR(10),
-    NgaySinh DATE,
-    Password VARCHAR(255)
-);
-
-
--- Tạo bảng Phong
-CREATE TABLE Phong (
-    MaPhong VARCHAR(10) PRIMARY KEY,
-    TenPhong VARCHAR(50),
-    DienTich INT,
-    SoGiuong INT,
-    GiaThue DECIMAL(10, 2),
-    MaDay VARCHAR(10),
-    TrangThaiSuDung VARCHAR(20),
-    SucChua INT,
-    SoChoThucTe INT,
-    DaO INT,
-    ConTrong INT,
-    GhiChu TEXT,
-    GioiTinh Boolean,
-    FOREIGN KEY (MaDay) REFERENCES Day(MaDay)
-);
-
-
-
-
-
-
-
-INSERT INTO KhuKTX (MaKhuKTX, TenKhuKTX)
-VALUES
-('A', 'Khu Ký Túc Xá A'),
-('B', 'Khu Ký Túc Xá B'),
-('C', 'Khu Ký Túc Xá C');
-
-
 INSERT INTO Day (MaDay, TenDay, MaKhuKTX) VALUES 
 ('AA01', 'AA01', 'A'),
 ('AA02', 'AA02', 'A'),
@@ -135,17 +80,42 @@ INSERT INTO Day (MaDay, TenDay, MaKhuKTX) VALUES
 
 
 
-INSERT INTO Lop (MaLop, TenLop)
-VALUES
-('HG21V7A1', 'Công nghệ thông tin Hoà An'),
-('HG22V7A1', 'Công nghệ thông tin Hoà An');
-
+-- Tạo bảng SinhVien
+CREATE TABLE SinhVien (
+    MaSinhVien VARCHAR(8) PRIMARY KEY,
+    HoTen VARCHAR(50),
+    SDT VARCHAR(10),
+    Email VARCHAR(50),
+    DiaChi VARCHAR(100),
+    GioiTinh Boolean,
+    KhoaHoc INT,
+    NgaySinh DATE,
+    ChucVu VARCHAR(50),
+    MaDay VARCHAR(10),
+    MaLop VARCHAR(10),
+    Password VARCHAR(255),
+    FOREIGN KEY (MaLop) REFERENCES Lop(MaLop),
+    FOREIGN KEY (MaDay) REFERENCES Day(MaDay)
+);
 
 -- Chèn dữ liệu mẫu vào bảng SinhVien
 INSERT INTO SinhVien (MaSinhVien, HoTen, SDT,Email, MaLop, DiaChi, GioiTinh, KhoaHoc, NgaySinh,ChucVu,MaDay, Password)
 VALUES
 ('B2111908', 'Nguyễn Quốc Việt', '0123456789','vietb2111908@student.ctu.edu.vn' ,'HG21V7A1', 'An Giang', 1,  47, '9/4/2003', 'Thành Viên ANXK', 'AC05', '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
 ('B2111893', 'Trương Huỳnh Tú Như', '0987654321','nhub211189@student.ctu.edu.vn'  ,'HG21V7A1', 'Bạc Liêu', 0, 47, '9/12/2003','Thành Viên ANXK','BB01', '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO');
+
+
+
+-- Tạo bảng NhanVien
+CREATE TABLE NhanVien (
+    MaNhanVien VARCHAR(8) PRIMARY KEY,
+    HoTen VARCHAR(50),
+    SDT VARCHAR(10),
+    GhiChu TEXT,
+    GioiTinh VARCHAR(10),
+    NgaySinh DATE,
+    Password VARCHAR(255)
+);
 
 
 INSERT INTO NhanVien (MaNhanVien, HoTen, SDT, GioiTinh, NgaySinh, Password)
@@ -155,25 +125,83 @@ VALUES
 
 
 
-INSERT INTO Phong (MaPhong, TenPhong, DienTich, SoGiuong, GiaThue, MaDay, TrangThaiSuDung, SucChua, SoChoThucTe, DaO, ConTrong, GioiTinh)
+
+-- Tạo bảng Phong
+CREATE TABLE Phong (
+    MaPhong VARCHAR(10) PRIMARY KEY,
+    TenPhong VARCHAR(50),
+    DienTich INT,
+    SoGiuong INT,
+    GiaThue DECIMAL(10, 2),
+    MaDay VARCHAR(10),
+    TrangThaiSuDung VARCHAR(20),
+    SucChua INT,
+    SoChoThucTe INT,
+    DaO INT,
+    ConTrong INT,
+    GhiChu TEXT,
+    LoaiPhong VARCHAR(10),
+    FOREIGN KEY (MaDay) REFERENCES Day(MaDay)
+);
+
+INSERT INTO Phong (MaPhong, TenPhong, DienTich, SoGiuong, GiaThue, MaDay, TrangThaiSuDung, SucChua, SoChoThucTe, DaO, ConTrong, LoaiPhong)
 VALUES
-('AA01100', 'AA01100', 30.0, 5, 190000.00, 'AA01', 'Đang sử dụng', 5, 5, 5, 0, 1),
-('AA01101', 'AA01101', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 0, 0),
-('AA01102', 'AA01102', 30.0, 4, 390000.00, 'AA01', 'Đang sử dụng', 4, 4, 4, 0, 1),
-('AA01103', 'AA01103', 30.0, 7, 218000.00, 'AA01', 'Đang sử dụng', 7, 7, 7, 0, 0),
-('AA01104', 'AA01104', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 0, 1),
-('AA01105', 'AA01105', 30.0, 4, 190000.00, 'AA01', 'Đang sử dụng', 4, 4, 4, 0, 0),
-('AA01106', 'AA01106', 30.0, 4, 390000.00, 'AA01', 'Đang sử dụng', 4, 4, 4, 0, 1),
-('AA01201', 'AA01201', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 0, 0),
-('AA01202', 'AA01202', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 7, 1, 1),
-('AA01203', 'AA01203', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 0, 0),
-('AA01204', 'AA01204', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 0, 1),
-('AA01205', 'AA01205', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 0, 0),
-('AA01206', 'AA01206', 30.0, 4, 190000.00, 'AA01', 'Đang sử dụng', 4, 4, 4, 0, 1),
-('AA01207', 'AA01207', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 7, 1, 0),
-('AA01208', 'AA01208', 30.0, 4, 190000.00, 'AA01', 'Đang sử dụng', 4, 4, 4, 0, 1),
-('AA01209', 'AA01209', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 0, 0),
-('AA01210', 'AA01210', 30.0, 3, 515000.00, 'AA01', 'Đang sử dụng', 3, 3, 3, 0, 1),
-('AA01211', 'AA01211', 30.0, 3, 190000.00, 'AA01', 'Đang sử dụng', 3, 3, 3, 0, 0),
-('AA01212', 'AA01212', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 0, 1),
-('AA01213', 'AA01213', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 7, 1, 0);
+('AA01100', 'AA01100', 30.0, 5, 190000.00, 'AA01', 'Đang sử dụng', 5, 5, 5, 0, 'Nam'),
+('AA01101', 'AA01101', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 0, 'Nam'),
+('AA01102', 'AA01102', 30.0, 4, 390000.00, 'AA01', 'Đang sử dụng', 4, 4, 4, 0, 'Nam'),
+('AA01103', 'AA01103', 30.0, 7, 218000.00, 'AA01', 'Đang sử dụng', 7, 7, 7, 0, 'Nam'),
+('AA01104', 'AA01104', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 0, 'Nam'),
+('AA01105', 'AA01105', 30.0, 4, 190000.00, 'AA01', 'Đang sử dụng', 4, 4, 4, 0, 'Nam'),
+('AA01106', 'AA01106', 30.0, 4, 390000.00, 'AA01', 'Đang sử dụng', 4, 4, 4, 0, 'Nam'),
+('AA01201', 'AA01201', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 0, 'Nam'),
+('AA01202', 'AA01202', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 7, 1, 'Nam'),
+('AA01203', 'AA01203', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 0, 'Nữ'),
+('AA01204', 'AA01204', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 0, 'Nam'),
+('AA01205', 'AA01205', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 0, 'Nam'),
+('AA01206', 'AA01206', 30.0, 4, 190000.00, 'AA01', 'Đang sử dụng', 4, 4, 4, 0, 'Nữ'),
+('AA01208', 'AA01208', 30.0, 4, 190000.00, 'AA01', 'Đang sử dụng', 4, 4, 4, 0, 'Nam'),
+('AA01209', 'AA01209', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 0, 'Nam'),
+('AA01210', 'AA01210', 30.0, 3, 515000.00, 'AA01', 'Đang sử dụng', 3, 3, 3, 0, 'Nữ'),
+('AA01211', 'AA01211', 30.0, 3, 190000.00, 'AA01', 'Đang sử dụng', 3, 3, 3, 0, 'Nam'),
+('AA01212', 'AA01212', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 0, 'Nam'),
+('AA01213', 'AA01213', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 7, 1, 'Nam');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Tạo bảng ThuePhong
+CREATE TABLE ThuePhong (
+    MaHopDong VARCHAR(10) PRIMARY KEY,
+    MaSinhVien VARCHAR(10),
+    MaPhong VARCHAR(10),
+    BatDau DATE,
+    KetThuc DATE,
+    TienDatCoc DECIMAL(10, 2),
+    GiaThueThucTe DECIMAL(10, 2),
+    FOREIGN KEY (MaSinhVien) REFERENCES SinhVien(MaSinhVien),
+    FOREIGN KEY (MaPhong) REFERENCES Phong(MaPhong)
+);
+
+-- Tạo bảng TT_ThuePhong
+CREATE TABLE TT_ThuePhong (
+    MaHopDong VARCHAR(10),
+    ThangNam DATE,
+    SoTien DECIMAL(10, 2),
+    NgayThanhToan DATE,
+    MaNhanVien VARCHAR(10),
+    PRIMARY KEY (MaHopDong, ThangNam),
+    FOREIGN KEY (MaHopDong) REFERENCES ThuePhong(MaHopDong),
+    FOREIGN KEY (MaNhanVien) REFERENCES NhanVien(MaNhanVien)
+);
