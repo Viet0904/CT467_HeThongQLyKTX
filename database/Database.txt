@@ -179,7 +179,7 @@ CREATE TABLE SinhVien (
     SDT VARCHAR(10),
     Email VARCHAR(50),
     DiaChi VARCHAR(100),
-    GioiTinh Boolean,
+    GioiTinh VARCHAR(10),
     KhoaHoc INT,
     NgaySinh DATE,
     ChucVu VARCHAR(50),

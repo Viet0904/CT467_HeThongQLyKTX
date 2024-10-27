@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Check if username matches SinhVien pattern
     if (preg_match('/^[A-Za-z]\d{7}$/', $username)) {
         echo "<script>console.log('Vào được user');</script>";
-        $query = "SELECT MaSinhVien, password, Email, HoTen FROM SinhVien WHERE MaSinhVien = ?";
+        $query = "SELECT MaSinhVien, password, Email, HoTen,GioiTinh FROM SinhVien WHERE MaSinhVien = ?";
         $stmt = $dbh->prepare($query);
         $stmt->bindValue(1, $username);
         $stmt->execute();
@@ -35,9 +35,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['MaSinhVien'] = $result['MaSinhVien'];
             $_SESSION['Email'] = $result['Email'];
             $_SESSION['HoTen'] = $result['HoTen'];
+            $_SESSION['HoTen'] = $result['HoTen'];
+            $_SESSION['GioiTinh'] = $result['GioiTinh'];
             $_SESSION['Role'] = 'user';
             echo "<script>alert('Đăng nhập thành công.')
-                window.location.href='./user/index.php';
+                window.location.href='./user/dashboard.php';
                 </script>";
             exit();
         } else {

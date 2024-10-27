@@ -2,9 +2,6 @@
 include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
 require_once __DIR__ . '/../../config/dbadmin.php';
-
-
-
 ?>
 
 <body>
@@ -13,15 +10,28 @@ require_once __DIR__ . '/../../config/dbadmin.php';
             <div class="col-auto" style="width: 250px; overflow:auto;">
                 <?php include_once __DIR__ . '/sidebar.php'; ?>
             </div>
-            <div class="col py-3">
+            <div class="col-auto py-3">
 
                 <?php
+                session_start(); // Đảm bảo đã khởi tạo session
+
+                // Kiểm tra xem $_SESSION['GioiTinh'] đã tồn tại chưa
+                if (!isset($_SESSION['GioiTinh'])) {
+                    echo "Lỗi: Không tìm thấy thông tin giới tính của sinh viên trong session.";
+                    exit;
+                }
+
+                $studentGender = $_SESSION['GioiTinh']; // Lấy giới tính từ session
+
                 // Số dòng trên mỗi trang
                 $rowsPerPage = 10;
+
                 // Tính tổng số dòng
-                $totalRowsQuery = "SELECT COUNT(*) FROM Phong";
-                $totalRowsResult = $dbh->query($totalRowsQuery);
-                $totalRows = $totalRowsResult->fetchColumn();
+                $totalRowsQuery = "SELECT COUNT(*) FROM Phong WHERE ConTrong > 0 AND LoaiPhong = :studentGender";
+                $totalRowsStmt = $dbh->prepare($totalRowsQuery);
+                $totalRowsStmt->bindParam(':studentGender', $studentGender, PDO::PARAM_STR);
+                $totalRowsStmt->execute();
+                $totalRows = $totalRowsStmt->fetchColumn();
 
                 // Tính tổng số trang
                 $totalPages = ceil($totalRows / $rowsPerPage);
@@ -37,9 +47,12 @@ require_once __DIR__ . '/../../config/dbadmin.php';
                 // Tính chỉ số bắt đầu của dòng trên trang hiện tại
                 $offset = ($currentPage - 1) * $rowsPerPage;
 
-                // Truy vấn SQL với LIMIT và OFFSET
-                $phong = "SELECT * FROM Phong LIMIT $rowsPerPage OFFSET $offset";
-                $result = $dbh->query($phong);
+                // Truy vấn SQL với giá trị LIMIT và OFFSET trực tiếp trong câu truy vấn
+                $phong = "SELECT * FROM Phong WHERE ConTrong > 0 AND LoaiPhong = :studentGender LIMIT $rowsPerPage OFFSET $offset";
+                $stmt = $dbh->prepare($phong);
+                $stmt->bindParam(':studentGender', $studentGender, PDO::PARAM_STR);
+                $stmt->execute();
+                $result = $stmt;
 
                 if ($result->rowCount() > 0) {
                     echo '<table class="table table-bordered table-striped table-hover mt-3">';
@@ -56,6 +69,7 @@ require_once __DIR__ . '/../../config/dbadmin.php';
                     echo '<th>Số chỗ thực tế</th>';
                     echo '<th>Đã ở</th>';
                     echo '<th>Còn trống</th>';
+                    echo '<th>Đăng ký</th>';
                     echo '</tr>';
                     echo '</thead>';
                     echo '<tbody>';
@@ -63,25 +77,29 @@ require_once __DIR__ . '/../../config/dbadmin.php';
                     // Xuất dữ liệu của từng hàng
                     $stt = $offset + 1;
                     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                        echo '<tr>';
-                        echo '<td>' . $stt++ . '</td>';
-                        echo '<td>' . htmlspecialchars($row["MaPhong"]) . '</td>';
-                        echo '<td>' . htmlspecialchars($row["TenPhong"]) . '</td>';
-                        echo '<td>' . htmlspecialchars($row["MaDay"]) . '</td>';
-                        echo '<td>' . htmlspecialchars($row["GiaThue"]) . '</td>';
-                        echo '<td>' . htmlspecialchars($row["GioiTinh"]) . '</td>';
-                        echo '<td>' . htmlspecialchars($row["TrangThaiSuDung"]) . '</td>';
-                        echo '<td>' . htmlspecialchars($row["SucChua"]) . '</td>';
-                        echo '<td>' . htmlspecialchars($row["SoChoThucTe"]) . '</td>';
-                        echo '<td>' . htmlspecialchars($row["DaO"]) . '</td>';
-                        echo '<td>' . htmlspecialchars($row["ConTrong"]) . '</td>';
-                        echo '</tr>';
+                        // Check điều kiện hiển thị
+                        if ($row["ConTrong"] > 0 && $row["LoaiPhong"] == $studentGender) {
+                            echo '<tr>';
+                            echo '<td>' . $stt++ . '</td>';
+                            echo '<td>' . htmlspecialchars($row["MaPhong"]) . '</td>';
+                            echo '<td>' . htmlspecialchars($row["TenPhong"]) . '</td>';
+                            echo '<td>' . htmlspecialchars($row["MaDay"]) . '</td>';
+                            echo '<td>' . htmlspecialchars($row["GiaThue"]) . '</td>';
+                            echo '<td>' . htmlspecialchars($row["LoaiPhong"]) . '</td>';
+                            echo '<td>' . htmlspecialchars($row["TrangThaiSuDung"]) . '</td>';
+                            echo '<td>' . htmlspecialchars($row["SucChua"]) . '</td>';
+                            echo '<td>' . htmlspecialchars($row["SoChoThucTe"]) . '</td>';
+                            echo '<td>' . htmlspecialchars($row["DaO"]) . '</td>';
+                            echo '<td>' . htmlspecialchars($row["ConTrong"]) . '</td>';
+                            echo '<td><a href="register.php?room_id=' . htmlspecialchars($row["MaPhong"]) . '" class="btn btn-success">Đăng ký</a></td>';
+                            echo '</tr>';
+                        }
                     }
 
                     echo '</tbody>';
                     echo '</table>';
                 } else {
-                    echo "0 kết quả";
+                    echo "Không có kết quả";
                 }
                 ?>
 
