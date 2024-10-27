@@ -2,7 +2,7 @@
 INSERT INTO KhuKTX (MaKhuKTX, TenKhuKTX)
 VALUES
 ('A', 'Khu Ký Túc Xá A'),
-('B', 'Khu Ký Túc Xá B');
+('B', 'Khu Ký Túc Xá B'),
 ('C', 'Khu Ký Túc Xá C');
 
 -- Chèn dữ liệu mẫu vào bảng Day
@@ -13,16 +13,16 @@ VALUES
 ('B1', 'Dãy B1', 'B');
 
 -- Chèn dữ liệu mẫu vào bảng Phong
-INSERT INTO Phong (MaPhong, TenPhong, DienTich, SoGiuong, GiaThue, MaDay, TrangThaiSuDung, SucChua, SoChoThucTe, DaO, ConTrong, GhiChu)
+INSERT INTO Phong (MaPhong, TenPhong, DienTich, SoGiuong, GiaThue, MaDay, TrangThaiSuDung, SucChua, SoChoThucTe, DaO, ConTrong,GioiTinh)
 VALUES
-('AC05004', 'Phòng 004', 25.5, 4, 245000.00, 'C5', 'Đang sử dụng', 8, 4, 4, 0, sạch sẽ'),
-('AA01211', 'Phòng 211', 30.0, 4, 200000.00, 'A1', 'Đang sử dụng', 8, 5, 4, 1, thoáng mát');
+('AC05004', 'Phòng 004', 25.5, 4, 245000.00, 'C5', 'Đang sử dụng', 8, 4, 4, 0),
+('AA01211', 'Phòng 211', 30.0, 4, 200000.00, 'A1', 'Đang sử dụng', 8, 5, 4, 1);
 
 -- Chèn dữ liệu mẫu vào bảng SinhVien
-INSERT INTO SinhVien (MaSinhVien, HoTen, SDT, MaLop, DiaChi, GioiTinh, NganhHoc,KhoaHoc, NgaySinh, NgayDangKy, ChucVu,MaDay, Password)
+INSERT INTO SinhVien (MaSinhVien, HoTen, SDT, MaLop, DiaChi, GioiTinh, KhoaHoc, NgaySinh, ChucVu,MaDay, Password)
 VALUES
-('B2111908', 'Nguyễn Quốc Việt', '0123456789', 'HG21V7A1', 'An Giang', 'Nam', 'CNTT', 47, '9/4/2003', '2000-01-01' 'Thành Viên ANXK', 'C5', 'password123'),
-('B2111893', 'Trương Huỳnh Tú Như', '0987654321', 'HG21V7A1', 'Bạc Liêu', 'Nữ', 'CNTT', 47, '9/12/2003', '2000-02-01','Thành Viên ANXK','B1', 'password456');
+('B2111908', 'Nguyễn Quốc Việt', '0123456789', 'HG21V7A1', 'An Giang', 'Nam', 47, '9/4/2003','Thành Viên ANXK', 'C5', 'password123'),
+('B2111893', 'Trương Huỳnh Tú Như', '0987654321', 'HG21V7A1', 'Bạc Liêu', 'Nữ', 47, '9/12/2003','Thành Viên ANXK','B1', 'password456');
 
 -- Chèn dữ liệu mẫu vào bảng Lop
 INSERT INTO Lop (MaLop, TenLop)
