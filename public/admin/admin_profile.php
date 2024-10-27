@@ -18,32 +18,39 @@ include_once __DIR__ . '/../../partials/heading.php';
                     </div>
 
                     <div class="modal-user">
-                        <form action="view_student.php" method="POST">
+                        <form action="#" method="POST">
                             <!-- School Details Section -->
                             <h5 class="mt-1"><b>Hồ sơ</b></h5>
                             <div class=" mb-3">
-                                <label for="schoolID" class="form-label"> Tên quản trị viên</label>
-                                <input type="text" class="form-control" id="schoolID">
+                                <label for="tenQt" class="form-label"> Tên quản trị viên</label>
+                                <input type="text" class="form-control" id="tenQt">
                             </div>
 
                             <div class=" mb-3">
-                                <label for="schoolID" class="form-label"> Tên tài khoản</label>
-                                <input type="text" class="form-control" id="schoolID">
+                                <label for="maQt" class="form-label"> Mã quản trị viên</label>
+                                <input type="text" class="form-control" id="maQt">
                             </div>
 
                             <div class=" mb-3">
-                                <label for="schoolID" class="form-label"> Số liên lạc</label>
-                                <input type="text" class="form-control" id="schoolID">
+                                <label for="soLienLac" class="form-label"> Số liên lạc</label>
+                                <input type="text" class="form-control" id="soLienLac">
                             </div>
 
-                            <div class=" mb-3">
-                                <label for="schoolID" class="form-label"> Địa chỉ email</label>
-                                <input type="text" class="form-control" id="schoolID">
+
+                            <div class="row row-add">
+                                <div class="col-md-6">
+                                    <label for="gender" class="form-label">Giới tính</label>
+                                    <input type="text" class="form-control" id="gender">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="ngaySinh" class="form-label">Ngày sinh</label>
+                                    <input type="text" class="form-control" id="ngaySinh">
+                                </div>
                             </div>
 
 
                             <!-- Submit Button -->
-                            <div class="text-end">
+                            <div class="text-end mt-3">
                                 <button type="submit" class="btn btn-primary"
                                     style="background-color: #db3077;">Cập nhật</button>
                             </div>
