@@ -19,11 +19,10 @@ include_once __DIR__ . '/../../partials/heading.php';
                         <!-- Phần header của List of Rooms -->
                         <div class="d-flex justify-content-between align-items-center">
                             <h5>Danh sách phòng</h5>
-                            <a href="javascript:void(0);" class="btn text-white"
-                                style="background-color: rgb(219, 48, 119);" onclick="openAddRoom()">
+                            <a href="./manage_room.php" class="btn text-white"
+                                style="background-color: rgb(219, 48, 119);">
                                 <i class="fas fa-plus me-1"></i>Tạo mới
                             </a>
-
 
                         </div>
 
@@ -53,10 +52,12 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 <thead class="table-light">
                                     <tr>
                                         <th>#</th>
-                                        <th>Ngày tạo</th>
+                                        <th>Khu</th>
                                         <th>Tên</th>
+                                        <th>Loại phòng</th>
                                         <th>Số chỗ</th>
-                                        <th>Có sẵn</th>
+                                        <th>Đã ở</th>
+                                        <th>Còn trống</th>
                                         <th>Giá</th>
                                         <th>Trạng thái</th>
                                         <th>Hoạt động</th>
@@ -65,10 +66,12 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 <tbody>
                                     <tr>
                                         <td>1</td>
-                                        <td>2022-05-07 10:36</td>
+                                        <td>A</td>
                                         <td>BB02101</td>
+                                        <td>Nam</td>
                                         <td>4</td>
                                         <td>3</td>
+                                        <td>1</td>
                                         <td>3,500.00</td>
                                         <td><span class="badge bg-success">Hoạt động</span></td>
                                         <td>
@@ -80,10 +83,8 @@ include_once __DIR__ . '/../../partials/heading.php';
                                                 <div id="actionDropdownMenu1"
                                                     class="dropdown-menu position-absolute p-0"
                                                     style="display: none; min-width: 100px;">
-                                                    <a class="dropdown-item py-2" href="javascript:void(0);"
-                                                        onclick="openDetailsRoom()">Xem</a>
-                                                    <a class="dropdown-item py-2" href="javascript:void(0);"
-                                                        onclick="openEditRoom()">Sửa</a>
+                                                    <a class="dropdown-item py-2" href="./view_room.php">Xem</a>
+                                                    <a class="dropdown-item py-2" href="./manage_room.php">Sửa</a>
                                                     <a class="dropdown-item py-2" href="javascript:void(0);"
                                                         onclick="openDeleteRoom()">Xoá</a>
                                                 </div>
@@ -118,129 +119,6 @@ include_once __DIR__ . '/../../partials/heading.php';
         </div>
     </div>
 
-    <!-- Modal để thêm phòng mới -->
-    <div id="addRoomModal" class="modal-overlay" style="display: none;">
-        <div class="modal-content-1">
-            <h5> <b>+ Thêm phòng</b></h5>
-            <!-- Đường phân cách -->
-            <hr style="border: none; border-top: 1px solid #a9a9a9; margin: 10px 0;">
-            <form>
-                <!-- Name -->
-                <div class="mb-3">
-                    <label for="roomName" class="form-label">Tên</label>
-                    <input type="text" class="form-control" id="roomName">
-                </div>
-
-                <!-- Beds -->
-                <div class="mb-3">
-                    <label for="beds" class="form-label">Số giường</label>
-                    <input type="number" class="form-control" id="beds">
-                </div>
-
-                <!-- Price per Month -->
-                <div class="mb-3">
-                    <label for="price" class="form-label">Giá/ tháng</label>
-                    <input type="number" class="form-control" id="price">
-                </div>
-
-                <!-- Status -->
-                <div class="mb-3">
-                    <label for="statusSelect" class="form-label">Trạng thái</label>
-                    <select class="form-select" id="statusSelect">
-                        <option selected>Hoạt động</option>
-                        <option value="Inactive">Không hoạt động</option>
-                    </select>
-                </div>
-
-                <!-- Nút Save và Cancel -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary"
-                        style="background-color: rgb(219, 48, 119);">Lưu</button>
-                    <button type="button" class="btn btn-secondary" onclick="closeAddRoom()">Trờ về</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal để hiển thị chi tiết phòng -->
-    <div id="roomDetailsModal" class="modal-overlay" style="display: none;">
-        <div class="modal-content-1">
-            <h5><b>Chi tiết phòng</b></h5>
-            <!-- Đường phân cách -->
-            <hr style="border: none; border-top: 1px solid #a9a9a9; margin: 10px 0;">
-
-            <!-- Hiển thị thông tin phòng -->
-            <div class="mb-2">
-                <label class="form-label mb-0"><b>Tên</b></label>
-                <p id="detailName" class="my-1">BB02111</p>
-            </div>
-            <div class="mb-2">
-                <label class="form-label mb-0"><b>Số giường</b></label>
-                <p id="detailBeds" class="my-1">3</p>
-            </div>
-            <div class="mb-2">
-                <label class="form-label mb-0"><b>Giường trống</b></label>
-                <p id="detailSlots" class="my-1">3</p>
-            </div>
-            <div class="mb-2">
-                <label class="form-label mb-0"><b>Giá/ tháng</b></label>
-                <p id="detailPrice" class="my-1">4,500.00</p>
-            </div>
-            <div class="mb-2">
-                <label class="form-label mb-0"><b>Trạng thái</b></label>
-                <span id="detailStatus" class="my-1 badge bg-success">Hoạt động</span>
-            </div>
-
-            <!-- Nút đóng modal -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="closeDetailsRoom()">Đóng</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal để edit phòng -->
-    <div id="editRoomModal" class="modal-overlay" style="display: none;">
-        <div class="modal-content-1">
-            <h5> <b> Cập nhật phòng</b></h5>
-            <!-- Đường phân cách -->
-            <hr style="border: none; border-top: 1px solid #a9a9a9; margin: 10px 0;">
-            <form>
-                <!-- Name -->
-                <div class="mb-3">
-                    <label for="roomName" class="form-label">Tên</label>
-                    <input type="text" class="form-control" id="roomName" value="Room 1">
-                </div>
-
-                <!-- Beds -->
-                <div class="mb-3">
-                    <label for="beds" class="form-label">Số giường</label>
-                    <input type="number" class="form-control" id="beds" value="4">
-                </div>
-
-                <!-- Price per Month -->
-                <div class="mb-3">
-                    <label for="price" class="form-label">Giá / tháng</label>
-                    <input type="number" class="form-control" id="price" value="3800">
-                </div>
-
-                <!-- Status -->
-                <div class="mb-3">
-                    <label for="statusSelect" class="form-label">Trạng thái</label>
-                    <select class="form-select" id="statusSelect">
-                        <option selected>Hoạt động</option>
-                        <option value="Inactive">Không hoạt động</option>
-                    </select>
-                </div>
-
-                <!-- Nút Save và Cancel -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary"
-                        style="background-color: rgb(219, 48, 119);">Lưu</button>
-                    <button type="button" class="btn btn-secondary" onclick="closeEditRoom()">Trở về</button>
-                </div>
-            </form>
-        </div>
-    </div>
 
     <!-- Modal để xác nhận xóa phòng -->
     <div id="deleteRoomModal" class="modal-overlay" style="display: none;">
@@ -292,37 +170,6 @@ include_once __DIR__ . '/../../partials/heading.php';
             dropdownMenu.style.display = "none"; // Đảm bảo đóng dropdown
         }
     }
-
-    // Mở modal add phòng
-    function openAddRoom() {
-        document.getElementById("addRoomModal").style.display = "flex";
-    }
-
-    // Đóng modal add phòng
-    function closeAddRoom() {
-        document.getElementById("addRoomModal").style.display = "none";
-    }
-
-    // Mở modal chi tiết phòng
-    function openDetailsRoom() {
-        document.getElementById("roomDetailsModal").style.display = "flex";
-    }
-
-    // Đóng modal chi tiết phòng
-    function closeDetailsRoom() {
-        document.getElementById("roomDetailsModal").style.display = "none";
-    }
-
-    // Mở modal edit phòng
-    function openEditRoom() {
-        document.getElementById("editRoomModal").style.display = "flex";
-    }
-
-    // Đóng modal edit phòng
-    function closeEditRoom() {
-        document.getElementById("editRoomModal").style.display = "none";
-    }
-
     // Mở modal xác nhận xóa phòng
     function openDeleteRoom() {
         document.getElementById("deleteRoomModal").style.display = "flex";
