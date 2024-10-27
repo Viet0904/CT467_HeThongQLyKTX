@@ -143,14 +143,14 @@ VALUES
 -- Chèn dữ liệu mẫu vào bảng SinhVien
 INSERT INTO SinhVien (MaSinhVien, HoTen, SDT, MaLop, DiaChi, GioiTinh, KhoaHoc, NgaySinh,ChucVu,MaDay, Password)
 VALUES
-('B2111908', 'Nguyễn Quốc Việt', '0123456789', 'HG21V7A1', 'An Giang', 1,  47, '9/4/2003', 'Thành Viên ANXK', 'AC05', 'b2111908'),
-('B2111893', 'Trương Huỳnh Tú Như', '0987654321', 'HG21V7A1', 'Bạc Liêu', 0, 47, '9/12/2003','Thành Viên ANXK','BB01', 'b2111893');
+('B2111908', 'Nguyễn Quốc Việt', '0123456789', 'HG21V7A1', 'An Giang', 1,  47, '9/4/2003', 'Thành Viên ANXK', 'AC05', '$2y$10$DfDtP1veP0nyBQU9u9gGCu5MU1XOwgvP5XxWIhHRSo.Tpkug1oZ5e'),
+('B2111893', 'Trương Huỳnh Tú Như', '0987654321', 'HG21V7A1', 'Bạc Liêu', 0, 47, '9/12/2003','Thành Viên ANXK','BB01', '$2y$10$DfDtP1veP0nyBQU9u9gGCu5MU1XOwgvP5XxWIhHRSo.Tpkug1oZ5e');
 
 
 INSERT INTO NhanVien (MaNhanVien, HoTen, SDT, GioiTinh, NgaySinh, Password)
 VALUES
-('CB000001', 'Nguyễn Văn C', '0333555777',  'Nam', '1980-05-15', 'admin123'),
-('CB000002', 'Lê Thị D', '0444666888',  'Nữ', '1985-06-20', 'admin456');
+('CB000001', 'Nguyễn Văn C', '0333555777',  'Nam', '1980-05-15', '$2y$10$yZqFF5KHp60clNvtE4l5V.QeOQOaMRwYK6/uNUAv/zuTBuiXRupg2'),
+('CB000002', 'Lê Thị D', '0444666888',  'Nữ', '1985-06-20', '$2y$10$yZqFF5KHp60clNvtE4l5V.QeOQOaMRwYK6/uNUAv/zuTBuiXRupg2');
 
 
 
