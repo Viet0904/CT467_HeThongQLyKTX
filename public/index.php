@@ -1,5 +1,85 @@
+<?php
+
+// Khởi tạo phiên làm việc
+if (!isset($_SESSION)) {
+    session_start();
+}
+// Kiểm tra xem vai trò đã được lưu trong session hay chưa
+// if (isset($_SESSION['Role'])) {
+//     $role = $_SESSION['Role'];
+
+//     if ($role === 'admin') {
+//         header("Location: ./admin/index.php");
+//         die();
+//     } elseif ($role === 'user') {
+//         header("Location: ./admin/index.php");
+//         die();
+//     }
+// }
+require_once __DIR__ . '/../config/dbadmin.php';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    // Check if username matches SinhVien pattern
+    if (preg_match('/^[A-Za-z]\d{7}$/', $username)) {
+        echo "<script>console.log('Vào được user');</script>";
+        $query = "SELECT MaSinhVien, password, Email, HoTen FROM SinhVien WHERE MaSinhVien = ?";
+        $stmt = $dbh->prepare($query);
+        $stmt->bindValue(1, $username);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($result && password_verify($password, $result['password'])) {
+            // Lưu thông tin tài khoản vào session
+            $_SESSION['MaSinhVien'] = $result['MaSinhVien'];
+            $_SESSION['Email'] = $result['Email'];
+            $_SESSION['HoTen'] = $result['HoTen'];
+            $_SESSION['Role'] = 'user';
+            echo "<script>alert('Đăng nhập thành công.')
+                window.location.href='./user/index.php';
+                </script>";
+            exit();
+        } else {
+            echo "<script>
+            alert('Tài khoản hoặc mật khẩu không chính xác. Vui lòng nhập lại.');
+        </script>";
+        }
+    }
+    // Check if username matches NhanVien pattern
+    elseif (preg_match('/^CB\d{6}$/', $username)) {
+        echo "<script>console.log('Vào được admin');</script>";
+        $query = "SELECT MaNhanVien, password, HoTen FROM NhanVien WHERE MaNhanVien = ?";
+        $stmt = $dbh->prepare($query);
+        $stmt->bindValue(1, $username);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($result && password_verify($password, $result['password'])) {
+            // Lưu thông tin tài khoản vào session
+            $_SESSION['MaNhanVien'] = $result['MaNhanVien'];
+            $_SESSION['HoTen'] = $result['HoTen'];
+            $_SESSION['Role'] = 'admin';
+            echo "<script>alert('Đăng nhập thành công.')
+                window.location.href='./admin/account_list.php';
+                </script>";
+            exit();
+        } else {
+            echo "<script>
+            alert('Tài khoản hoặc mật khẩu không chính xác. Vui lòng nhập lại.');
+            </script>";
+        }
+    } else {
+        echo "<script>
+            alert('Tài khoản hoặc mật khẩu không chính xác. Vui lòng nhập lại.');
+        </script>";
+    }
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
+
 
 <head>
     <meta charset="UTF-8">
@@ -42,7 +122,7 @@
                     <form method="POST" name="login" id="login">
                         <div class="form-group">
                             <label for="usernameInput" class="pt-2">
-                                <i class="fas fa-user"></i> Tên admin:
+                                <i class="fas fa-user"></i> Mã Đăng Nhập:
                             </label>
                             <input class="form-control mt-1 border rounded-1" placeholder="Nhập tên Admin" id="usernameInput" name="username"></input>
                         </div>
@@ -63,7 +143,7 @@
                         </div>
                         <button type="submit" class="btn btn-primary mt-3 w-100 mb-4" name="login">
                             <i class="fas fa-power-off"></i>
-                            <a href="./admin/account_list.php" class="text-decoration-none text-white">Đăng nhập</a>
+                            <span class="text-decoration-none text-white">Đăng nhập</span>
                         </button>
                     </form>
                 </div>
