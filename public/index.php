@@ -71,7 +71,9 @@
         </div>
     </div>
 
-    <a href="./admin/dashboard.php" class="text-decoration-none">Đăng ký</a>
+    <a href="./admin/dashboard.php" class="text-decoration-none">admin</a>
+    <a href="./user/dashboard.php" class="text-decoration-none">user</a>
+
 
     <!-- <script src="../assets/js/checklogin_admin.js"></script> -->
 </body>

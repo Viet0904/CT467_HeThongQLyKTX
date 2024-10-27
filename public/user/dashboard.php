@@ -1,34 +1,7 @@
 <?php
-// Khởi tạo phiên làm việc
-if (!isset($_SESSION)) {
-    session_start();
-}
-// Kiểm tra xem vai trò đã được lưu trong session hay chưa
-if (isset($_SESSION['Role'])) {
-    $role = $_SESSION['Role'];
-    if ($role === 'user') {
-        $sessionContactName = $_SESSION['ContactName'];
-    } elseif ($role === 'admin') {
-        echo "<script>alert('Bạn không có quyền truy cập vào trang này.')
-        window.location.href='../../admin/dashboard.php';
-        </script>";
-        die();
-    }
-} else {
-    echo "<script>alert('Vui lòng đăng nhập.')
-    window.location.href='./index.php';
-    </script>";
-    die();
-}
-
-// Bắt đầu nội dung trang
-ob_start();
 include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
-require_once __DIR__ . '/../../config/dbadmin.php';
 ?>
-
-<!-- Nội dung trang dashboard -->
 
 <body>
     <div class="container-fluid">
@@ -36,19 +9,41 @@ require_once __DIR__ . '/../../config/dbadmin.php';
             <?php
             include_once __DIR__ . '/sidebar.php';
             ?>
-            <div class="col py-5">
-                <h3 class="text-center">
-                    <b>Welcome to MyEitik !!
-                        <?php echo htmlspecialchars($sessionContactName) ?>
-                        Programming Blog</b>
-                </h3>
+
+            <div class="col px-0">
+                <!-- Nội dung chính của trang -->
+                <div class="content">
+                    <div class="dashboard-header">Welcome!</div>
+
+                    
+                </div>
             </div>
         </div>
     </div>
 
-    <?php
-    include_once __DIR__ . '/../../partials/footer.php';
-    ?>
-</body>
+    
 
-</html>
+<script>
+    // Hàm mở và đóng dropdown
+    function toggleDropdown() {
+        var dropdown = document.getElementById("dropdownMenu");
+        if (dropdown.style.display === "none" || dropdown.style.display === "") {
+            dropdown.style.display = "block"; // Hiển thị dropdown
+        } else {
+            dropdown.style.display = "none"; // Ẩn dropdown
+        }
+    }
+
+    // Đóng dropdown nếu click bên ngoài
+    window.onclick = function(event) {
+        if (!event.target.matches('#userDropdown') && !event.target.matches('.ms-1')) {
+            var dropdown = document.getElementById("dropdownMenu");
+            if (dropdown.style.display === "block") {
+                dropdown.style.display = "none";
+            }
+        }
+    }
+</script>
+
+</body>
+</html>     
