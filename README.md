@@ -31,10 +31,11 @@ Vào `C:\xampp\apache\conf\extra\httpd-vhosts.conf`
     </Directory>
 </VirtualHost>
 ```
-
 ### Lưu ý: Chỉnh sửa lại đường dẫn theo bạn 
-## Bước 5: Truy cập web
-Mở Apache và MySQL
+## Bước 5: Mở Apache của XAMP
+![image](https://github.com/user-attachments/assets/61a7ba1d-1b1c-4f89-9367-5fe13f9e4b5f)
 
+### Lưu ý: Chỉ cần Mở Apache không cần mở MySQL
+## Bước 6: Truy cập web
 Sau đó truy cập Link [http://htqlktx.localhost](http://htqlktx.localhost/)
 
