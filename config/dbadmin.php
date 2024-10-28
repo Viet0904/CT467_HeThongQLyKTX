@@ -2,7 +2,7 @@
 // DB credentials.
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
-define('DB_PORT', '3308');
+define('DB_PORT', '3306');
 define('DB_PASS', '');
 define('DB_NAME', 'htqlktx');
 define("APPNAME", "Hệ thống quản lý KTX");
