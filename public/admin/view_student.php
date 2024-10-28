@@ -102,7 +102,8 @@ include_once __DIR__ . '/../../partials/heading.php';
                                     </a>
                                 </div>
                                 <div class="mx-2">
-                                    <a href="#" class="btn btn-danger">Xoá</a>
+                                    <a href="javascript:void(0);" class="btn btn-danger"
+                                        onclick="openDeleteRoom()">Xoá</a>
                                 </div>
                                 <div class="mx-2">
                                     <a href="student_list.php" class="btn btn-secondary">Trở về</a>
@@ -118,6 +119,19 @@ include_once __DIR__ . '/../../partials/heading.php';
         </div>
 
     </div>
+    </div>
+
+    <!-- Modal để xác nhận xóa phòng -->
+    <div id="deleteRoomModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content-1">
+            <h5> <b>Bạn có chắc chắn muốn xoá sinh viên?</b></h5>
+            <!-- Đường phân cách -->
+            <hr style="border: none; border-top: 1px solid #a9a9a9; margin: 10px 0;">
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger">Xoá</button>
+                <button type="button" class="btn btn-secondary" onclick="closeDeleteRoom()">Trở về</button>
+            </div>
+        </div>
     </div>
 </body>
 
@@ -155,6 +169,15 @@ include_once __DIR__ . '/../../partials/heading.php';
         if (!event.target.matches('#userDropdown') && !event.target.matches('.ms-1') && !dropdownMenu.contains(event.target)) {
             dropdownMenu.style.display = "none"; // Đảm bảo đóng dropdown
         }
+    }
+    // Mở modal xác nhận xóa phòng
+    function openDeleteRoom() {
+        document.getElementById("deleteRoomModal").style.display = "flex";
+    }
+
+    // Đóng modal xác nhận xóa phòng
+    function closeDeleteRoom() {
+        document.getElementById("deleteRoomModal").style.display = "none";
     }
 </script>
 
