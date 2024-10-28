@@ -5,7 +5,8 @@
 ## Bước 1: Truy Cập MySQL WorkBench đăng nhập với root
 Mở Query Tab mới Hoặc Ctrl + T để mở.
 ### Lưu ý: Bước này Set Password tài khoản Root thành rỗng
-```ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY ''; 
+```
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY ''; 
 FLUSH PRIVILEGES;
 ```
 
