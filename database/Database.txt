@@ -260,19 +260,6 @@ VALUES
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 -- Tạo bảng ThuePhong
 CREATE TABLE ThuePhong (
     MaHopDong VARCHAR(10) PRIMARY KEY,

@@ -1,4 +1,12 @@
 <?php
+include_once __DIR__ . '/../../config/dbadmin.php';
+$sql = "SELECT SinhVien.MaSinhVien, SinhVien.HoTen, SinhVien.MaLop, Lop.TenLop
+        FROM SinhVien
+        JOIN Lop ON SinhVien.MaLop = Lop.MaLop
+        JOIN ThuePhong ON SinhVien.MaSinhVien = ThuePhong.MaSinhVien
+;";
+$result = $dbh->query($sql);
+
 include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
 ?>
@@ -26,71 +34,53 @@ include_once __DIR__ . '/../../partials/heading.php';
 
                         </div>
 
-                        <!-- Phần tìm kiếm và số lượng hiển thị -->
-                        <div class="row mt-3">
-                            <div class="col-md-6">
-                                <label for="entries" class="form-label">Hiển thị</label>
-                                <select class="form-select form-select-sm w-auto d-inline-block" id="entries"
-                                    aria-label="Entries">
-                                    <option selected>10</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select>
-                                <span class="ms-2">trang</span>
-                            </div>
-                            <div class="col-md-6 text-end" style="margin-left: 527px">
-                                <label for="search" class="form-label me-2">Tìm kiếm:</label>
-                                <input type="search" class="form-control form-control-sm w-auto d-inline-block"
-                                    id="search">
-                            </div>
-                        </div>
-
-                        <!-- Bảng danh sách các học sinh -->
-                        <div class="table-responsive mt-3">
-                            <table class="table table-bordered table-hover">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Tên</th>
-                                        <th>Mã số sinh viên</th>
-                                        <th>Lớp</th>
-                                        <th>Ngành học</th>
-                                        <th>Khoa</th>
-                                        <th>Trang thái</th>
-                                        <th>Hoạt động</th>
-
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Pham Gia Khang</td>
-                                        <td>B2119292</td>
-                                        <td>AB24i82</td>
-                                        <td>Bác sĩ</td>
-                                        <td>Y đa khoa</td>
-                                        <td><span class="badge bg-success">Hoạt động</span></td>
-                                        <td>
-                                            <div class="dropdown position-relative">
-                                                <button class="btn btn-outline-secondary dropdown-toggle" type="button"
-                                                    onclick="toggleActionDropdown('actionDropdownMenu1')">
-                                                    Hoạt động
-                                                </button>
-                                                <div id="actionDropdownMenu1"
-                                                    class="dropdown-menu position-absolute p-0"
-                                                    style="display: none; min-width: 100px;">
-                                                    <a class="dropdown-item py-2" href="view_student.php">Xem</a>
-                                                    <a class="dropdown-item py-2" href="manage_student.php">Sửa</a>
-                                                    <a class="dropdown-item py-2" href="#">Xoá</a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <!-- Thêm các dòng khác tương tự -->
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="table-responsive mt-3">
+                        <table class="table table-bordered table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Tên</th>
+                                    <th>Mã số sinh viên</th>
+                                    <th>Lớp</th>
+                                    <th>Ngành học</th>
+                                    <th>Khoa</th>
+                                    <th>Trang thái</th>
+                                    <th>Hoạt động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                if ($result->rowCount() > 0) {
+                                    $i = 1;  // Counter for row numbers
+                                    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                                        echo "<tr>
+                                                <td>{$i}</td>
+                                                <td>{$row['HoTen']}</td>
+                                                <td>{$row['MaSinhVien']}</td>
+                                                <td>{$row['MaLop']}</td>
+                                                <td>{$row['TenLop']}</td>
+                                                <td>
+                                                    <div class='dropdown position-relative'>
+                                                        <button class='btn btn-outline-secondary dropdown-toggle' type='button' onclick=\"toggleActionDropdown('actionDropdownMenu{$i}')\">
+                                                            Hoạt động
+                                                        </button>
+                                                        <div id='actionDropdownMenu{$i}' class='dropdown-menu position-absolute p-0' style='display: none; min-width: 100px;'>
+                                                            <a class='dropdown-item py-2' href='view_student.php?id={$row['MaSinhVien']}'>Xem</a>
+                                                            <a class='dropdown-item py-2' href='manage_student.php?id={$row['MaSinhVien']}'>Sửa</a>
+                                                            <a class='dropdown-item py-2' href='delete_student.php?id={$row['MaSinhVien']}'>Xoá</a>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                              </tr>";
+                                        $i++;
+                                    }
+                                } else {
+                                    echo "<tr><td colspan='8'>Không có dữ liệu</td></tr>";
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
 
                         <!-- Phân trang -->
                         <div class="d-flex justify-content-between align-items-center">

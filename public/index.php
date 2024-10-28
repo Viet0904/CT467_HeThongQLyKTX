@@ -110,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 
 <body>
-    <h1 class="text-center text-white px-4 py-5" id="page-title">Hệ thống quản lí ký túc xá<b></b></h1>
+    <h1 class="text-center text-white px-4 py-5" id="page-title">Hệ thống quản lí Ký túc xá<b></b></h1>
     <div class="container w-50 py-2">
         <div class="modal-dialog rounded shadow-lg p-2 m-4 bg-body rounded">
             <div class="modal-content p-2">
@@ -124,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <form method="POST" name="login" id="login">
                         <div class="form-group">
                             <label for="usernameInput" class="pt-2">
-                                <i class="fas fa-user"></i> Mã Đăng Nhập:
+                                <i class="fas fa-user"></i> Tên Đăng Nhập:
                             </label>
                             <input class="form-control mt-1 border rounded-1" placeholder="Nhập tên Admin" id="usernameInput" name="username"></input>
                         </div>
