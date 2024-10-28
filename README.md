@@ -42,6 +42,12 @@ Sau đó truy cập Link [http://htqlktx.localhost](http://htqlktx.localhost/)
 
 
 # Hướng dẫn chuyển nhánh 
+## Kiểm tra nhánh hiện tại của bạn
+```
+git branch
+```
+### Nhánh hiện tại là nhánh được đánh dấu *
+![image](https://github.com/user-attachments/assets/32136e0c-1339-4bdb-ac5b-43907f002671)
 
 ## Chuyển Branch
 ```
