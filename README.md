@@ -10,8 +10,8 @@ ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '';
 FLUSH PRIVILEGES;
 ```
 
-## Bước 2: Tạo các bảng
-Insert file Database.txt thì folder database
+## Bước 2: Tạo các Database và các bảng
+Mở File Database_Workbench.sql thực chạy.
 
 ## Bước 3: Clone dự án về máy
 `git clone https://github.com/Viet0904/CT467_HeThongQLyKTX.git`
@@ -33,8 +33,6 @@ Vào `C:\xampp\apache\conf\extra\httpd-vhosts.conf`
 ```
 
 ### Lưu ý: Chỉnh sửa lại đường dẫn theo bạn 
-
-
 ## Bước 5: Truy cập web
 Mở Apache và MySQL
 
