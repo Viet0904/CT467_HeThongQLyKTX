@@ -41,8 +41,8 @@ include_once __DIR__ . '/../../partials/heading.php';
                                     <input type="text" class="form-control" id="maDay">
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="maDay" class="form-label">Mã dãy</label>
-                                    <input type="text" class="form-control" id="maDay">
+                                    <label for="chucVu" class="form-label">Chức vụ</label>
+                                    <input type="text" class="form-control" id="chucVu">
                                 </div>
                             </div>
 
