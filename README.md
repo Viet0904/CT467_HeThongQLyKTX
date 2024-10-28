@@ -1,7 +1,13 @@
 ## Hệ Thống Quản Lý KTX
 
-## Bước 1: Tạo CSDL
-Truy cập <a href="http://localhost/phpmyadmin/">MYSQL</a> tạo CSDL tên htqlktx
+## 
+
+## Bước 1: Truy Cập MySQL WorkBench đăng nhập với root
+Mở Query Tab mới Hoặc Ctrl + T để mở.
+### Lưu ý: Bước này Set Password tài khoản Root thành rỗng
+```ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY ''; 
+FLUSH PRIVILEGES;
+```
 
 ## Bước 2: Tạo các bảng
 Insert file Database.txt thì folder database
