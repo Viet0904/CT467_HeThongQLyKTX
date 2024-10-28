@@ -27,7 +27,7 @@ include_once __DIR__ . '/../../partials/heading.php';
                                     <input type="text" class="form-control" id="schoolID">
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="department" class="form-label">Khoa</label>
+                                    <label for="department" class="form-label">Khoá</label>
                                     <input type="text" class="form-control" id="department">
                                 </div>
                                 <div class="col-md-4">
@@ -36,16 +36,27 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 </div>
                             </div>
 
+                            <div class="row row-add mb-3">
+                            <div class="col-md-4">
+                                    <label for="maDay" class="form-label">Mã dãy</label>
+                                    <input type="text" class="form-control" id="maDay">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="chucVu" class="form-label">Chức vụ</label>
+                                    <input type="text" class="form-control" id="chucVu">
+                                </div>
+                            </div>
+
                             <!-- Personal Information Section -->
                             <h5><b>Thông tin cá nhân</b></h5>
                             <div class="row row-add mb-3">
                                 <div class="col-md-4">
-                                    <label for="firstName" class="form-label">Tên riêng</label>
+                                    <label for="firstName" class="form-label">Tên</label>
                                     <input type="text" class="form-control" id="firstName">
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="lastName" class="form-label">Họ</label>
-                                    <input type="text" class="form-control" id="lastName">
+                                    <label for="ngaySinh" class="form-label">Ngày sinh</label>
+                                    <input type="date" id="filter-date" value="" class="form-control">
                                 </div>
                             </div>
 

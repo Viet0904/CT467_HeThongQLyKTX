@@ -14,7 +14,7 @@ include_once __DIR__ . '/../../partials/heading.php';
                 <!-- Nội dung chính -->
                 <div class="my-2" style="margin-left: 260px;">
                     <div class="modal-header-1">
-                        <h5 class="modal-title mt-2">Chi tiết trường học</h5>
+                        <h5 class="modal-title mt-2">Chi tiết sinh viên</h5>
                     </div>
 
                     <div class="modal-user">
@@ -43,8 +43,16 @@ include_once __DIR__ . '/../../partials/heading.php';
                             </div>
                             <div class="row row-add">
                                 <div class="col-md-4">
-                                    <label for="department"><b>Khoa</b></label>
-                                    <p class="mt-1 mb-2 mx-3"> Cong Nghe Thong Tin & TT</p>
+                                    <label for="maDay"><b>Mã dãy</b></label>
+                                    <p class="mt-1 mb-2 mx-3">D123</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="chucVu"><b>Chức vụ</b></label>
+                                    <p class="mt-1 mb-2 mx-3">Anxk</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="department"><b>Khoá</b></label>
+                                    <p class="mt-1 mb-2 mx-3">47</p>
                                 </div>
                             </div>
 
@@ -57,6 +65,10 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 <div class="col-md-4">
                                     <label for="firstName"><b>Tên</b></label>
                                     <p class="mb-2 mt-1 mx-3">Pham Gia Khang</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="firstName"><b>Ngày sinh</b></label>
+                                    <p class="mb-2 mt-1 mx-3">4524</p>
                                 </div>
                             </div>
 
