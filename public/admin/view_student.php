@@ -1,4 +1,15 @@
 <?php
+include_once __DIR__ . '/../../config/dbadmin.php';
+$id = $_GET['id'];  // Lấy id của sinh viên từ URL để truy vấn
+$sql = "SELECT SinhVien.*, Lop.TenLop
+        FROM SinhVien
+        JOIN Lop ON SinhVien.MaLop = Lop.MaLop
+        WHERE MaSinhVien = :id";
+$stmt = $dbh->prepare($sql);
+$stmt->execute(['id' => $id]);
+$student = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
 include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
 ?>
@@ -14,7 +25,7 @@ include_once __DIR__ . '/../../partials/heading.php';
                 <!-- Nội dung chính -->
                 <div class="my-2" style="margin-left: 260px;">
                     <div class="modal-header-1">
-                        <h5 class="modal-title mt-2">Chi tiết trường học</h5>
+                        <h5 class="modal-title mt-2">Chi tiết sinh viên</h5>
                     </div>
 
                     <div class="modal-user">
@@ -34,17 +45,25 @@ include_once __DIR__ . '/../../partials/heading.php';
                             <div class="row row-add">
                                 <div class="col-md-4 ">
                                     <label for="schoolID"> <b>Mã sinh viên</b></label>
-                                    <p class="mb-2 mt-1 mx-3">B2111837</p>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['MaSinhVien']; ?></p>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="course"><b>Lớp</b></label>
-                                    <p class="mb-2 mt-1 mx-3">Hg218732</p>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['TenLop']; ?></p>
                                 </div>
                             </div>
                             <div class="row row-add">
                                 <div class="col-md-4">
-                                    <label for="department"><b>Khoa</b></label>
-                                    <p class="mt-1 mb-2 mx-3"> Cong Nghe Thong Tin & TT</p>
+                                    <label for="maDay"><b>Mã dãy</b></label>
+                                    <p class="mt-1 mb-2 mx-3"><?php echo $student['MaDay']; ?></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="chucVu"><b>Chức vụ</b></label>
+                                    <p class="mt-1 mb-2 mx-3"><?php echo $student['ChucVu']; ?></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="department"><b>Khoá</b></label>
+                                    <p class="mt-1 mb-2 mx-3"><?php echo $student['KhoaHoc']; ?></p>
                                 </div>
                             </div>
 
@@ -56,29 +75,33 @@ include_once __DIR__ . '/../../partials/heading.php';
                             <div class="row row-add">
                                 <div class="col-md-4">
                                     <label for="firstName"><b>Tên</b></label>
-                                    <p class="mb-2 mt-1 mx-3">Pham Gia Khang</p>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['HoTen']; ?></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="firstName"><b>Ngày sinh</b></label>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['NgaySinh']; ?></p>
                                 </div>
                             </div>
 
                             <div class="row row-add">
                                 <div class="col-md-4">
                                     <label for="gender"><b>Giới tính</b></label>
-                                    <p class="mb-2 mt-1 mx-3">Nam</p>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['GioiTinh']; ?></p>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="contact"><b>Liên hệ #</b></label>
-                                    <p class="mb-2 mt-1 mx-3">0937367183</p>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['SDT']; ?></p>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="email"><b>Email</b></label>
-                                    <p class="mb-2 mt-1 mx-3">pkhang@gmail.com</p>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['Email']; ?></p>
                                 </div>
                             </div>
 
                             <div class="row row-add">
                                 <div class="col-md-12">
                                     <label for="address"><b>Địa chỉ</b></label>
-                                    <p class="mb-2 mt-1 mx-3">fakljfaklsfakls</p>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['DiaChi']; ?></p>
                                 </div>
                             </div>
 
@@ -90,7 +113,8 @@ include_once __DIR__ . '/../../partials/heading.php';
                                     </a>
                                 </div>
                                 <div class="mx-2">
-                                    <a href="#" class="btn btn-danger">Xoá</a>
+                                    <a href="javascript:void(0);" class="btn btn-danger"
+                                        onclick="openDeleteRoom()">Xoá</a>
                                 </div>
                                 <div class="mx-2">
                                     <a href="student_list.php" class="btn btn-secondary">Trở về</a>
@@ -106,6 +130,19 @@ include_once __DIR__ . '/../../partials/heading.php';
         </div>
 
     </div>
+    </div>
+
+    <!-- Modal để xác nhận xóa phòng -->
+    <div id="deleteRoomModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content-1">
+            <h5> <b>Bạn có chắc chắn muốn xoá sinh viên?</b></h5>
+            <!-- Đường phân cách -->
+            <hr style="border: none; border-top: 1px solid #a9a9a9; margin: 10px 0;">
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger">Xoá</button>
+                <button type="button" class="btn btn-secondary" onclick="closeDeleteRoom()">Trở về</button>
+            </div>
+        </div>
     </div>
 </body>
 
@@ -143,6 +180,15 @@ include_once __DIR__ . '/../../partials/heading.php';
         if (!event.target.matches('#userDropdown') && !event.target.matches('.ms-1') && !dropdownMenu.contains(event.target)) {
             dropdownMenu.style.display = "none"; // Đảm bảo đóng dropdown
         }
+    }
+    // Mở modal xác nhận xóa phòng
+    function openDeleteRoom() {
+        document.getElementById("deleteRoomModal").style.display = "flex";
+    }
+
+    // Đóng modal xác nhận xóa phòng
+    function closeDeleteRoom() {
+        document.getElementById("deleteRoomModal").style.display = "none";
     }
 </script>
 

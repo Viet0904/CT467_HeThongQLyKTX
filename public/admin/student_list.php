@@ -3,9 +3,9 @@ include_once __DIR__ . '/../../config/dbadmin.php';
 $sql = "SELECT SinhVien.MaSinhVien, SinhVien.HoTen, SinhVien.MaLop, SinhVien.KhoaHoc, Lop.TenLop
         FROM SinhVien
         JOIN Lop ON SinhVien.MaLop = Lop.MaLop
-        JOIN ThuePhong ON SinhVien.MaSinhVien = ThuePhong.MaSinhVien
 ;";
 $result = $dbh->query($sql);
+
 
 include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
