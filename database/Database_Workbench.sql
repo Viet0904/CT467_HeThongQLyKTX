@@ -1,3 +1,8 @@
+
+-- Kiểm tra và xóa database nếu đã tồn tại
+DROP DATABASE IF EXISTS htqlktx;
+
+-- Tạo database mới
 create database htqlktx;
 use htqlktx;
 
@@ -233,33 +238,32 @@ CREATE TABLE Phong (
     SucChua INT,
     SoChoThucTe INT,
     DaO INT,
-    ConTrong INT,
     GhiChu TEXT,
     LoaiPhong VARCHAR(10),
     FOREIGN KEY (MaDay) REFERENCES Day(MaDay)
 );
 
-INSERT INTO Phong (MaPhong, TenPhong, DienTich, SoGiuong, GiaThue, MaDay, TrangThaiSuDung, SucChua, SoChoThucTe, DaO, ConTrong, LoaiPhong)
+INSERT INTO Phong (MaPhong, TenPhong, DienTich, SoGiuong, GiaThue, MaDay, TrangThaiSuDung, SucChua, SoChoThucTe, DaO, LoaiPhong)
 VALUES
-('AA01100', 'AA01100', 30.0, 5, 190000.00, 'AA01', 'Đang sử dụng', 5, 5, 5, 0, 'Nam'),
-('AA01101', 'AA01101', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 0, 'Nam'),
-('AA01102', 'AA01102', 30.0, 4, 390000.00, 'AA01', 'Đang sử dụng', 4, 4, 4, 0, 'Nam'),
-('AA01103', 'AA01103', 30.0, 7, 218000.00, 'AA01', 'Đang sử dụng', 7, 7, 7, 0, 'Nam'),
-('AA01104', 'AA01104', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 0, 'Nam'),
-('AA01105', 'AA01105', 30.0, 4, 190000.00, 'AA01', 'Đang sử dụng', 4, 4, 4, 0, 'Nam'),
-('AA01106', 'AA01106', 30.0, 4, 390000.00, 'AA01', 'Đang sử dụng', 4, 4, 4, 0, 'Nam'),
-('AA01201', 'AA01201', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 0, 'Nam'),
-('AA01202', 'AA01202', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 7, 1, 'Nam'),
-('AA01203', 'AA01203', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 0, 'Nữ'),
-('AA01204', 'AA01204', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 0, 'Nam'),
-('AA01205', 'AA01205', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 0, 'Nam'),
-('AA01206', 'AA01206', 30.0, 4, 190000.00, 'AA01', 'Đang sử dụng', 4, 4, 4, 0, 'Nữ'),
-('AA01208', 'AA01208', 30.0, 4, 190000.00, 'AA01', 'Đang sử dụng', 4, 4, 4, 0, 'Nam'),
-('AA01209', 'AA01209', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 0, 'Nam'),
-('AA01210', 'AA01210', 30.0, 3, 515000.00, 'AA01', 'Đang sử dụng', 3, 3, 3, 0, 'Nữ'),
-('AA01211', 'AA01211', 30.0, 3, 190000.00, 'AA01', 'Đang sử dụng', 3, 3, 3, 0, 'Nam'),
-('AA01212', 'AA01212', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 0, 'Nam'),
-('AA01213', 'AA01213', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 7, 1, 'Nam');
+('AA01100', 'AA01100', 30.0, 5, 190000.00, 'AA01', 'Đang sử dụng', 5, 5, 5, 'Nam'),
+('AA01101', 'AA01101', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 'Nam'),
+('AA01102', 'AA01102', 30.0, 4, 390000.00, 'AA01', 'Đang sử dụng', 4, 4, 4, 'Nam'),
+('AA01103', 'AA01103', 30.0, 7, 218000.00, 'AA01', 'Đang sử dụng', 7, 7, 7, 'Nam'),
+('AA01104', 'AA01104', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 'Nam'),
+('AA01105', 'AA01105', 30.0, 4, 190000.00, 'AA01', 'Đang sử dụng', 4, 4, 4, 'Nam'),
+('AA01106', 'AA01106', 30.0, 4, 390000.00, 'AA01', 'Đang sử dụng', 4, 4, 4, 'Nam'),
+('AA01201', 'AA01201', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 'Nam'),
+('AA01202', 'AA01202', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 7, 'Nam'),
+('AA01203', 'AA01203', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 'Nữ'),
+('AA01204', 'AA01204', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 'Nam'),
+('AA01205', 'AA01205', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 'Nam'),
+('AA01206', 'AA01206', 30.0, 4, 190000.00, 'AA01', 'Đang sử dụng', 4, 4, 4, 'Nữ'),
+('AA01208', 'AA01208', 30.0, 4, 190000.00, 'AA01', 'Đang sử dụng', 4, 4, 4, 'Nam'),
+('AA01209', 'AA01209', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 'Nam'),
+('AA01210', 'AA01210', 30.0, 3, 515000.00, 'AA01', 'Đang sử dụng', 3, 3, 3, 'Nữ'),
+('AA01211', 'AA01211', 30.0, 3, 190000.00, 'AA01', 'Đang sử dụng', 3, 3, 3, 'Nam'),
+('AA01212', 'AA01212', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 'Nam'),
+('AA01213', 'AA01213', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 7, 'Nam');
 
 
 
