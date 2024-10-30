@@ -1,10 +1,9 @@
-
+use htqlktx;
 -- Tìm phòng còn trống dựa theo giới tính 
 DELIMITER //
 CREATE FUNCTION SoChoConLai(MaPhongInput VARCHAR(20)) 
 RETURNS INT
 DETERMINISTIC
-
 BEGIN
     DECLARE SoChoConLai INT;
     SELECT (SoChoThucTe - DaO) INTO SoChoConLai
@@ -13,8 +12,6 @@ BEGIN
     RETURN SoChoConLai;
 END //
 DELIMITER ;
-
-
 
 
 -- Tính số chỗ còn trống của 1 phòng
