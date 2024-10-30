@@ -4,7 +4,7 @@
     <div class="container-fluid">
 
         <!-- Tiêu đề hệ thống -->
-        <a class="navbar-brand ms-3 fs-6" href="#">Hệ thống quản lý Ký túc xá trường học</a>
+        <a class="navbar-brand ms-3 fs-6" href="#">Hệ thống quản lý Ký túc xá</a>
 
         <!-- Phần thông tin tài khoản người dùng -->
         <div class="d-flex align-items-center position-relative me-3">
