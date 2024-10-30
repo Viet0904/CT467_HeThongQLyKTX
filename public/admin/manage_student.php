@@ -35,6 +35,16 @@ include_once __DIR__ . '/../../partials/heading.php';
                                     <input type="text" class="form-control" id="course">
                                 </div>
                             </div>
+                            <div class="row row-add mb-3">
+                                <div class="col-md-4">
+                                    <label for="maDay" class="form-label">Mã dãy</label>
+                                    <input type="text" class="form-control" id="maDay">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="chucVu" class="form-label">Chức vụ</label>
+                                    <input type="text" class="form-control" id="chucVu">
+                                </div>
+                            </div>
 
                             <div class="row row-add mb-3">
                             <div class="col-md-4">
@@ -56,8 +66,13 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 </div>
                                 <div class="col-md-4">
                                     <label for="ngaySinh" class="form-label">Ngày sinh</label>
+<<<<<<< HEAD
                                     <input type="date" id="filter-date" value="" class="form-control">
+=======
+                                    <input type="text" class="form-control" id="ngaySinh">
+>>>>>>> 3bd600158415006c29d4ce2eeec815f740794177
                                 </div>
+
                             </div>
 
                             <div class="row row-add mb-3">
