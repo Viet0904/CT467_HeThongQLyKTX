@@ -1,14 +1,38 @@
--- Tìm phòng còn trống
+
+-- Tìm phòng còn trống dựa theo giới tính 
 DELIMITER //
-CREATE PROCEDURE TimPhongConTrong (IN maDayInput VARCHAR(10))
+CREATE FUNCTION SoChoConLai(MaPhongInput VARCHAR(20)) 
+RETURNS INT
+DETERMINISTIC
+
 BEGIN
-    SELECT MaPhong, TenPhong, ConTrong
+    DECLARE SoChoConLai INT;
+    SELECT (SoChoThucTe - DaO) INTO SoChoConLai
     FROM Phong
-    WHERE MaDay = maDayInput AND ConTrong > 0;
+    WHERE MaPhong = MaPhongInput;
+    RETURN SoChoConLai;
 END //
 DELIMITER ;
 
-CALL TimPhongConTrong('D01');
+
+
+
+-- Tính số chỗ còn trống của 1 phòng
+DELIMITER //
+CREATE PROCEDURE TimPhongConTrongGioiTinh (IN gioiTinhInput VARCHAR(10))
+BEGIN
+    SELECT *, (SoChoThucTe - DaO) AS ConTrong
+    FROM Phong
+    WHERE LoaiPhong = gioiTinhInput
+      AND (SoChoThucTe - DaO) > 0;
+END //
+DELIMITER ;
+
+
+
+
+
+
 
 --  Tính tổng tiền thuê phòng của một sinh viên
 DELIMITER //
@@ -40,42 +64,6 @@ BEGIN
 END //
 DELIMITER ;
 
--- Đăng ký phòng cho sinh viên
-START TRANSACTION;
--- Kiểm tra phòng còn chỗ không
-SET @conTrong = (SELECT ConTrong FROM Phong WHERE MaPhong = 'P01');
-IF @conTrong > 0 THEN
-    -- Thêm sinh viên vào phòng
-    INSERT INTO SinhVien (MaSinhVien, HoTen, MaDay)
-    VALUES ('SV02', 'Nguyen Van B', 'P01');
-
-    -- Cập nhật số chỗ còn trống của phòng
-    UPDATE Phong
-    SET DaO = DaO + 1,
-        ConTrong = ConTrong - 1
-    WHERE MaPhong = 'P01';
-
-    COMMIT;
-ELSE
-    ROLLBACK;
-END IF;
-
-
-
--- Tính tổng số tiền phải đóng của tất cả sinh viên trong phòng
-DELIMITER //
-CREATE FUNCTION TongTienCuaPhong(maPhongInput VARCHAR(10), soThangO INT)
-RETURNS DECIMAL(10,2)
-DETERMINISTIC
-BEGIN
-    DECLARE giaThue DECIMAL(10,2);
-    SELECT GiaThue INTO giaThue
-    FROM Phong
-    WHERE MaPhong = maPhongInput;
-    RETURN giaThue * soThangO * (SELECT COUNT(*) FROM SinhVien WHERE MaDay = maPhongInput);
-END //
-DELIMITER ;
-SELECT TongTienCuaPhong('P01', 6) AS TongTien;
 
 
 

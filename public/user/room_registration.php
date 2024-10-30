@@ -27,11 +27,20 @@ require_once __DIR__ . '/../../config/dbadmin.php';
                 $rowsPerPage = 10;
 
                 // Tính tổng số dòng
-                $totalRowsQuery = "SELECT COUNT(*) FROM Phong WHERE ConTrong > 0 AND LoaiPhong = :studentGender";
+                $totalRowsQuery = "SELECT COUNT(*) FROM Phong WHERE LoaiPhong = :studentGender AND (SoChoThucTe - DaO) > 0";
+
+                // Prepare the statement
                 $totalRowsStmt = $dbh->prepare($totalRowsQuery);
+
+                // Bind the parameter
                 $totalRowsStmt->bindParam(':studentGender', $studentGender, PDO::PARAM_STR);
+
+                // Execute the query
                 $totalRowsStmt->execute();
+
+                // Fetch the total number of rows
                 $totalRows = $totalRowsStmt->fetchColumn();
+
 
                 // Tính tổng số trang
                 $totalPages = ceil($totalRows / $rowsPerPage);
@@ -47,10 +56,11 @@ require_once __DIR__ . '/../../config/dbadmin.php';
                 // Tính chỉ số bắt đầu của dòng trên trang hiện tại
                 $offset = ($currentPage - 1) * $rowsPerPage;
 
-                // Truy vấn SQL với giá trị LIMIT và OFFSET trực tiếp trong câu truy vấn
-                $phong = "SELECT * FROM Phong WHERE ConTrong > 0 AND LoaiPhong = :studentGender LIMIT $rowsPerPage OFFSET $offset";
-                $stmt = $dbh->prepare($phong);
-                $stmt->bindParam(':studentGender', $studentGender, PDO::PARAM_STR);
+                // Gọi thủ tục TimPhongConTrongGioiTinh với giá trị LIMIT và OFFSET trực tiếp trong câu truy vấn
+                // Gọi stored procedure với phân trang
+                $query = "CALL TimPhongConTrongGioiTinh(:gioiTinh)";
+                $stmt = $dbh->prepare($query);
+                $stmt->bindParam(':gioiTinh', $_SESSION['GioiTinh'], PDO::PARAM_STR);
                 $stmt->execute();
                 $result = $stmt;
 
