@@ -1,4 +1,9 @@
 <?php
+include_once __DIR__ . '/../../config/dbadmin.php';
+
+$query = "SELECT * FROM Phong";
+$result = $dbh->query($query);
+
 include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
 ?>
@@ -12,7 +17,7 @@ include_once __DIR__ . '/../../partials/heading.php';
 
             <div class="col px-0">
                 <!-- Nội dung chính -->
-                <div class=" mt-4"
+                <div class="mt-4"
                     style="max-width: 1075px; margin-left: 273px; border: 1px solid #ddd; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
                     <div style="padding: 2px; background-color: rgb(219, 48, 119); border-radius: 6px;"></div>
                     <div class="container-fluid py-3" style="padding: 20px;">
@@ -23,7 +28,6 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 style="background-color: rgb(219, 48, 119);">
                                 <i class="fas fa-plus me-1"></i>Tạo mới
                             </a>
-
                         </div>
 
                         <!-- Phần tìm kiếm và số lượng hiển thị -->
@@ -52,7 +56,7 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 <thead class="table-light">
                                     <tr>
                                         <th>#</th>
-                                        <th>Khu</th>
+                                        <th>Dãy</th>
                                         <th>Tên</th>
                                         <th>Loại phòng</th>
                                         <th>Số chỗ</th>
@@ -64,40 +68,50 @@ include_once __DIR__ . '/../../partials/heading.php';
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>A</td>
-                                        <td>BB02101</td>
-                                        <td>Nam</td>
-                                        <td>4</td>
-                                        <td>3</td>
-                                        <td>1</td>
-                                        <td>3,500.00</td>
-                                        <td><span class="badge bg-success">Hoạt động</span></td>
-                                        <td>
-                                            <div class="dropdown position-relative">
-                                                <button class="btn btn-outline-secondary dropdown-toggle" type="button"
-                                                    onclick="toggleActionDropdown('actionDropdownMenu1')">
-                                                    Hoạt động
-                                                </button>
-                                                <div id="actionDropdownMenu1"
-                                                    class="dropdown-menu position-absolute p-0"
-                                                    style="display: none; min-width: 100px;">
-                                                    <a class="dropdown-item py-2" href="./view_room.php">Xem</a>
-                                                    <a class="dropdown-item py-2" href="./manage_room.php">Sửa</a>
-                                                    <a class="dropdown-item py-2" href="javascript:void(0);"
-                                                        onclick="openDeleteRoom()">Xoá</a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                    <?php
+                                    if ($result->rowCount() > 0) {
+                                        $i = 1;
+                                        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                                            echo "<tr>
+                                                    <td>{$i}</td>
+                                                    <td>{$row['MaDay']}</td>
+                                                    <td>{$row['TenPhong']}</td>
+                                                    <td>{$row['LoaiPhong']}</td>
+                                                    <td>{$row['SucChua']}</td>
+                                                    <td>{$row['DaO']}</td>
+                                                    <td>{$row['ConTrong']}</td>
+                                                    <td>" . number_format($row['GiaThue'], 2) . "</td>
+                                                    <td><span class='badge bg-success'>{$row['TrangThaiSuDung']}</span></td>
+                                                    <td>
+                                                        <div class='dropdown position-relative'>
+                                                            <button class='btn btn-outline-secondary dropdown-toggle' type='button'
+                                                                onclick=\"toggleActionDropdown('actionDropdownMenu{$i}')\">
+                                                                Hoạt động
+                                                            </button>
+                                                            <div id='actionDropdownMenu{$i}'
+                                                                class='dropdown-menu position-absolute p-0'
+                                                                style='display: none; min-width: 100px;'>
+                                                                <a class='dropdown-item py-2' href='./view_room.php?id={$row['MaPhong']}'>Xem</a>
+                                                                <a class='dropdown-item py-2' href='./manage_room.php?id={$row['MaPhong']}'>Sửa</a>
+                                                                <a class='dropdown-item py-2' href='javascript:void(0);'
+                                                                    onclick=\"openDeleteRoom('{$row['MaPhong']}')\">Xoá</a>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>";
+                                            $i++;
+                                        }
+                                    } else {
+                                        echo "<tr><td colspan='10'>Không có dữ liệu</td></tr>";
+                                    }
+                                    ?>
                                 </tbody>
                             </table>
                         </div>
 
                         <!-- Phân trang -->
                         <div class="d-flex justify-content-between align-items-center">
-                            <p class="mb-0">Xem 1 đến 7 trong 7 trang</p>
+                            <p class="mb-0">Xem 1 đến trang</p>
                             <nav>
                                 <ul class="pagination pagination-sm mb-0">
                                     <li class="page-item disabled">
@@ -112,6 +126,9 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 </ul>
                             </nav>
                         </div>
+                    </div>
+                </div>
+            </div>
                     </div>
                 </div>
             </div>
