@@ -35,7 +35,9 @@ require_once __DIR__ . '/../../config/dbadmin.php';
                 $offset = ($currentPage - 1) * $rowsPerPage;
 
                 // Truy vấn SQL với LIMIT và OFFSET
-                $phong = "SELECT * FROM Phong LIMIT $rowsPerPage OFFSET $offset";
+                $phong = "SELECT *, SoChoConLai(MaPhong) AS ConTrong 
+                            FROM Phong 
+                            LIMIT $rowsPerPage OFFSET $offset";
                 $result = $dbh->query($phong);
 
                 if ($result->rowCount() > 0) {
@@ -60,6 +62,7 @@ require_once __DIR__ . '/../../config/dbadmin.php';
                     // Xuất dữ liệu của từng hàng
                     $stt = $offset + 1;
                     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                        // $ConTrong = $row["SoChoThucTe"] - $row["DaO"];
                         echo '<tr>';
                         echo '<td>' . $stt++ . '</td>';
                         echo '<td>' . htmlspecialchars($row["MaPhong"]) . '</td>';
@@ -71,7 +74,7 @@ require_once __DIR__ . '/../../config/dbadmin.php';
                         echo '<td>' . htmlspecialchars($row["SucChua"]) . '</td>';
                         echo '<td>' . htmlspecialchars($row["SoChoThucTe"]) . '</td>';
                         echo '<td>' . htmlspecialchars($row["DaO"]) . '</td>';
-                        echo '<td>' . htmlspecialchars($row["ConTrong"]) . '</td>';
+                        echo '<td>' . htmlspecialchars($row['ConTrong']) . '</td>';
                         echo '</tr>';
                     }
 
