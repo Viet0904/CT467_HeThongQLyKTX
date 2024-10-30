@@ -1,4 +1,15 @@
 <?php
+include_once __DIR__ . '/../../config/dbadmin.php';
+$id = $_GET['id'];  // Lấy id của sinh viên từ URL để truy vấn
+$sql = "SELECT SinhVien.*, Lop.TenLop
+        FROM SinhVien
+        JOIN Lop ON SinhVien.MaLop = Lop.MaLop
+        WHERE MaSinhVien = :id";
+$stmt = $dbh->prepare($sql);
+$stmt->execute(['id' => $id]);
+$student = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
 include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
 ?>
@@ -34,25 +45,25 @@ include_once __DIR__ . '/../../partials/heading.php';
                             <div class="row row-add">
                                 <div class="col-md-4 ">
                                     <label for="schoolID"> <b>Mã sinh viên</b></label>
-                                    <p class="mb-2 mt-1 mx-3">B2111837</p>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['MaSinhVien']; ?></p>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="course"><b>Lớp</b></label>
-                                    <p class="mb-2 mt-1 mx-3">Hg218732</p>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['TenLop']; ?></p>
                                 </div>
                             </div>
                             <div class="row row-add">
                                 <div class="col-md-4">
                                     <label for="maDay"><b>Mã dãy</b></label>
-                                    <p class="mt-1 mb-2 mx-3">D123</p>
+                                    <p class="mt-1 mb-2 mx-3"><?php echo $student['MaDay']; ?></p>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="chucVu"><b>Chức vụ</b></label>
-                                    <p class="mt-1 mb-2 mx-3">Anxk</p>
+                                    <p class="mt-1 mb-2 mx-3"><?php echo $student['ChucVu']; ?></p>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="department"><b>Khoá</b></label>
-                                    <p class="mt-1 mb-2 mx-3">47</p>
+                                    <p class="mt-1 mb-2 mx-3"><?php echo $student['KhoaHoc']; ?></p>
                                 </div>
                             </div>
 
@@ -64,33 +75,33 @@ include_once __DIR__ . '/../../partials/heading.php';
                             <div class="row row-add">
                                 <div class="col-md-4">
                                     <label for="firstName"><b>Tên</b></label>
-                                    <p class="mb-2 mt-1 mx-3">Pham Gia Khang</p>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['HoTen']; ?></p>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="firstName"><b>Ngày sinh</b></label>
-                                    <p class="mb-2 mt-1 mx-3">4524</p>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['NgaySinh']; ?></p>
                                 </div>
                             </div>
 
                             <div class="row row-add">
                                 <div class="col-md-4">
                                     <label for="gender"><b>Giới tính</b></label>
-                                    <p class="mb-2 mt-1 mx-3">Nam</p>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['GioiTinh']; ?></p>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="contact"><b>Liên hệ #</b></label>
-                                    <p class="mb-2 mt-1 mx-3">0937367183</p>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['SDT']; ?></p>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="email"><b>Email</b></label>
-                                    <p class="mb-2 mt-1 mx-3">pkhang@gmail.com</p>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['Email']; ?></p>
                                 </div>
                             </div>
 
                             <div class="row row-add">
                                 <div class="col-md-12">
                                     <label for="address"><b>Địa chỉ</b></label>
-                                    <p class="mb-2 mt-1 mx-3">fakljfaklsfakls</p>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['DiaChi']; ?></p>
                                 </div>
                             </div>
 

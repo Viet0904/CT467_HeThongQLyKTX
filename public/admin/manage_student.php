@@ -1,4 +1,50 @@
 <?php
+include_once __DIR__ . '/../../config/dbadmin.php';
+$message = '';
+
+// Xử lý khi form được submit
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Lấy dữ liệu từ form
+    $maSinhVien = $_POST['schoolID'];
+    $ten = $_POST['firstName'];
+    $lienHe = $_POST['contact'];
+    $email = $_POST['email'];
+    $maLop = $_POST['course'];
+    $diaChi = $_POST['address'];
+    $gioiTinh = $_POST['gender'];
+    $khoaHoc = $_POST['department'];
+    $ngaySinh = $_POST['ngaySinh'];
+    $chucVu = $_POST['chucVu'];
+    $maDay = $_POST['maDay'];
+    $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+
+    // Thực hiện câu lệnh INSERT để thêm sinh viên vào bảng SinhVien
+    $sql = "INSERT INTO SinhVien (MaSinhVien, HoTen, SDT, Email, MaLop, DiaChi, GioiTinh, KhoaHoc, NgaySinh, ChucVu, MaDay, Password) 
+            VALUES (:maSinhVien, :ten, :lienHe, :email, :maLop, :diaChi, :gioiTinh, :khoaHoc, :ngaySinh, :chucVu, :maDay, :password)";
+
+    $stmt = $dbh->prepare($sql);
+
+    $stmt->bindParam(':maSinhVien', $maSinhVien);
+    $stmt->bindParam(':ten', $ten);
+    $stmt->bindParam(':lienHe', $lienHe);
+    $stmt->bindParam(':email', $email);
+    $stmt->bindParam(':maLop', $maLop);
+    $stmt->bindParam(':diaChi', $diaChi);
+    $stmt->bindParam(':gioiTinh', $gioiTinh);
+    $stmt->bindParam(':khoaHoc', $khoaHoc);
+    $stmt->bindParam(':ngaySinh', $ngaySinh);
+    $stmt->bindParam(':chucVu', $chucVu);
+    $stmt->bindParam(':maDay', $maDay);
+    $stmt->bindParam(':password', $password);
+
+    // Thực thi câu lệnh và kiểm tra kết quả
+    if ($stmt->execute()) {
+        $message = "Sinh viên mới đã được thêm thành công!";
+    } else {
+        $message = "Đã xảy ra lỗi khi thêm sinh viên.";
+    }
+}
+
 include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
 ?>
@@ -17,22 +63,34 @@ include_once __DIR__ . '/../../partials/heading.php';
                         <h5 class="modal-title mt-2">Đăng ký sinh viên mới</h5>
                     </div>
 
+                    <!-- Hiển thị thông báo -->
+                    <?php if (!empty($message)): ?>
+                        <div class="alert alert-info mt-3"><?php echo $message; ?></div>
+                    <?php endif; ?>
+
                     <div class="modal-user">
-                        <form action="view_student.php" method="POST">
+                        <form action="manage_student.php" method="POST">
                             <!-- School Details Section -->
                             <h5 class="mt-1"><b>Chi tiết trường học</b></h5>
                             <div class="row row-add mb-3">
                                 <div class="col-md-4">
                                     <label for="schoolID" class="form-label"> Mã Sinh viên</label>
-                                    <input type="text" class="form-control" id="schoolID">
+                                    <input type="text" class="form-control" id="schoolID" name="schoolID" required>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="department" class="form-label">Khoá</label>
-                                    <input type="text" class="form-control" id="department">
+                                    <input type="text" class="form-control" id="department" name="department" required>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="course" class="form-label">Lớp</label>
-                                    <input type="text" class="form-control" id="course">
+                                    <label for="course" class="form-label">Mã Lớp</label>
+                                    <input type="text" class="form-control" id="course" name="course" required>
+                                </div>
+                            </div>
+                            <div class="row row-add mb-3">
+
+                                <div class="col-md-4">
+                                    <label for="maDay" class="form-label">Mã Dãy</label>
+                                    <input type="text" class="form-control" id="maDay" name="maDay" required>
                                 </div>
                             </div>
 
@@ -41,28 +99,25 @@ include_once __DIR__ . '/../../partials/heading.php';
                             <div class="row row-add mb-3">
                                 <div class="col-md-4">
                                     <label for="firstName" class="form-label">Tên</label>
-                                    <input type="text" class="form-control" id="firstName">
+                                    <input type="text" class="form-control" id="firstName" name="firstName" required>
                                 </div>
                                 <div class="col-md-4">
-<<<<<<< HEAD
-                                    <label for="ngaySinh" class="form-label">Ngày sinh</label>
-<<<<<<< HEAD
-                                    <input type="date" id="filter-date" value="" class="form-control">
-=======
-                                    <input type="text" class="form-control" id="ngaySinh">
->>>>>>> 3bd600158415006c29d4ce2eeec815f740794177
-=======
-                                    <label for="lastName" class="form-label">Họ</label>
-                                    <input type="text" class="form-control" id="lastName">
->>>>>>> ca4b6fe911ec3260950bf6190d15d7fe97a61c7b
-                                </div>
 
+                                    <label for="ngaySinh" class="form-label">Ngày sinh</label>
+                                    <input type="text" class="form-control" id="ngaySinh" name="ngaySinh" required>
+
+                                </div>
+                                <div class="col-md-4">
+
+                                    <label for="chucVu" class="form-label">Chức vụ</label>
+                                    <input type="text" class="form-control" id="chucVu" name="chucVu" required>
+                                </div>
                             </div>
 
                             <div class="row row-add mb-3">
                                 <div class="col-md-4">
                                     <label for="gender" class="form-label">Giới tính</label>
-                                    <select class="form-select" id="gender">
+                                    <select class="form-select" id="gender" name="gender">
                                         <option selected>Nam</option>
                                         <option value="Female">Nữ</option>
                                         <option value="Other">Khác</option>
@@ -70,32 +125,29 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 </div>
                                 <div class="col-md-4">
                                     <label for="contact" class="form-label">Liên hệ #</label>
-                                    <input type="text" class="form-control" id="contact">
+                                    <input type="text" class="form-control" id="contact" name="contact" required>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="email" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="email">
+                                    <input type="email" class="form-control" id="email" name="email" required>
                                 </div>
                             </div>
 
                             <div class="row row-add mb-3">
                                 <div class="col-md-12">
                                     <label for="address" class="form-label">Địa chỉ</label>
-                                    <input type="text" class="form-control" id="address">
+                                    <input type="text" class="form-control" id="address" name="address" required>
                                 </div>
                             </div>
 
                             <div class="col-md-12">
-                                <label for="address" class="form-label">Trạng thái</label>
-                                <select class="form-select width-status" id="statusSelect">
-                                    <option selected>Hoạt động</option>
-                                    <option value="Inactive">Không hoạt động</option>
-                                </select>
+                                <label for="password" class="form-label">Password</label>
+                                <input type="text" class="form-control" id="password" name="password" required>
                             </div>
 
 
                             <!-- Submit Button -->
-                            <div class="text-end">
+                            <div class="text-end mt-2">
                                 <button type="submit" class="btn btn-primary"
                                     style="background-color: #db3077;">Lưu</button>
                             </div>
