@@ -1,13 +1,8 @@
 <?php
 include_once __DIR__ . '/../../config/dbadmin.php';
-$sql = "SELECT SinhVien.MaSinhVien, SinhVien.HoTen, SinhVien.MaLop, SinhVien.KhoaHoc, Lop.TenLop, Phong.MaPhong
+$sql = "SELECT SinhVien.MaSinhVien, SinhVien.HoTen, SinhVien.MaLop, SinhVien.KhoaHoc, Lop.TenLop, SinhVien.MaPhong
         FROM SinhVien
-        LEFT JOIN Lop ON SinhVien.MaLop = Lop.MaLop
-        LEFT JOIN 
-    ThuePhong ON SinhVien.MaSinhVien = ThuePhong.MaSinhVien 
-LEFT JOIN 
-    Phong ON ThuePhong.MaPhong = Phong.MaPhong
-;";
+        LEFT JOIN Lop ON SinhVien.MaLop = Lop.MaLop";
 $result = $dbh->query($sql);
 
 
