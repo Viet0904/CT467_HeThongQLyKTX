@@ -31,9 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
 
     // Kiểm tra xem mã sinh viên có giá trị không
-    if (empty($maSinhVien)) {
-        $message = "Mã sinh viên không được để trống.";
-    } else {
         if (!empty($maSinhVien)) {
             // Cập nhật sinh viên
             $sql = "UPDATE SinhVien SET HoTen = :ten, SDT = :lienHe, Email = :email, MaLop = :maLop, DiaChi = :diaChi, GioiTinh = :gioiTinh, 
@@ -74,7 +71,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $message = "Lỗi: " . $e->getMessage();
         }
     }
-}
 
 
 

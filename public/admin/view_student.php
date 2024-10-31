@@ -142,24 +142,6 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 </div>
                             </div>
 
-                            <!-- Submit Button -->
-                            <div class="row-add d-flex justify-content-center align-items-center">
-                                <div class="mx-2">
-                                    <a href="manage_student.php" class="btn" style="background-color: #db3077;">
-                                        <p style="color: white" class="mb-0">Sửa</p>
-                                    </a>
-                                </div>
-                                <div class="mx-2">
-                                    <a href="javascript:void(0);" class="btn btn-danger"
-                                        onclick="openDeleteRoom()">Xoá</a>
-                                </div>
-                                <div class="mx-2">
-                                    <a href="student_list.php" class="btn btn-secondary">Trở về</a>
-                                </div>
-                            </div>
-
-
-
                         </form>
                     </div>
 
