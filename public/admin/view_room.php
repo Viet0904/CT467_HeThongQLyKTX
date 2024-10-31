@@ -1,6 +1,21 @@
 <?php
+include_once __DIR__ . '/../../config/dbadmin.php';
 include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
+
+$roomId = isset($_GET['id']) ? $_GET['id'] : null;
+$roomData = [];
+
+if ($roomId) {
+    $stmt = $dbh->prepare("SELECT * FROM Phong WHERE MaPhong = :id");
+    $stmt->execute([':id' => $roomId]);
+    $roomData = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if (!$roomData) {
+        echo "Phòng không tồn tại.";
+        exit;
+    }
+}
 ?>
 
 <body>
@@ -14,16 +29,13 @@ include_once __DIR__ . '/../../partials/heading.php';
                 <!-- Nội dung chính -->
                 <div class="my-2" style="margin-left: 260px;">
                     <div class="modal-header-1">
-                        <h5 class="modal-title mt-2">Chi tiết trường học</h5>
+                        <h5 class="modal-title mt-2">Chi tiết phòng</h5>
                     </div>
 
                     <div class="modal-user">
                         <form action="" method="POST">
                             <!-- School Details Section -->
                             <div class="row row-add">
-                                <div class="col-md-4">
-                                    <h5 class="mt-1"><b>Chi tiết phòng</b></h5>
-                                </div>
                                 <div class="col-md-8">
                                     <div class="status-toggle">
                                         <span>Hoạt động</span>
