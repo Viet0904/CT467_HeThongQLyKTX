@@ -16,7 +16,7 @@ include_once __DIR__ . '/../../partials/heading.php';
                 <div class=" mt-4"
                     style="max-width: 1075px; margin-left: 273px; border: 1px solid #ddd; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
                     <div style="padding: 2px; background-color: rgb(219, 48, 119); border-radius: 6px;"></div>
-                    <div class="container-fluid py-3" style="padding: 20px;">
+                    <div class="container-fluid py-3 px-2" style="padding: 20px;">
                         <!-- Phần header của List of Rooms -->
                         <div class="d-flex justify-content-between align-items-center">
                             <h5>Danh sách phòng</h5>
@@ -72,6 +72,7 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 echo '<th>Số chỗ thực tế</th>';
                                 echo '<th>Đã ở</th>';
                                 echo '<th>Còn trống</th>';
+                                echo '<th>Hoạt động</th>';
                                 echo '</tr>';
                                 echo '</thead>';
                                 echo '<tbody>';
@@ -92,6 +93,18 @@ include_once __DIR__ . '/../../partials/heading.php';
                                     echo '<td>' . htmlspecialchars($row["SoChoThucTe"]) . '</td>';
                                     echo '<td>' . htmlspecialchars($row["DaO"]) . '</td>';
                                     echo '<td>' . htmlspecialchars($row['ConTrong']) . '</td>';
+                                    echo '<td>
+                                    <div class="dropdown position-relative">
+                                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" onclick="toggleActionDropdown(\'actionDropdownMenu' . htmlspecialchars($stt) . '\')">
+                                            Hoạt động
+                                        </button>
+                                        <div id="actionDropdownMenu' . htmlspecialchars($stt) . '" class="dropdown-menu position-absolute p-0" style="display: none; min-width: 100px;">
+                                            <a class="dropdown-item py-2" href="view_room.php?msv=' . htmlspecialchars($row['MaPhong']) . '">Xem</a>
+                                            <a class="dropdown-item py-2" href="manage_room.php?msv=' . htmlspecialchars($row['MaPhong']) . '">Sửa</a>
+                                            <a class="dropdown-item py-2" href="delete_room.php?msv=' . htmlspecialchars($row['MaPhong']) . '">Xoá</a>
+                                        </div>
+                                    </div>
+                                  </td>';
                                     echo '</tr>';
                                 }
 

@@ -27,7 +27,7 @@ include_once __DIR__ . '/../../partials/heading.php';
 
                         </div>
 
-                        <div class="col-auto py-3">
+                        <div class="col-auto py-3 ">
 
                             <?php
                             // Số dòng trên mỗi trang
