@@ -105,6 +105,42 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 </div>
                             </div>
 
+                            <!-- Đường phân cách -->
+                            <hr style="border: none; border-top: 1px solid #a9a9a9; margin: 1px 0;">
+                            <!-- School Details Section -->
+                            <div class="col-md-4">
+                                <h5 class="mt-3"><b>Thông tin phòng</b></h5>
+                            </div>
+                            <div class="row row-add">
+                                <div class="col-md-4">
+                                    <label for="maPhong"> <b>Mã phòng</b></label>
+                                    <p class="mb-2 mt-1 mx-3">Hf1333234</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="tenPhong"><b>Tên Phòng</b></label>
+                                    <p class="mb-2 mt-1 mx-3">BB04115</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="maDay"><b>Mã dãy</b></label>
+                                    <p class="mb-2 mt-1 mx-3">390.000</p>
+                                </div>
+                            </div>
+
+                            <div class="row row-add">
+                                <div class="col-md-4">
+                                    <label for="maPhong"> <b>Mã phòng</b></label>
+                                    <p class="mb-2 mt-1 mx-3">Hf1333234</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="tenPhong"><b>Tên Phòng</b></label>
+                                    <p class="mb-2 mt-1 mx-3">BB04115</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="maDay"><b>Mã dãy</b></label>
+                                    <p class="mb-2 mt-1 mx-3">390.000</p>
+                                </div>
+                            </div>
+
                             <!-- Submit Button -->
                             <div class="row-add d-flex justify-content-center align-items-center">
                                 <div class="mx-2">
@@ -125,6 +161,7 @@ include_once __DIR__ . '/../../partials/heading.php';
 
                         </form>
                     </div>
+
                 </div>
             </div>
         </div>

@@ -1,14 +1,5 @@
 <?php
 include_once __DIR__ . '/../../config/dbadmin.php';
-$sql = "SELECT SinhVien.MaSinhVien, SinhVien.HoTen, SinhVien.MaLop, SinhVien.KhoaHoc, Lop.TenLop, Phong.MaPhong
-        FROM SinhVien
-        LEFT JOIN Lop ON SinhVien.MaLop = Lop.MaLop
-        LEFT JOIN 
-    ThuePhong ON SinhVien.MaSinhVien = ThuePhong.MaSinhVien 
-LEFT JOIN 
-    Phong ON ThuePhong.MaPhong = Phong.MaPhong
-;";
-$result = $dbh->query($sql);
 
 
 include_once __DIR__ . '/../../partials/header.php';
@@ -30,7 +21,7 @@ include_once __DIR__ . '/../../partials/heading.php';
                     <div class="container-fluid py-3" style="padding: 20px;">
                         <!-- Phần header của List of Rooms -->
                         <div class="d-flex justify-content-between align-items-center">
-                            <h5>Danh sách sinh viên</h5>
+                            <h5>Danh sách thuê phòng</h5>
                             <a href="./manage_student.php" class="btn text-white"
                                 style="background-color: rgb(219, 48, 119);">
                                 <i class="fas fa-plus me-1"></i>Tạo mới
@@ -38,33 +29,31 @@ include_once __DIR__ . '/../../partials/heading.php';
 
                         </div>
 
-                        <div class="table-responsive mt-3">
-                            <table class="table table-bordered table-hover">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Tên</th>
-                                        <th>Mã số sinh viên</th>
-                                        <th>Mã Lớp</th>
-                                        <th>Tên lớp</th>
-                                        <th>Khoá</th>
-                                        <th>Phòng</th>
-                                        <th>Hoạt động</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    if ($result->rowCount() > 0) {
-                                        $i = 1;  // Counter for row numbers
-                                        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                                            echo "<tr>
+                    <div class="table-responsive mt-3">
+                        <table class="table table-bordered table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Tên</th>
+                                    <th>Mã số sinh viên</th>
+                                    <th>Mã Lớp</th>
+                                    <th>Tên lớp</th>
+                                    <th>Khoá</th>
+                                    <th>Hoạt động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                if ($result->rowCount() > 0) {
+                                    $i = 1;  // Counter for row numbers
+                                    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                                        echo "<tr>
                                                 <td>{$i}</td>
                                                 <td>{$row['HoTen']}</td>
                                                 <td>{$row['MaSinhVien']}</td>
                                                 <td>{$row['MaLop']}</td>
                                                 <td>{$row['TenLop']}</td>
                                                 <td>{$row['KhoaHoc']}</td>
-                                                <td>{$row['MaPhong']}</td>
                                                 <td>
                                                     <div class='dropdown position-relative'>
                                                         <button class='btn btn-outline-secondary dropdown-toggle' type='button' onclick=\"toggleActionDropdown('actionDropdownMenu{$i}')\">
@@ -78,15 +67,15 @@ include_once __DIR__ . '/../../partials/heading.php';
                                                     </div>
                                                 </td>
                                               </tr>";
-                                            $i++;
-                                        }
-                                    } else {
-                                        echo "<tr><td colspan='8'>Không có dữ liệu</td></tr>";
+                                        $i++;
                                     }
-                                    ?>
-                                </tbody>
-                            </table>
-                        </div>
+                                } else {
+                                    echo "<tr><td colspan='8'>Không có dữ liệu</td></tr>";
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
 
                         <!-- Phân trang -->
                         <div class="d-flex justify-content-between align-items-center">
@@ -153,3 +142,4 @@ include_once __DIR__ . '/../../partials/heading.php';
 </script>
 
 </html>
+
