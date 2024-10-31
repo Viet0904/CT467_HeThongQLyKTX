@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['HoTen'] = $result['HoTen'];
             $_SESSION['Role'] = 'admin';
             echo "<script>alert('Đăng nhập thành công.')
-                window.location.href='./admin/account_list.php';
+                window.location.href='./admin/dashboard.php';
                 </script>";
             exit();
         } else {

@@ -31,46 +31,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
 
     // Kiểm tra xem mã sinh viên có giá trị không
-        if (!empty($maSinhVien)) {
-            // Cập nhật sinh viên
-            $sql = "UPDATE SinhVien SET HoTen = :ten, SDT = :lienHe, Email = :email, MaLop = :maLop, DiaChi = :diaChi, GioiTinh = :gioiTinh, 
+    if (!empty($maSinhVien)) {
+        // Cập nhật sinh viên
+        $sql = "UPDATE SinhVien SET HoTen = :ten, SDT = :lienHe, Email = :email, MaLop = :maLop, DiaChi = :diaChi, GioiTinh = :gioiTinh, 
                     KhoaHoc = :khoaHoc, NgaySinh = :ngaySinh, ChucVu = :chucVu, MaDay = :maDay, Password = :password WHERE MaSinhVien = :maSinhVien";
-            $stmt = $dbh->prepare($sql);
-            // Gán các tham số
-            $stmt->bindParam(':maSinhVien', $maSinhVien);
-        } else {
-            // Thêm sinh viên mới
-            $sql = "INSERT INTO SinhVien (MaSinhVien, HoTen, SDT, Email, MaLop, DiaChi, GioiTinh, KhoaHoc, NgaySinh, ChucVu, MaDay, Password) 
+        $stmt = $dbh->prepare($sql);
+        // Gán các tham số
+        $stmt->bindParam(':maSinhVien', $maSinhVien);
+    } else {
+        // Thêm sinh viên mới
+        $sql = "INSERT INTO SinhVien (MaSinhVien, HoTen, SDT, Email, MaLop, DiaChi, GioiTinh, KhoaHoc, NgaySinh, ChucVu, MaDay, Password) 
                     VALUES (:maSinhVien, :ten, :lienHe, :email, :maLop, :diaChi, :gioiTinh, :khoaHoc, :ngaySinh, :chucVu, :maDay, :password)";
-            $stmt = $dbh->prepare($sql);
-            // Gán các tham số
-            $stmt->bindParam(':maSinhVien', $maSinhVien);
-        }
-
-        // Gán các tham số còn lại cho cả hai trường hợp
-        $stmt->bindParam(':ten', $ten);
-        $stmt->bindParam(':lienHe', $lienHe);
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':maLop', $maLop);
-        $stmt->bindParam(':diaChi', $diaChi);
-        $stmt->bindParam(':gioiTinh', $gioiTinh);
-        $stmt->bindParam(':khoaHoc', $khoaHoc);
-        $stmt->bindParam(':ngaySinh', $ngaySinh);
-        $stmt->bindParam(':chucVu', $chucVu);
-        $stmt->bindParam(':maDay', $maDay);
-        $stmt->bindParam(':password', $password);
-
-        // Thực thi và kiểm tra kết quả
-        try {
-            if ($stmt->execute()) {
-                $message = "Cập nhật thành công!";
-            } else {
-                $message = "Đã xảy ra lỗi.";
-            }
-        } catch (PDOException $e) {
-            $message = "Lỗi: " . $e->getMessage();
-        }
+        $stmt = $dbh->prepare($sql);
+        // Gán các tham số
+        $stmt->bindParam(':maSinhVien', $maSinhVien);
     }
+
+    // Gán các tham số còn lại cho cả hai trường hợp
+    $stmt->bindParam(':ten', $ten);
+    $stmt->bindParam(':lienHe', $lienHe);
+    $stmt->bindParam(':email', $email);
+    $stmt->bindParam(':maLop', $maLop);
+    $stmt->bindParam(':diaChi', $diaChi);
+    $stmt->bindParam(':gioiTinh', $gioiTinh);
+    $stmt->bindParam(':khoaHoc', $khoaHoc);
+    $stmt->bindParam(':ngaySinh', $ngaySinh);
+    $stmt->bindParam(':chucVu', $chucVu);
+    $stmt->bindParam(':maDay', $maDay);
+    $stmt->bindParam(':password', $password);
+
+    // Thực thi và kiểm tra kết quả
+    try {
+        if ($stmt->execute()) {
+            $message = "Cập nhật thành công!";
+            header("Location: student_list.php");
+        } else {
+            $message = "Đã xảy ra lỗi.";
+        }
+    } catch (PDOException $e) {
+        $message = "Lỗi: " . $e->getMessage();
+    }
+}
 
 
 
@@ -99,7 +100,7 @@ include_once __DIR__ . '/../../partials/heading.php';
 
                     <div class="modal-user">
                         <form action="manage_student.php" method="POST">
-                            
+
                             <!-- School Details Section -->
                             <h5 class="mt-1"><b>Chi tiết trường học</b></h5>
                             <div class="row row-add mb-3">
@@ -153,14 +154,11 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 <div class="col-md-4">
                                     <label for="gioiTinh" class="form-label">Giới tính</label>
                                     <select class="form-select" id="gioiTinh" name="gioiTinh">
-                                        <option value="Nam" <?php if ($sinhVien['GioiTinh'] === 'Nam')
-                                            echo 'selected'; ?>>Nam</option>
-                                        <option value="Nữ" <?php if ($sinhVien['GioiTinh'] === 'Nữ')
-                                            echo 'selected'; ?>>
-                                            Nữ</option>
-                                        <option value="Khác" <?php if ($sinhVien['GioiTinh'] === 'Khác')
-                                            echo 'selected'; ?>>Khác</option>
+                                        <option value="Nam" <?php echo (isset($sinhVien['GioiTinh']) && $sinhVien['GioiTinh'] === 'Nam') ? 'selected' : ''; ?>>Nam</option>
+                                        <option value="Nữ" <?php echo (isset($sinhVien['GioiTinh']) && $sinhVien['GioiTinh'] === 'Nữ') ? 'selected' : ''; ?>>Nữ</option>
+                                        <option value="Khác" <?php echo (isset($sinhVien['GioiTinh']) && $sinhVien['GioiTinh'] === 'Khác') ? 'selected' : ''; ?>>Khác</option>
                                     </select>
+
 
                                 </div>
                                 <div class="col-md-4">
