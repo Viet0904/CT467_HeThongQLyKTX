@@ -14,19 +14,27 @@ $roomData = [
     'SucChua' => '',
     'SoChoThucTe' => '',
     'DaO' => '',
+    'ConTrong' => '',  // Trường này sẽ được lấy từ truy vấn
     'GiaThue' => '0.0',
     'TrangThaiSuDung' => 'Chưa sử dụng'
 ];
 
 if ($roomId) {
-    $stmt = $dbh->prepare("SELECT *, SoChoConLai(MaPhong) AS ConTrong FROM Phong WHERE MaPhong = :id");
+    // Thực hiện truy vấn để lấy thông tin phòng
+    $stmt = $dbh->prepare("SELECT * FROM Phong WHERE MaPhong = :id");
     $stmt->execute([':id' => $roomId]);
     $roomData = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$roomData) {
-        // Handle case where room does not exist
+        // Xử lý trường hợp phòng không tồn tại
         echo "Phòng không tồn tại.";
         exit;
+    } else {
+        // Nếu phòng tồn tại, gọi hàm SoChoConLai để lấy số chỗ còn trống
+        $stmtConTrong = $dbh->prepare("SELECT SoChoConLai(:id) AS ConTrong");
+        $stmtConTrong->execute([':id' => $roomId]);
+        $result = $stmtConTrong->fetch(PDO::FETCH_ASSOC);
+        $roomData['ConTrong'] = $result['ConTrong']; // Cập nhật số chỗ còn trống
     }
 }
 ?>
@@ -45,7 +53,7 @@ if ($roomId) {
 
                     <div class="modal-user mt-3">
                         <form action="/admin/action/manage_room_action.php" method="POST">
-                            <input type="hidden" name="maphong" value="<?php echo $roomData['MaPhong']; ?>">
+                            <input type="hidden" name="MaPhong" value="<?php echo $roomData['MaPhong']; ?>">
                             <div class="row row-add mb-3 mt-1">
                                 <div class="col-md-4">
                                     <label for="maphong" class="form-label">Mã phòng</label>
@@ -80,17 +88,21 @@ if ($roomId) {
                             </div>
 
                             <div class="row row-add mb-3">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label for="succhua" class="form-label">Sức chứa</label>
                                     <input type="number" class="form-control" id="succhua" name="succhua" value="<?php echo $roomData['SucChua']; ?>" required>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label for="sochothucte" class="form-label">Số chỗ thực tế</label>
                                     <input type="number" class="form-control" id="sochothucte" name="sochothucte" value="<?php echo $roomData['SoChoThucTe']; ?>" required>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label for="dao" class="form-label">Đã ở</label>
                                     <input type="number" class="form-control" id="dao" name="dao" value="<?php echo $roomData['DaO']; ?>" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="trong" class="form-label">Còn trống</label>
+                                    <input type="number" class="form-control" id="trong" name="trong" value="<?php echo $roomData['ConTrong']; ?>" readonly>
                                 </div>
                             </div>
 

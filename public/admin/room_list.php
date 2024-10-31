@@ -99,9 +99,9 @@ include_once __DIR__ . '/../../partials/heading.php';
                                             Hoạt động
                                         </button>
                                         <div id="actionDropdownMenu' . htmlspecialchars($stt) . '" class="dropdown-menu position-absolute p-0" style="display: none; min-width: 100px;">
-                                            <a class="dropdown-item py-2" href="view_room.php?msv=' . htmlspecialchars($row['MaPhong']) . '">Xem</a>
-                                            <a class="dropdown-item py-2" href="manage_room.php?msv=' . htmlspecialchars($row['MaPhong']) . '">Sửa</a>
-                                            <a class="dropdown-item py-2" href="delete_room.php?msv=' . htmlspecialchars($row['MaPhong']) . '">Xoá</a>
+                                            <a class="dropdown-item py-2" href="view_room.php?mp=' . htmlspecialchars($row['MaPhong']) . '">Xem</a>
+                                            <a class="dropdown-item py-2" href="manage_room.php?mp=' . htmlspecialchars($row['MaPhong']) . '">Sửa</a>
+                                            <a class="dropdown-item py-2" href="delete_room.php?mp=' . htmlspecialchars($row['MaPhong']) . '">Xoá</a>
                                         </div>
                                     </div>
                                   </td>';
