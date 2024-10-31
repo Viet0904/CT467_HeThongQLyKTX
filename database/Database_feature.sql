@@ -1,4 +1,5 @@
 use htqlktx;
+
 -- Tìm phòng còn trống dựa theo giới tính 
 DELIMITER //
 CREATE FUNCTION SoChoConLai(MaPhongInput VARCHAR(20)) 
@@ -61,7 +62,32 @@ BEGIN
 END //
 DELIMITER ;
 
+-- Cập nhật đăng ký phòng cho sinh viên
+DELIMITER //
+CREATE PROCEDURE proc_dangkyphong(
+    IN p_MaSinhVien VARCHAR(8),
+    IN p_MaPhong VARCHAR(10)
+)
+BEGIN
+    DECLARE v_error VARCHAR(255);
 
+    -- Check if the student already has a pending registration
+    IF EXISTS (SELECT 1 FROM SinhVien WHERE MaSinhVien = p_MaSinhVien AND MaPhongDangKy IS NOT NULL) THEN
+        SET v_error = 'Sinh viên đã đăng ký phòng rồi.';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = v_error;
+    END IF;
 
+    -- Check if the room exists
+    IF NOT EXISTS (SELECT 1 FROM Phong WHERE MaPhong = p_MaPhong) THEN
+        SET v_error = 'Phòng không tồn tại.';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = v_error;
+    ELSE
+        -- Update the student's MaPhongDangKy field
+        UPDATE SinhVien
+        SET MaPhongDangKy = p_MaPhong
+        WHERE MaSinhVien = p_MaSinhVien;
+    END IF;
+END//
+DELIMITER ;
 
 
