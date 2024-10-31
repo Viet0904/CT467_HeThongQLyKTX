@@ -194,7 +194,9 @@ CREATE TABLE SinhVien (
     MaDay VARCHAR(10),
     MaLop VARCHAR(10),
 	MaPhongDangKy varchar(10) default null,
+    MaPhong VARCHAR(10) default null,
     Password VARCHAR(255),
+    FOREIGN KEY (MaPhong) REFERENCES Phong(MaPhong),
     FOREIGN KEY (MaLop) REFERENCES Lop(MaLop),
     FOREIGN KEY (MaDay) REFERENCES Day(MaDay)
 );
@@ -241,8 +243,6 @@ CREATE TABLE Phong (
     DaO INT,
     GhiChu TEXT,
     LoaiPhong VARCHAR(10),
-	MaSinhVien VARCHAR(8),
-    FOREIGN KEY (MaSinhVien) REFERENCES SinhVien(MaSinhVien),
     FOREIGN KEY (MaDay) REFERENCES Day(MaDay)
 );
 
