@@ -12,6 +12,8 @@
         <!-- Master List Section -->
         <li class="section-header">Danh sách chính</li>
         <li class="p-0 ms-1"><a href="./room_list.php" class="py-2 ps-3"><i class="fas fa-door-open"></i> Danh sách phòng</a></li>
+        <li class="p-0 ms-1"><a href="./room_list.php" class="py-2 ps-3"><i class="fas fa-door-open"></i> Quản lý đăng ký KTX</a></li>
+        <li class="p-0 ms-1"><a href="./room_list.php" class="py-2 ps-3"><i class="fas fa-door-open"></i> Quản lý thuê phòng</a></li>
         
         <!-- Reports Section -->
         <li class="section-header">Báo cáo</li>

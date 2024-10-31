@@ -30,26 +30,6 @@ include_once __DIR__ . '/../../partials/heading.php';
                             </a>
                         </div>
 
-                        <!-- Phần tìm kiếm và số lượng hiển thị -->
-                        <div class="row mt-3">
-                            <div class="col-md-6">
-                                <label for="entries" class="form-label">Hiển thị</label>
-                                <select class="form-select form-select-sm w-auto d-inline-block" id="entries"
-                                    aria-label="Entries">
-                                    <option selected>10</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select>
-                                <span class="ms-2">trang</span>
-                            </div>
-                            <div class="col-md-6 text-end" style="margin-left: 527px">
-                                <label for="search" class="form-label me-2">Tìm kiếm:</label>
-                                <input type="search" class="form-control form-control-sm w-auto d-inline-block"
-                                    id="search">
-                            </div>
-                        </div>
-
                         <!-- Bảng danh sách các phòng -->
                         <div class="table-responsive mt-3">
                             <table class="table table-bordered table-hover">

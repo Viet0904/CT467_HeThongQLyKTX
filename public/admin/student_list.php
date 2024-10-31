@@ -65,9 +65,9 @@ include_once __DIR__ . '/../../partials/heading.php';
                                                             Hoạt động
                                                         </button>
                                                         <div id='actionDropdownMenu{$i}' class='dropdown-menu position-absolute p-0' style='display: none; min-width: 100px;'>
-                                                            <a class='dropdown-item py-2' href='view_student.php?id={$row['MaSinhVien']}'>Xem</a>
-                                                            <a class='dropdown-item py-2' href='manage_student.php?id={$row['MaSinhVien']}'>Sửa</a>
-                                                            <a class='dropdown-item py-2' href='delete_student.php?id={$row['MaSinhVien']}'>Xoá</a>
+                                                            <a class='dropdown-item py-2' href='view_student.php?msv={$row['MaSinhVien']}'>Xem</a>
+                                                            <a class='dropdown-item py-2' href='manage_student.php?msv={$row['MaSinhVien']}'>Sửa</a>
+                                                            <a class='dropdown-item py-2' href='delete_student.php?msv={$row['MaSinhVien']}'>Xoá</a>
                                                         </div>
                                                     </div>
                                                 </td>

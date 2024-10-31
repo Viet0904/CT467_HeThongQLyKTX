@@ -1,12 +1,12 @@
 <?php
 include_once __DIR__ . '/../../config/dbadmin.php';
-$id = $_GET['id'];  // Lấy id của sinh viên từ URL để truy vấn
+$msv = $_GET['msv'];  // Lấy msv của sinh viên từ URL để truy vấn
 $sql = "SELECT SinhVien.*, Lop.TenLop
         FROM SinhVien
         JOIN Lop ON SinhVien.MaLop = Lop.MaLop
-        WHERE MaSinhVien = :id";
+        WHERE MaSinhVien = :msv";
 $stmt = $dbh->prepare($sql);
-$stmt->execute(['id' => $id]);
+$stmt->execute(['msv' => $msv]);
 $student = $stmt->fetch(PDO::FETCH_ASSOC);
 
 
