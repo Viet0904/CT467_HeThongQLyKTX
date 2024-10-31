@@ -32,76 +32,76 @@ if ($roomId) {
                         <h5 class="modal-title mt-2">Chi tiết phòng</h5>
                     </div>
 
-                    <div class="modal-user">
+                    <div class="modal-user mt-3">
                         <form action="" method="POST">
                             <!-- School Details Section -->
                             <div class="row row-add">
                                 <div class="col-md-8">
                                     <div class="status-toggle">
                                         <span>Hoạt động</span>
-                                        <input type="checkbox" checked disabled>
+                                        <input type="checkbox" checked enabled>
                                     </div>
                                 </div>
                             </div>
                             <div class="row row-add mt-3">
                                 <div class="col-md-4 ">
                                     <label for="maphong"> <b>Mã phòng</b></label>
-                                    <p class="mb-2 mt-1 mx-3">B2111837</p>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo htmlspecialchars($roomData['MaPhong']); ?></p>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="MaDay"><b>Mã dãy</b></label>
-                                    <p class="mb-2 mt-1 mx-3">Hg218732</p>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo htmlspecialchars($roomData['MaDay']); ?></p>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="tenphong"><b>Tên phòng</b></label>
-                                    <p class="mb-2 mt-1 mx-3">Hg218732</p>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo htmlspecialchars($roomData['TenPhong']); ?></p>
                                 </div>
                             </div>
                             <div class="row row-add mt-1">
                                 <div class="col-md-4">
                                     <label for="loaiphong"><b>Loại phòng</b></label>
-                                    <p class="mt-1 mb-2 mx-3">Nam</p>
+                                    <p class="mt-1 mb-2 mx-3"><?php echo htmlspecialchars($roomData['LoaiPhong']); ?></p>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="dientich"><b>Diện tích</b></label>
-                                    <p class="mt-1 mb-2 mx-3"> 11,450</p>
+                                    <p class="mt-1 mb-2 mx-3"><?php echo htmlspecialchars($roomData['DienTich']); ?></p>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="sogiuong"><b>Số giường</b></label>
-                                    <p class="mt-1 mb-2 mx-3">4</p>
+                                    <p class="mt-1 mb-2 mx-3"><?php echo htmlspecialchars($roomData['SoGiuong']); ?></p>
                                 </div>
                             </div>
 
                             <div class="row row-add">
                                 <div class="col-md-4">
                                     <label for="succhua"><b>Sức chứa</b></label>
-                                    <p class="mb-2 mt-1 mx-3">4</p>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo htmlspecialchars($roomData['SucChua']); ?></p>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="giathue"><b>Giá thuê</b></label>
-                                    <p class="mb-2 mt-1 mx-3">14,0932</p>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo number_format($roomData['GiaThue'], 2); ?></p>
                                 </div>
                             </div>
 
                             <div class="row row-add">
                                 <div class="col-md-4">
                                     <label for="socho"><b>Số chỗ thực tế</b></label>
-                                    <p class="mb-2 mt-1 mx-3">4</p>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo htmlspecialchars($roomData['SoChoThucTe']); ?></p>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="dao"><b>Đã ở</b></label>
-                                    <p class="mb-2 mt-1 mx-3">3</p>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo htmlspecialchars($roomData['DaO']); ?></p>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="trong"><b>Còn trống</b></label>
-                                    <p class="mb-2 mt-1 mx-3">1</p>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo htmlspecialchars($roomData['SoChoThucTe'] - $roomData['DaO']); ?></p>
                                 </div>
                             </div>
 
                             <!-- Submit Button -->
                             <div class="row-add d-flex justify-content-center align-items-center mt-2">
                                 <div class="mx-2">
-                                    <a href="manage_room.php" class="btn" style="background-color: #db3077;">
+                                    <a href="manage_room.php?id=<?php echo htmlspecialchars($roomId); ?>" class="btn" style="background-color: #db3077;">
                                         <p style="color: white" class="mb-0">Sửa</p>
                                     </a>
                                 </div>
@@ -113,9 +113,6 @@ if ($roomId) {
                                     <a href="room_list.php" class="btn btn-secondary">Trở về</a>
                                 </div>
                             </div>
-
-
-
                         </form>
                     </div>
                 </div>
@@ -128,7 +125,6 @@ if ($roomId) {
     <div id="deleteRoomModal" class="modal-overlay" style="display: none;">
         <div class="modal-content-1">
             <h5> <b>Bạn có chắc chắn muốn xoá phòng?</b></h5>
-            <!-- Đường phân cách -->
             <hr style="border: none; border-top: 1px solid #a9a9a9; margin: 10px 0;">
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger">Xoá</button>
@@ -173,6 +169,7 @@ if ($roomId) {
             dropdownMenu.style.display = "none"; // Đảm bảo đóng dropdown
         }
     }
+
     // Mở modal xác nhận xóa phòng
     function openDeleteRoom() {
         document.getElementById("deleteRoomModal").style.display = "flex";

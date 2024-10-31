@@ -53,7 +53,7 @@ if ($roomId) {
 
                     <div class="modal-user mt-3">
                         <form action="/admin/action/manage_room_action.php" method="POST">
-                            <input type="hidden" name="MaPhong" value="<?php echo $roomData['MaPhong']; ?>">
+                            <input type="hidden" name="old_maphong" value="<?php echo $roomData['MaPhong']; ?>">
                             <div class="row row-add mb-3 mt-1">
                                 <div class="col-md-4">
                                     <label for="maphong" class="form-label">Mã phòng</label>
