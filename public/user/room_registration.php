@@ -2,6 +2,43 @@
 include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
 require_once __DIR__ . '/../../config/dbadmin.php';
+session_start();
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['MaPhong']) && isset($_SESSION['MaSinhVien'])) {
+        $maPhong = $_POST['MaPhong'];
+        $maSinhVien = $_SESSION['MaSinhVien'];
+
+        // Prepare and execute stored procedure
+        $sql = "CALL proc_dangkyphong(:maSinhVien, :maPhong)";
+        $stmt = $dbh->prepare($sql);
+        // Bind the parameters
+        $stmt->bindParam(':maSinhVien', $maSinhVien, PDO::PARAM_STR);
+        $stmt->bindParam(':maPhong', $maPhong, PDO::PARAM_STR);
+
+        try {
+            $stmt->execute();
+            echo "<script>alert('Đăng ký thành công! Vui lòng chờ quản trị viên duyệt.');</script>";
+        } catch (PDOException $e) {
+            // Extract error information
+            $errorInfo = $e->errorInfo;
+            $sqlstate = $errorInfo[0];
+            $errorMessage = $errorInfo[2];
+
+            // Display custom error message
+            if ($sqlstate == '45000') {
+                echo "<script>alert('Lỗi: " . $errorMessage . "');</script>";
+            } else {
+                // Handle other SQL errors
+                echo "<script>alert('Đã xảy ra lỗi. Vui lòng thử lại.');</script>";
+            }
+        }
+
+        $stmt->closeCursor(); // Close the cursor to free the connection
+    } else {
+        echo "<script>alert('Vui lòng đăng nhập trước khi đăng ký phòng.');</script>";
+    }
+}
 ?>
 
 <body>
@@ -13,7 +50,6 @@ require_once __DIR__ . '/../../config/dbadmin.php';
             <div class="col-auto py-3">
 
                 <?php
-                session_start(); // Đảm bảo đã khởi tạo session
 
                 // Kiểm tra xem $_SESSION['GioiTinh'] đã tồn tại chưa
                 if (!isset($_SESSION['GioiTinh'])) {
@@ -101,7 +137,12 @@ require_once __DIR__ . '/../../config/dbadmin.php';
                             echo '<td>' . htmlspecialchars($row["SoChoThucTe"]) . '</td>';
                             echo '<td>' . htmlspecialchars($row["DaO"]) . '</td>';
                             echo '<td>' . htmlspecialchars($row["ConTrong"]) . '</td>';
-                            echo '<td><a href="register.php?room_id=' . htmlspecialchars($row["MaPhong"]) . '" class="btn btn-success">Đăng ký</a></td>';
+                            echo '<td>
+                                    <form method="POST" action="">
+                                        <input type="hidden" name="MaPhong" value="' . htmlspecialchars($row["MaPhong"]) . '">
+                                        <button type="submit" class="btn btn-success">Đăng ký</button>
+                                    </form>
+                                </td>';
                             echo '</tr>';
                         }
                     }

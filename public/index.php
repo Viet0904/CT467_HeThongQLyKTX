@@ -35,7 +35,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['MaSinhVien'] = $result['MaSinhVien'];
             $_SESSION['Email'] = $result['Email'];
             $_SESSION['HoTen'] = $result['HoTen'];
-            $_SESSION['HoTen'] = $result['HoTen'];
             $_SESSION['GioiTinh'] = $result['GioiTinh'];
             $_SESSION['Role'] = 'user';
             echo "<script>alert('Đăng nhập thành công.')
