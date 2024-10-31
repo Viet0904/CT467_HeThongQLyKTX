@@ -1,142 +1,132 @@
 <?php
+include_once __DIR__ . '/../../config/dbadmin.php';
 include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
+
+$roomId = isset($_GET['id']) ? $_GET['id'] : null;
+$roomData = [
+    'MaPhong' => '',
+    'MaDay' => '',
+    'TenPhong' => '',
+    'LoaiPhong' => 'Nam',
+    'DienTich' => '',
+    'SoGiuong' => '',
+    'SucChua' => '',
+    'SoChoThucTe' => '',
+    'DaO' => '',
+    'ConTrong' => '',
+    'GiaThue' => '',
+    'TrangThaiSuDung' => 'Chưa sử dụng'
+];
+
+if ($roomId) {
+    $stmt = $dbh->prepare("SELECT * FROM Phong WHERE MaPhong = :id");
+    $stmt->execute([':id' => $roomId]);
+    $roomData = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$roomData) {
+        // Handle case where room does not exist
+        echo "Phòng không tồn tại.";
+        exit;
+    }
+}
 ?>
 
 <body>
     <div class="container-fluid">
         <div class="row flex-nowrap">
-            <?php
-            include_once __DIR__ . '/sidebar.php';
-            ?>
+            <?php include_once __DIR__ . '/sidebar.php'; ?>
 
             <div class="col px-0">
                 <!-- Nội dung chính -->
                 <div class="my-2" style="margin-left: 260px;">
                     <div class="modal-header-1">
-                        <h5 class="modal-title mt-2">Thêm phòng mới</h5>
+                        <h5 class="modal-title mt-2"><?php echo $roomId ? 'Chỉnh sửa phòng' : 'Thêm phòng mới'; ?></h5>
                     </div>
 
                     <div class="modal-user">
-                        <form action="view_room.php" method="POST">
+                        <form action="/admin/action/manage_room_action.php" method="POST">
+                            <input type="hidden" name="MaPhong" value="<?php echo $roomData['MaPhong']; ?>">
                             <div class="row row-add mb-3 mt-1">
                                 <div class="col-md-4">
-                                    <label for="maphong" class="form-label"> Mã phòng</label>
-                                    <input type="text" class="form-control" id="maphong">
+                                    <label for="maphong" class="form-label">Mã phòng</label>
+                                    <input type="text" class="form-control" id="maphong" name="maphong" value="<?php echo $roomData['MaPhong']; ?>" required>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="MaDay" class="form-label">Mã dãy</label>
-                                    <input type="text" class="form-control" id="MaDay">
+                                    <input type="text" class="form-control" id="MaDay" name="MaDay" value="<?php echo $roomData['MaDay']; ?>" required>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="tenphong" class="form-label">Tên phòng</label>
-                                    <input type="text" class="form-control" id="tenphong">
+                                    <input type="text" class="form-control" id="tenphong" name="tenphong" value="<?php echo $roomData['TenPhong']; ?>" required>
                                 </div>
                             </div>
 
                             <div class="row row-add mb-3">
                                 <div class="col-md-4">
                                     <label for="loaiphong" class="form-label">Loại phòng</label>
-                                    <select class="form-select" id="loaiphong">
-                                        <option selected>Nam</option>
-                                        <option value="Female">Nữ</option>
+                                    <select class="form-select" id="loaiphong" name="loaiphong">
+                                        <option value="Nam" <?php echo $roomData['LoaiPhong'] === 'Nam' ? 'selected' : ''; ?>>Nam</option>
+                                        <option value="Nữ" <?php echo $roomData['LoaiPhong'] === 'Nữ' ? 'selected' : ''; ?>>Nữ</option>
                                     </select>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="dientich" class="form-label">Diện tích</label>
-                                    <input type="text" class="form-control" id="dientich">
+                                    <input type="text" class="form-control" id="dientich" name="dientich" value="<?php echo $roomData['DienTich']; ?>" required>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="sogiuong" class="form-label">Số giường</label>
-                                    <input type="number" class="form-control" id="sogiuong">
+                                    <input type="number" class="form-control" id="sogiuong" name="sogiuong" value="<?php echo $roomData['SoGiuong']; ?>" required>
                                 </div>
                             </div>
 
                             <div class="row row-add mb-3">
                                 <div class="col-md-3">
                                     <label for="succhua" class="form-label">Sức chứa</label>
-                                    <input type="number" class="form-control" id="succhua">
+                                    <input type="number" class="form-control" id="succhua" name="succhua" value="<?php echo $roomData['SucChua']; ?>" required>
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="socho" class="form-label">Số chỗ thực tế</label>
-                                    <input type="number" class="form-control" id="socho">
+                                    <label for="sochothucte" class="form-label">Số chỗ thực tế</label>
+                                    <input type="number" class="form-control" id="sochothucte" name="sochothucte" value="<?php echo $roomData['SoChoThucTe']; ?>" required>
                                 </div>
                                 <div class="col-md-3">
                                     <label for="dao" class="form-label">Đã ở</label>
-                                    <input type="number" class="form-control" id="dao">
+                                    <input type="number" class="form-control" id="dao" name="dao" value="<?php echo $roomData['DaO']; ?>" required>
                                 </div>
                                 <div class="col-md-3">
                                     <label for="trong" class="form-label">Còn trống</label>
-                                    <input type="number" class="form-control" id="trong">
+                                    <input type="number" class="form-control" id="trong" name="trong" value="<?php echo $roomData['ConTrong']; ?>" required>
                                 </div>
                             </div>
 
                             <div class="row row-add mb-3">
                                 <div class="col-md-12">
                                     <label for="giathue" class="form-label">Giá thuê</label>
-                                    <input type="text" class="form-control" id="giathue">
+                                    <input type="text" class="form-control" id="giathue" name="giathue" value="<?php echo number_format($roomData['GiaThue'], 2); ?>" required>
                                 </div>
                             </div>
 
                             <div class="col-md-12">
-                                <label for="address" class="form-label">Trạng thái</label>
-                                <select class="form-select width-status" id="statusSelect">
-                                    <option selected>Hoạt động</option>
-                                    <option value="Inactive">Không hoạt động</option>
+                                <label for="statusSelect" class="form-label">Trạng thái</label>
+                                <select class="form-select width-status" id="statusSelect" name="trangthai">
+                                    <option value="Đang sử dụng" <?php echo $roomData['TrangThaiSuDung'] === 'Đang sử dụng' ? 'selected' : ''; ?>>Đang sử dụng</option>
+                                    <option value="Chưa sử dụng" <?php echo $roomData['TrangThaiSuDung'] === 'Chưa sử dụng' ? 'selected' : ''; ?>>Chưa sử dụng</option>
                                 </select>
                             </div>
 
-
                             <!-- Submit Button -->
                             <div class="text-end">
-                                <button type="submit" class="btn btn-primary"
-                                    style="background-color: #db3077;">Lưu</button>
+                                <button type="submit" class="btn btn-primary" style="background-color: #db3077;">Lưu</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-
-    </div>
     </div>
 </body>
 
 <!-- Bootstrap JS và Popper.js -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-    integrity="sha384-oBqDVmMz4fnFO9gybBogGzPztE1M5rZG/8Xlqh8fATrSWJZDmmW4Ll48dWkOVbCH"
-    crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-    integrity="sha384-shoIXUoVOFk60M7DuE4bfOY1pNIqcd9tPCSZrhTDQTXkNv8El+fEfXksqNhUNuUc"
-    crossorigin="anonymous"></script>
-
-<script>
-    // Hàm mở và đóng dropdown khi bấm tên admin
-    function toggleDropdown(event) {
-        event.stopPropagation(); // Ngăn chặn sự kiện click bên ngoài
-        var dropdown = document.getElementById("dropdownMenu");
-        dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block"; // Toggle dropdown
-    }
-
-    // Hàm mở và đóng dropdown khi bấm vào nút Action
-    function toggleActionDropdown(id) {
-        var dropdown = document.getElementById(id);
-        if (dropdown.style.display === "none" || dropdown.style.display === "") {
-            dropdown.style.display = "block"; // Hiển thị dropdown
-        } else {
-            dropdown.style.display = "none"; // Ẩn dropdown
-        }
-    }
-
-    // Đóng tất cả các dropdown nếu click bên ngoài
-    window.onclick = function (event) {
-        var dropdownMenu = document.getElementById("dropdownMenu");
-
-        // Đóng dropdown của tên admin nếu click bên ngoài
-        if (!event.target.matches('#userDropdown') && !event.target.matches('.ms-1') && !dropdownMenu.contains(event.target)) {
-            dropdownMenu.style.display = "none"; // Đảm bảo đóng dropdown
-        }
-    }
-</script>
-
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gybBogGzPztE1M5rZG/8Xlqh8fATrSWJZDmmW4Ll48dWkOVbCH" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-shoIXUoVOFk60M7DuE4bfOY1pNIqcd9tPCSZrhTDQTXkNv8El+fEfXksqNhUNuUc" crossorigin="anonymous"></script>
 </html>
