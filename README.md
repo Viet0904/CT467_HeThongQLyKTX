@@ -11,7 +11,7 @@ FLUSH PRIVILEGES;
 ```
 
 ## Bước 2: Tạo các Database và các bảng
-Mở File Database_Workbench.sql thực chạy.
+Mở File Database_Workbench.sql và Database_feature.sql thực chạy.
 
 ## Bước 3: Clone dự án về máy
 `git clone https://github.com/Viet0904/CT467_HeThongQLyKTX.git`
