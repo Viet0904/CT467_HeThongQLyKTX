@@ -63,7 +63,7 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 echo '<table class="table table-bordered table-striped table-hover mt-3">';
                                 echo '<thead class="table-primary">';
                                 echo '<tr>';
-                                echo '<th>Stt</th>';
+                                echo '<th>STT</th>';
                                 echo '<th>Tên</th>';
                                 echo '<th>MSSV</th>';
                                 echo '<th>Giới tính</th>';

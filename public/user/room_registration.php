@@ -4,8 +4,8 @@ include_once __DIR__ . '/../../partials/heading.php';
 require_once __DIR__ . '/../../config/dbadmin.php';
 session_start();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['MaPhong']) && isset($_SESSION['MaSinhVien'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['MaPhong']) && isset($_POST['dang_ky'])) {
+    if (isset($_SESSION['MaSinhVien'])) {
         $maPhong = $_POST['MaPhong'];
         $maSinhVien = $_SESSION['MaSinhVien'];
 
@@ -18,27 +18,101 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         try {
             $stmt->execute();
-            echo "<script>alert('Đăng ký thành công! Vui lòng chờ quản trị viên duyệt.');</script>";
+
+            // Fetch the success message returned from the stored procedure
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($result && isset($result['Message'])) {
+                $successMessage = $result['Message'];
+                // Display the message and redirect using JavaScript
+                echo "<script>
+                    alert('" . $successMessage . "');
+                    window.location.href = 'room_registration.php';
+                </script>";
+                exit();
+            } else {
+                // If no message is returned, display a default success message
+                echo "<script>
+                    alert('Đăng ký thành công! Vui lòng chờ quản trị viên duyệt.');
+                    window.location.href = 'room_registration.php';
+                </script>";
+                exit();
+            }
         } catch (PDOException $e) {
             // Extract error information
             $errorInfo = $e->errorInfo;
             $sqlstate = $errorInfo[0];
             $errorMessage = $errorInfo[2];
 
-            // Display custom error message
+            // Display custom error message and redirect
             if ($sqlstate == '45000') {
-                echo "<script>alert('Lỗi: " . $errorMessage . "');</script>";
+                echo "<script>
+                    alert('" . $errorMessage . "');
+                    window.location.href = 'room_registration.php';
+                </script>";
             } else {
                 // Handle other SQL errors
-                echo "<script>alert('Đã xảy ra lỗi. Vui lòng thử lại.');</script>";
+                echo "<script>
+                    alert('Đã xảy ra lỗi. Vui lòng thử lại.');
+                    window.location.href = 'room_registration.php';
+                </script>";
             }
+            exit();
         }
 
         $stmt->closeCursor(); // Close the cursor to free the connection
     } else {
-        echo "<script>alert('Vui lòng đăng nhập trước khi đăng ký phòng.');</script>";
+        echo "<script>
+            alert('Vui lòng đăng nhập trước khi đăng ký phòng.');
+            window.location.href = 'login.php';
+        </script>";
+        exit();
     }
 }
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['huy_dang_ky']) && isset($_POST['MaPhong'])) {
+    if (isset($_SESSION['MaSinhVien'])) {
+        $maPhong = $_POST['MaPhong'];
+        $maSinhVien = $_SESSION['MaSinhVien'];
+
+        try {
+            // Chuẩn bị và thực thi stored procedure
+            $sql = "CALL proc_huyDangKyPhong(:maSinhVien)";
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindParam(':maSinhVien', $maSinhVien);
+            $stmt->execute();
+
+            // Lấy thông báo thành công trả về từ stored procedure
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($result && isset($result['Message'])) {
+                $successMessage = $result['Message'];
+                // Hiển thị thông báo lên trang web
+                echo "<script>
+                    alert('" . $successMessage . "');
+                    window.location.href = 'room_registration.php';
+                </script>";
+                exit();
+            }
+            $stmt->closeCursor(); // Đóng con trỏ để giải phóng kết nối
+        } catch (PDOException $e) {
+            $errorInfo = $e->errorInfo;
+            $sqlstate = $errorInfo[0];
+            $errorMessage = $errorInfo[2];
+
+            // Hiển thị thông báo lỗi tùy chỉnh
+            if ($sqlstate == '45000') {
+                echo "<script>alert('" . $errorMessage . "');</script>";
+            } else {
+                // Xử lý các lỗi SQL khác
+                echo "<script>alert('Đã xảy ra lỗi. Vui lòng thử lại.');</script>";
+            }
+        }
+    }
+}
+$maSinhVien = $_SESSION['MaSinhVien'];
+$sql = "SELECT GetMaPhongDangKy(:maSinhVien) AS MaPhongDangKy";
+$stmt = $dbh->prepare($sql);
+$stmt->bindParam(':maSinhVien', $maSinhVien);
+$stmt->execute();
+$maPhongDangKy = $stmt->fetchColumn();
 ?>
 
 <body>
@@ -115,7 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     echo '<th>Số chỗ thực tế</th>';
                     echo '<th>Đã ở</th>';
                     echo '<th>Còn trống</th>';
-                    echo '<th>Đăng ký</th>';
+                    echo '<th>Hoạt động</th>';
                     echo '</tr>';
                     echo '</thead>';
                     echo '<tbody>';
@@ -137,13 +211,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             echo '<td>' . htmlspecialchars($row["SoChoThucTe"]) . '</td>';
                             echo '<td>' . htmlspecialchars($row["DaO"]) . '</td>';
                             echo '<td>' . htmlspecialchars($row["ConTrong"]) . '</td>';
-                            echo '<td>
+                            if ($maPhongDangKy == $row["MaPhong"]) {
+                                echo '<td>
                                     <form method="POST" action="">
                                         <input type="hidden" name="MaPhong" value="' . htmlspecialchars($row["MaPhong"]) . '">
+                                        <input type="hidden" name="huy_dang_ky" value="1">
+                                        <button type="submit" class="btn btn-danger">Huỷ Đăng ký</button>
+                                    </form>
+                                </td>';
+                            } else {
+                                echo '<td>
+                                    <form method="POST" action="">
+                                        <input type="hidden" name="MaPhong" value="' . htmlspecialchars($row["MaPhong"]) . '">
+                                        <input type="hidden" name="dang_ky" value="0">
                                         <button type="submit" class="btn btn-success">Đăng ký</button>
                                     </form>
                                 </td>';
-                            echo '</tr>';
+                            }
                         }
                     }
 
