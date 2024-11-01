@@ -1,82 +1,58 @@
 <?php
 include_once __DIR__ . '/../../config/dbadmin.php';
+include_once __DIR__ . '/../../partials/header.php';
+include_once __DIR__ . '/../../partials/heading.php';
+
 $message = '';
+$maSinhVien = $_GET['msv'] ?? ''; // Lấy mã sinh viên từ URL nếu có
 
-// Kiểm tra xem có mã sinh viên trong URL không (chế độ sửa)
-$maSinhVien = isset($_GET['msv']) ? $_GET['msv'] : '';
-
-// Nếu có mã sinh viên, truy vấn dữ liệu sinh viên từ cơ sở dữ liệu
-if (!empty($maSinhVien)) {
-    $query = "SELECT * FROM SinhVien WHERE MaSinhVien = :maSinhVien";
-    $stmt = $dbh->prepare($query);
-    $stmt->bindParam(':maSinhVien', $maSinhVien);
-    $stmt->execute();
+// Lấy thông tin sinh viên nếu có mã sinh viên
+if ($maSinhVien) {
+    $stmt = $dbh->prepare("SELECT * FROM SinhVien WHERE MaSinhVien = :maSinhVien");
+    $stmt->execute([':maSinhVien' => $maSinhVien]);
     $sinhVien = $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-// Xử lý khi form được submit (thêm mới hoặc cập nhật sinh viên)
+// Thực hiện thêm hoặc cập nhật sinh viên khi form được submit
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Lấy mã sinh viên từ POST
-    $maSinhVien = $_POST['maSinhVien'] ?? '';
-    $ten = $_POST['firstName'];
-    $lienHe = $_POST['contact'];
-    $email = $_POST['email'];
-    $maLop = $_POST['maLop'];
-    $diaChi = $_POST['address'];
-    $gioiTinh = $_POST['gioiTinh'];
-    $khoaHoc = $_POST['khoaHoc'];
-    $ngaySinh = $_POST['ngaySinh'];
-    $chucVu = $_POST['chucVu'];
-    $maDay = $_POST['maDay'];
-    $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+    $maSinhVien = $_POST['maSinhVien'] ?? $maSinhVien; // Lấy mã sinh viên từ POST nếu có, nếu không thì giữ giá trị từ URL
 
-    // Kiểm tra xem mã sinh viên có giá trị không
-    if (!empty($maSinhVien)) {
-        // Cập nhật sinh viên
-        $sql = "UPDATE SinhVien SET HoTen = :ten, SDT = :lienHe, Email = :email, MaLop = :maLop, DiaChi = :diaChi, GioiTinh = :gioiTinh, 
-                    KhoaHoc = :khoaHoc, NgaySinh = :ngaySinh, ChucVu = :chucVu, MaDay = :maDay, Password = :password WHERE MaSinhVien = :maSinhVien";
-        $stmt = $dbh->prepare($sql);
-        // Gán các tham số
-        $stmt->bindParam(':maSinhVien', $maSinhVien);
+    // Kiểm tra xem mã sinh viên có tồn tại trong CSDL không
+    $checkStmt = $dbh->prepare("SELECT * FROM SinhVien WHERE MaSinhVien = :maSinhVien");
+    $checkStmt->execute([':maSinhVien' => $maSinhVien]);
+    $sinhVien = $checkStmt->fetch(PDO::FETCH_ASSOC);
+
+    $data = [
+        ':maSinhVien' => $maSinhVien,
+        ':ten' => $_POST['firstName'],
+        ':lienHe' => $_POST['contact'],
+        ':email' => $_POST['email'],
+        ':maLop' => $_POST['maLop'],
+        ':diaChi' => $_POST['address'],
+        ':gioiTinh' => $_POST['gioiTinh'],
+        ':khoaHoc' => $_POST['khoaHoc'],
+        ':ngaySinh' => $_POST['ngaySinh'],
+        ':chucVu' => $_POST['chucVu'],
+        ':maDay' => $_POST['maDay'],
+        ':password' => password_hash($_POST['password'], PASSWORD_BCRYPT)
+    ];
+
+    // Tạo câu truy vấn SQL dựa trên kiểm tra tồn tại
+    if ($sinhVien) {
+        $sql = "UPDATE SinhVien SET HoTen = :ten, SDT = :lienHe, Email = :email, MaLop = :maLop, DiaChi = :diaChi, GioiTinh = :gioiTinh, KhoaHoc = :khoaHoc, NgaySinh = :ngaySinh, ChucVu = :chucVu, MaDay = :maDay, Password = :password WHERE MaSinhVien = :maSinhVien";
     } else {
-        // Thêm sinh viên mới
-        $sql = "INSERT INTO SinhVien (MaSinhVien, HoTen, SDT, Email, MaLop, DiaChi, GioiTinh, KhoaHoc, NgaySinh, ChucVu, MaDay, Password) 
-                    VALUES (:maSinhVien, :ten, :lienHe, :email, :maLop, :diaChi, :gioiTinh, :khoaHoc, :ngaySinh, :chucVu, :maDay, :password)";
-        $stmt = $dbh->prepare($sql);
-        // Gán các tham số
-        $stmt->bindParam(':maSinhVien', $maSinhVien);
+        $sql = "INSERT INTO SinhVien (MaSinhVien, HoTen, SDT, Email, MaLop, DiaChi, GioiTinh, KhoaHoc, NgaySinh, ChucVu, MaDay, Password) VALUES (:maSinhVien, :ten, :lienHe, :email, :maLop, :diaChi, :gioiTinh, :khoaHoc, :ngaySinh, :chucVu, :maDay, :password)";
     }
 
-    // Gán các tham số còn lại cho cả hai trường hợp
-    $stmt->bindParam(':ten', $ten);
-    $stmt->bindParam(':lienHe', $lienHe);
-    $stmt->bindParam(':email', $email);
-    $stmt->bindParam(':maLop', $maLop);
-    $stmt->bindParam(':diaChi', $diaChi);
-    $stmt->bindParam(':gioiTinh', $gioiTinh);
-    $stmt->bindParam(':khoaHoc', $khoaHoc);
-    $stmt->bindParam(':ngaySinh', $ngaySinh);
-    $stmt->bindParam(':chucVu', $chucVu);
-    $stmt->bindParam(':maDay', $maDay);
-    $stmt->bindParam(':password', $password);
-
-    // Thực thi và kiểm tra kết quả
+    $stmt = $dbh->prepare($sql);
     try {
-        if ($stmt->execute()) {
-            $message = "Cập nhật thành công!";
-            header("Location: student_list.php");
-        } else {
-            $message = "Đã xảy ra lỗi.";
-        }
+        // Thực thi câu truy vấn
+        $stmt->execute($data);
+        $message = $sinhVien ? "Cập nhật thành công!" : "Thêm mới thành công!";
     } catch (PDOException $e) {
         $message = "Lỗi: " . $e->getMessage();
     }
 }
-
-
-
-include_once __DIR__ . '/../../partials/header.php';
-include_once __DIR__ . '/../../partials/heading.php';
 ?>
 
 <body>
