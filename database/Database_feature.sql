@@ -49,18 +49,18 @@ DELIMITER ;
 SELECT TongTienThuePhong('SV01', 6) AS TongTien;
 
 
--- Tự động cập nhật số chỗ trống khi thêm sinh viên vào phòng
-DELIMITER //
-CREATE TRIGGER CapNhatSoChoKhiThemSinhVien 
-AFTER INSERT ON SinhVien
-FOR EACH ROW
-BEGIN
-    UPDATE Phong
-    SET DaO = DaO + 1,
-        ConTrong = ConTrong - 1
-    WHERE MaPhong = NEW.MaDay;
-END //
-DELIMITER ;
+-- -- Tự động cập nhật số chỗ trống khi thêm sinh viên vào phòng
+-- DELIMITER //
+-- CREATE TRIGGER CapNhatSoChoKhiThemSinhVien 
+-- AFTER INSERT ON SinhVien
+-- FOR EACH ROW
+-- BEGIN
+--     UPDATE Phong
+--     SET DaO = DaO + 1,
+--         ConTrong = ConTrong - 1
+--     WHERE MaPhong = NEW.MaDay;
+-- END //
+-- DELIMITER ;
 
 -- Cập nhật đăng ký phòng cho sinh viên
 DELIMITER //
