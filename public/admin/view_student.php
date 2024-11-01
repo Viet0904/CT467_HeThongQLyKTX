@@ -1,9 +1,10 @@
 <?php
 include_once __DIR__ . '/../../config/dbadmin.php';
 $msv = $_GET['msv'];  // Lấy msv của sinh viên từ URL để truy vấn
-$sql = "SELECT SinhVien.*, Lop.TenLop
+$sql = "SELECT SinhVien.*, Lop.TenLop, Phong.*
         FROM SinhVien
         JOIN Lop ON SinhVien.MaLop = Lop.MaLop
+        LEFT JOIN Phong ON SinhVien.MaPhong = Phong.MaPhong
         WHERE MaSinhVien = :msv";
 $stmt = $dbh->prepare($sql);
 $stmt->execute(['msv' => $msv]);
@@ -105,26 +106,45 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 </div>
                             </div>
 
-                            <!-- Submit Button -->
-                            <div class="row-add d-flex justify-content-center align-items-center">
-                                <div class="mx-2">
-                                    <a href="manage_student.php" class="btn" style="background-color: #db3077;">
-                                        <p style="color: white" class="mb-0">Sửa</p>
-                                    </a>
+                            <!-- Đường phân cách -->
+                            <hr style="border: none; border-top: 1px solid #a9a9a9; margin: 1px 0;">
+                            <!-- School Details Section -->
+                            <div class="col-md-4">
+                                <h5 class="mt-3"><b>Thông tin phòng</b></h5>
+                            </div>
+                            <div class="row row-add">
+                                <div class="col-md-4">
+                                    <label for="maPhong"> <b>Mã phòng</b></label>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['MaPhong']; ?></p>
                                 </div>
-                                <div class="mx-2">
-                                    <a href="javascript:void(0);" class="btn btn-danger"
-                                        onclick="openDeleteRoom()">Xoá</a>
+                                <div class="col-md-4">
+                                    <label for="tenPhong"><b>Tên Phòng</b></label>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['TenPhong']; ?></p>
                                 </div>
-                                <div class="mx-2">
-                                    <a href="student_list.php" class="btn btn-secondary">Trở về</a>
+                                <div class="col-md-4">
+                                    <label for="maDay"><b>Mã dãy</b></label>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['MaDay']; ?></p>
                                 </div>
                             </div>
 
-
+                            <div class="row row-add">
+                                <div class="col-md-4">
+                                    <label for="maPhong"> <b>Diện tích</b></label>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['DienTich']; ?></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="tenPhong"><b>Giá thuê</b></label>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['GiaThue']; ?></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="maDay"><b>Loại phòng</b></label>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['LoaiPhong']; ?></p>
+                                </div>
+                            </div>
 
                         </form>
                     </div>
+
                 </div>
             </div>
         </div>

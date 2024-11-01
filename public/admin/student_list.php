@@ -1,12 +1,5 @@
 <?php
 include_once __DIR__ . '/../../config/dbadmin.php';
-$sql = "SELECT SinhVien.MaSinhVien, SinhVien.HoTen, SinhVien.MaLop, SinhVien.KhoaHoc, Lop.TenLop
-        FROM SinhVien
-        JOIN Lop ON SinhVien.MaLop = Lop.MaLop
-;";
-$result = $dbh->query($sql);
-
-
 include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
 ?>
@@ -34,71 +27,121 @@ include_once __DIR__ . '/../../partials/heading.php';
 
                         </div>
 
-                    <div class="table-responsive mt-3">
-                        <table class="table table-bordered table-hover">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>#</th>
-                                    <th>Tên</th>
-                                    <th>Mã số sinh viên</th>
-                                    <th>Mã Lớp</th>
-                                    <th>Tên lớp</th>
-                                    <th>Khoá</th>
-                                    <th>Hoạt động</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                if ($result->rowCount() > 0) {
-                                    $i = 1;  // Counter for row numbers
-                                    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                                        echo "<tr>
-                                                <td>{$i}</td>
-                                                <td>{$row['HoTen']}</td>
-                                                <td>{$row['MaSinhVien']}</td>
-                                                <td>{$row['MaLop']}</td>
-                                                <td>{$row['TenLop']}</td>
-                                                <td>{$row['KhoaHoc']}</td>
-                                                <td>
-                                                    <div class='dropdown position-relative'>
-                                                        <button class='btn btn-outline-secondary dropdown-toggle' type='button' onclick=\"toggleActionDropdown('actionDropdownMenu{$i}')\">
-                                                            Hoạt động
-                                                        </button>
-                                                        <div id='actionDropdownMenu{$i}' class='dropdown-menu position-absolute p-0' style='display: none; min-width: 100px;'>
-                                                            <a class='dropdown-item py-2' href='view_student.php?msv={$row['MaSinhVien']}'>Xem</a>
-                                                            <a class='dropdown-item py-2' href='manage_student.php?msv={$row['MaSinhVien']}'>Sửa</a>
-                                                            <a class='dropdown-item py-2' href='delete_student.php?msv={$row['MaSinhVien']}'>Xoá</a>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                              </tr>";
-                                        $i++;
-                                    }
-                                } else {
-                                    echo "<tr><td colspan='8'>Không có dữ liệu</td></tr>";
-                                }
-                                ?>
-                            </tbody>
-                        </table>
-                    </div>
+                        <div class="col-auto py-3 ">
 
-                        <!-- Phân trang -->
-                        <div class="d-flex justify-content-between align-items-center">
-                            <p class="mb-0">Xem 1 đến 7 trong 7 trang</p>
-                            <nav>
-                                <ul class="pagination pagination-sm mb-0">
-                                    <li class="page-item disabled">
-                                        <a class="page-link" href="#">Trước</a>
-                                    </li>
-                                    <li class="page-item active">
-                                        <a class="page-link" href="#">1</a>
-                                    </li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">Sau</a>
-                                    </li>
-                                </ul>
-                            </nav>
+                            <?php
+                            // Số dòng trên mỗi trang
+                            $rowsPerPage = 10;
+                            // Tính tổng số dòng
+                            $totalRowsQuery = "SELECT COUNT(*) FROM SinhVien";
+                            $totalRowsResult = $dbh->query($totalRowsQuery);
+                            $totalRows = $totalRowsResult->fetchColumn();
+
+                            // Tính tổng số trang
+                            $totalPages = ceil($totalRows / $rowsPerPage);
+
+                            // Lấy trang hiện tại từ query string, nếu không có thì mặc định là trang 1
+                            $currentPage = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+                            if ($currentPage < 1) {
+                                $currentPage = 1;
+                            } elseif ($currentPage > $totalPages) {
+                                $currentPage = $totalPages;
+                            }
+
+                            // Tính chỉ số bắt đầu của dòng trên trang hiện tại
+                            $offset = ($currentPage - 1) * $rowsPerPage;
+
+                            // Truy vấn SQL với LIMIT và OFFSET
+                            $sinhvien = "SELECT SinhVien.*, Lop.TenLop 
+                            FROM SinhVien 
+                            JOIN Lop ON SinhVien.MaLop = Lop.MaLop 
+                            LIMIT $rowsPerPage OFFSET $offset";
+
+                            $result = $dbh->query($sinhvien);
+
+                            if ($result->rowCount() > 0) {
+                                echo '<table class="table table-bordered table-striped table-hover mt-3">';
+                                echo '<thead class="table-primary">';
+                                echo '<tr>';
+                                echo '<th>Stt</th>';
+                                echo '<th>Tên</th>';
+                                echo '<th>MSSV</th>';
+                                echo '<th>Giới tính</th>';
+                                echo '<th>Mã lớp</th>';
+                                echo '<th>Tên lớp</th>';
+                                echo '<th>Khoá</th>';
+                                echo '<th>Phòng</th>';
+                                echo '<th>Hoạt động</th>';
+                                echo '</tr>';
+                                echo '</thead>';
+                                echo '<tbody>';
+
+                                // Xuất dữ liệu của từng hàng
+                                $stt = $offset + 1;
+                                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                                    echo '<tr>';
+                                    echo '<td>' . $stt++ . '</td>';
+                                    echo '<td>' . htmlspecialchars($row["HoTen"]) . '</td>';
+                                    echo '<td>' . htmlspecialchars($row["MaSinhVien"]) . '</td>';
+                                    echo '<td>' . htmlspecialchars($row["GioiTinh"]) . '</td>';
+                                    echo '<td>' . htmlspecialchars($row["MaLop"]) . '</td>';
+                                    echo '<td>' . htmlspecialchars($row["TenLop"]) . '</td>';
+                                    echo '<td>' . htmlspecialchars($row["KhoaHoc"]) . '</td>';
+                                    echo '<td>' . htmlspecialchars($row["MaPhong"]) . '</td>';
+                                    echo '<td>
+                                    <div class="dropdown position-relative">
+                                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" onclick="toggleActionDropdown(\'actionDropdownMenu' . htmlspecialchars($stt) . '\')">
+                                            Hoạt động
+                                        </button>
+                                        <div id="actionDropdownMenu' . htmlspecialchars($stt) . '" class="dropdown-menu position-absolute p-0" style="display: none; min-width: 100px;">
+                                            <a class="dropdown-item py-2" href="view_student.php?msv=' . htmlspecialchars($row['MaSinhVien']) . '">Xem</a>
+                                            <a class="dropdown-item py-2" href="manage_student.php?msv=' . htmlspecialchars($row['MaSinhVien']) . '">Sửa</a>
+                                            <a class="dropdown-item py-2" href="delete_student.php?msv=' . htmlspecialchars($row['MaSinhVien']) . '">Xoá</a>
+                                        </div>
+                                    </div>
+                                  </td>';
+                                    echo '</tr>';
+                                }
+
+                                echo '</tbody>';
+                                echo '</table>';
+                            } else {
+                                echo "0 kết quả";
+                            }
+                            ?>
+
+                            <!-- Pagination -->
+                            <?php
+                            if ($totalPages > 1) {
+                                echo '<nav aria-label="..." class="d-flex">';
+                                echo '<ul class="pagination mx-auto">';
+                                if ($currentPage > 1) {
+                                    echo '<li class="page-item"><a class="page-link" href="?page=1">Trang đầu</a></li>';
+                                    $prevPage = $currentPage - 1;
+                                    echo '<li class="page-item"><a class="page-link" href="?page=' . htmlspecialchars($prevPage) . '">Previous</a></li>';
+                                }
+
+                                for ($i = 1; $i <= $totalPages; $i++) {
+                                    if ($i === $currentPage) {
+                                        echo '<li class="page-item active" aria-current="page"><span class="page-link">' . htmlspecialchars($i) . '</span></li>';
+                                    } else {
+                                        echo '<li class="page-item"><a class="page-link" href="?page=' . htmlspecialchars($i) . '">' . htmlspecialchars($i) . '</a></li>';
+                                    }
+                                }
+
+                                if ($currentPage < $totalPages) {
+                                    $nextPage = $currentPage + 1;
+                                    echo '<li class="page-item"><a class="page-link" href="?page=' . htmlspecialchars($nextPage) . '">Next</a></li>';
+                                    echo '<li class="page-item"><a class="page-link" href="?page=' . htmlspecialchars($totalPages) . '">Trang cuối</a></li>';
+                                }
+                                echo '</ul>';
+                                echo '</nav>';
+                            }
+                            ?>
+                            <p><strong>Tổng số:</strong> <?php echo $totalRows; ?> dòng</p>
+
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -147,4 +190,3 @@ include_once __DIR__ . '/../../partials/heading.php';
 </script>
 
 </html>
-
