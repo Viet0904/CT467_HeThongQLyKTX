@@ -1,9 +1,10 @@
 <?php
 include_once __DIR__ . '/../../config/dbadmin.php';
 $msv = $_GET['msv'];  // Lấy msv của sinh viên từ URL để truy vấn
-$sql = "SELECT SinhVien.*, Lop.TenLop
+$sql = "SELECT SinhVien.*, Lop.TenLop, Phong.*
         FROM SinhVien
         JOIN Lop ON SinhVien.MaLop = Lop.MaLop
+        LEFT JOIN Phong ON SinhVien.MaPhong = Phong.MaPhong
         WHERE MaSinhVien = :msv";
 $stmt = $dbh->prepare($sql);
 $stmt->execute(['msv' => $msv]);
@@ -114,50 +115,32 @@ include_once __DIR__ . '/../../partials/heading.php';
                             <div class="row row-add">
                                 <div class="col-md-4">
                                     <label for="maPhong"> <b>Mã phòng</b></label>
-                                    <p class="mb-2 mt-1 mx-3">Hf1333234</p>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['MaPhong']; ?></p>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="tenPhong"><b>Tên Phòng</b></label>
-                                    <p class="mb-2 mt-1 mx-3">BB04115</p>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['TenPhong']; ?></p>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="maDay"><b>Mã dãy</b></label>
-                                    <p class="mb-2 mt-1 mx-3">390.000</p>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['MaDay']; ?></p>
                                 </div>
                             </div>
 
                             <div class="row row-add">
                                 <div class="col-md-4">
-                                    <label for="maPhong"> <b>Mã phòng</b></label>
-                                    <p class="mb-2 mt-1 mx-3">Hf1333234</p>
+                                    <label for="maPhong"> <b>Diện tích</b></label>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['DienTich']; ?></p>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="tenPhong"><b>Tên Phòng</b></label>
-                                    <p class="mb-2 mt-1 mx-3">BB04115</p>
+                                    <label for="tenPhong"><b>Giá thuê</b></label>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['GiaThue']; ?></p>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="maDay"><b>Mã dãy</b></label>
-                                    <p class="mb-2 mt-1 mx-3">390.000</p>
+                                    <label for="maDay"><b>Loại phòng</b></label>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['LoaiPhong']; ?></p>
                                 </div>
                             </div>
-
-                            <!-- Submit Button -->
-                            <div class="row-add d-flex justify-content-center align-items-center">
-                                <div class="mx-2">
-                                    <a href="manage_student.php" class="btn" style="background-color: #db3077;">
-                                        <p style="color: white" class="mb-0">Sửa</p>
-                                    </a>
-                                </div>
-                                <div class="mx-2">
-                                    <a href="javascript:void(0);" class="btn btn-danger"
-                                        onclick="openDeleteRoom()">Xoá</a>
-                                </div>
-                                <div class="mx-2">
-                                    <a href="student_list.php" class="btn btn-secondary">Trở về</a>
-                                </div>
-                            </div>
-
-
 
                         </form>
                     </div>
