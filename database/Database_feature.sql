@@ -40,6 +40,28 @@ END //
 DELIMITER ;
 
 
+DELIMITER //
+CREATE PROCEDURE GetSinhVienPhongDangKy(IN page_limit INT, IN page_offset INT)
+BEGIN
+    SELECT 
+        sv.HoTen AS TenSinhVien,
+        sv.MaSinhVien,
+        sv.GioiTinh,
+        sv.MaPhongDangKy,
+        p.LoaiPhong,
+        p.SucChua,
+        p.SoChoThucTe,
+        p.DaO,
+        (p.SoChoThucTe - p.DaO) AS ConTrong
+    FROM 
+        SinhVien sv
+    LEFT JOIN 
+        Phong p ON sv.MaPhongDangKy = p.MaPhong
+    WHERE 
+        sv.MaPhongDangKy IS NOT NULL
+    LIMIT page_limit OFFSET page_offset;
+END //
+DELIMITER ;
 
 
 
@@ -74,7 +96,7 @@ BEGIN
 
     -- Check if the student already has a pending registration
     IF EXISTS (SELECT 1 FROM SinhVien WHERE MaSinhVien = p_MaSinhVien AND MaPhongDangKy IS NOT NULL) THEN
-        SET v_error = 'Sinh viên đã đăng ký phòng rồi. Hãy Huỷ đăng ký phòng trước';
+        SET v_error = 'Sinh viên đã đăng ký phòng rồi. Hãy Huỷ đăng ký phòng.';
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = v_error;
     END IF;
 
