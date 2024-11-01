@@ -13,6 +13,19 @@ BEGIN
     RETURN SoChoConLai;
 END //
 DELIMITER ;
+-- Lấy MaPhongDangKy của SinhVien
+DELIMITER //
+CREATE FUNCTION GetMaPhongDangKy(p_MaSinhVien VARCHAR(8))
+RETURNS VARCHAR(10)
+DETERMINISTIC
+BEGIN
+    DECLARE v_MaPhongDangKy VARCHAR(10);
+    SELECT MaPhongDangKy INTO v_MaPhongDangKy
+    FROM SinhVien
+    WHERE MaSinhVien = p_MaSinhVien;
+    RETURN v_MaPhongDangKy;
+END //
+DELIMITER ;
 
 
 -- Tính số chỗ còn trống của 1 phòng
@@ -77,5 +90,28 @@ BEGIN
     END IF;
 END//
 DELIMITER ;
+-- Huỷ Đăng Ký Phòng
+DELIMITER //
+CREATE PROCEDURE proc_huyDangKyPhong(IN p_MaSinhVien VARCHAR(8))
+BEGIN
+    DECLARE v_MaPhongDangKy VARCHAR(10);
+    DECLARE v_error VARCHAR(255);
 
+    -- Check if the student exists and has a registered room
+    SELECT MaPhongDangKy INTO v_MaPhongDangKy
+    FROM SinhVien
+    WHERE MaSinhVien = p_MaSinhVien;
 
+    IF v_MaPhongDangKy IS NULL THEN
+        SET v_error = 'Sinh viên không có phòng đăng ký để hủy.';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = v_error;
+    ELSE
+        -- Update MaPhongDangKy to NULL
+        UPDATE SinhVien
+        SET MaPhongDangKy = NULL
+        WHERE MaSinhVien = p_MaSinhVien;
+        -- Return success message
+        SELECT 'Hủy đăng ký phòng thành công.' AS Message;
+    END IF;
+END //
+DELIMITER ;
