@@ -74,7 +74,7 @@ BEGIN
 
     -- Check if the student already has a pending registration
     IF EXISTS (SELECT 1 FROM SinhVien WHERE MaSinhVien = p_MaSinhVien AND MaPhongDangKy IS NOT NULL) THEN
-        SET v_error = 'Sinh viên đã đăng ký phòng rồi.';
+        SET v_error = 'Sinh viên đã đăng ký phòng rồi. Hãy Huỷ đăng ký phòng trước';
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = v_error;
     END IF;
 
@@ -82,13 +82,16 @@ BEGIN
     IF NOT EXISTS (SELECT 1 FROM Phong WHERE MaPhong = p_MaPhong) THEN
         SET v_error = 'Phòng không tồn tại.';
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = v_error;
-    ELSE
-        -- Update the student's MaPhongDangKy field
-        UPDATE SinhVien
-        SET MaPhongDangKy = p_MaPhong
-        WHERE MaSinhVien = p_MaSinhVien;
     END IF;
-END//
+
+    -- Update the student's MaPhongDangKy field
+    UPDATE SinhVien
+    SET MaPhongDangKy = p_MaPhong
+    WHERE MaSinhVien = p_MaSinhVien;
+
+    -- Return success message
+    SELECT 'Đăng ký phòng thành công! Vui lòng chờ quản trị viên duyệt.' AS Message;
+END //
 DELIMITER ;
 -- Huỷ Đăng Ký Phòng
 DELIMITER //

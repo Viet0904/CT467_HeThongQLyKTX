@@ -18,25 +18,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['MaPhong']) && isset($
 
         try {
             $stmt->execute();
-            echo "<script>alert('Đăng ký thành công! Vui lòng chờ quản trị viên duyệt.');</script>";
+
+            // Fetch the success message returned from the stored procedure
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($result && isset($result['Message'])) {
+                $successMessage = $result['Message'];
+                // Display the message and redirect using JavaScript
+                echo "<script>
+                    alert('" . $successMessage . "');
+                    window.location.href = 'room_registration.php';
+                </script>";
+                exit();
+            } else {
+                // If no message is returned, display a default success message
+                echo "<script>
+                    alert('Đăng ký thành công! Vui lòng chờ quản trị viên duyệt.');
+                    window.location.href = 'room_registration.php';
+                </script>";
+                exit();
+            }
         } catch (PDOException $e) {
             // Extract error information
             $errorInfo = $e->errorInfo;
             $sqlstate = $errorInfo[0];
             $errorMessage = $errorInfo[2];
 
-            // Display custom error message
+            // Display custom error message and redirect
             if ($sqlstate == '45000') {
-                echo "<script>alert('" . $errorMessage . "');</script>";
+                echo "<script>
+                    alert('" . $errorMessage . "');
+                    window.location.href = 'room_registration.php';
+                </script>";
             } else {
                 // Handle other SQL errors
-                echo "<script>alert('Đã xảy ra lỗi. Vui lòng thử lại.');</script>";
+                echo "<script>
+                    alert('Đã xảy ra lỗi. Vui lòng thử lại.');
+                    window.location.href = 'room_registration.php';
+                </script>";
             }
+            exit();
         }
 
         $stmt->closeCursor(); // Close the cursor to free the connection
     } else {
-        echo "<script>alert('Vui lòng đăng nhập trước khi đăng ký phòng.');</script>";
+        echo "<script>
+            alert('Vui lòng đăng nhập trước khi đăng ký phòng.');
+            window.location.href = 'login.php';
+        </script>";
+        exit();
     }
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['huy_dang_ky']) && isset($_POST['MaPhong'])) {
