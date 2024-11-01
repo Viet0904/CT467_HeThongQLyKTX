@@ -49,6 +49,7 @@ DELIMITER ;
 SELECT TongTienThuePhong('SV01', 6) AS TongTien;
 
 
+
 -- Cập nhật đăng ký phòng cho sinh viên
 DELIMITER //
 CREATE PROCEDURE proc_dangkyphong(
