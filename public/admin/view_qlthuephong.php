@@ -36,8 +36,8 @@ $roomId = $_GET['MaPhong'] ?? null;
                                                 <td>{$contract['MaHopDong']}</td>
                                                 <td>{$contract['BatDau']}</td>
                                                 <td>{$contract['KetThuc']}</td>
-                                                <td>{$contract['TienDatCoc']}</td>
-                                                <td>{$contract['GiaThueThucTe']}</td>
+                                                <td>" . number_format($contract['TienDatCoc'], 2) . "</td>
+                                                <td>" . number_format($contract['GiaThueThucTe'], 2) . "</td>
                                                 <td><a href='hopdong_detail.php?MaHopDong={$contract['MaHopDong']}' class='btn btn-outline-info'>Xem chi tiết</a></td>
                                               </tr>";
                                     }
