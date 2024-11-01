@@ -14,20 +14,27 @@ $roomData = [
     'SucChua' => '',
     'SoChoThucTe' => '',
     'DaO' => '',
-    'ConTrong' => '',
-    'GiaThue' => '',
+    'ConTrong' => '',  // Trường này sẽ được lấy từ truy vấn
+    'GiaThue' => '0.0',
     'TrangThaiSuDung' => 'Chưa sử dụng'
 ];
 
 if ($roomId) {
+    // Thực hiện truy vấn để lấy thông tin phòng
     $stmt = $dbh->prepare("SELECT * FROM Phong WHERE MaPhong = :id");
     $stmt->execute([':id' => $roomId]);
     $roomData = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$roomData) {
-        // Handle case where room does not exist
+        // Xử lý trường hợp phòng không tồn tại
         echo "Phòng không tồn tại.";
         exit;
+    } else {
+        // Nếu phòng tồn tại, gọi hàm SoChoConLai để lấy số chỗ còn trống
+        $stmtConTrong = $dbh->prepare("SELECT SoChoConLai(:id) AS ConTrong");
+        $stmtConTrong->execute([':id' => $roomId]);
+        $result = $stmtConTrong->fetch(PDO::FETCH_ASSOC);
+        $roomData['ConTrong'] = $result['ConTrong']; // Cập nhật số chỗ còn trống
     }
 }
 ?>
@@ -44,9 +51,9 @@ if ($roomId) {
                         <h5 class="modal-title mt-2"><?php echo $roomId ? 'Chỉnh sửa phòng' : 'Thêm phòng mới'; ?></h5>
                     </div>
 
-                    <div class="modal-user">
+                    <div class="modal-user mt-3">
                         <form action="/admin/action/manage_room_action.php" method="POST">
-                            <input type="hidden" name="MaPhong" value="<?php echo $roomData['MaPhong']; ?>">
+                            <input type="hidden" name="old_maphong" value="<?php echo $roomData['MaPhong']; ?>">
                             <div class="row row-add mb-3 mt-1">
                                 <div class="col-md-4">
                                     <label for="maphong" class="form-label">Mã phòng</label>
@@ -95,7 +102,7 @@ if ($roomId) {
                                 </div>
                                 <div class="col-md-3">
                                     <label for="trong" class="form-label">Còn trống</label>
-                                    <input type="number" class="form-control" id="trong" name="trong" value="<?php echo $roomData['ConTrong']; ?>" required>
+                                    <input type="number" class="form-control" id="trong" name="trong" value="<?php echo $roomData['ConTrong']; ?>" readonly>
                                 </div>
                             </div>
 

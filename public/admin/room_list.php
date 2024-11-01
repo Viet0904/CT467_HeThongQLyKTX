@@ -2,6 +2,11 @@
 include_once __DIR__ . '/../../config/dbadmin.php';
 include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
+
+if (isset($_GET['success']) && $_GET['success'] == 1) {
+    echo "<script>alert('Xóa phòng thành công.');</script>";
+}
+
 ?>
 
 <body>
@@ -14,7 +19,7 @@ include_once __DIR__ . '/../../partials/heading.php';
             <div class="col px-0">
                 <!-- Nội dung chính -->
                 <div class=" mt-4"
-                    style="max-width: 1075px; margin-left: 273px; border: 1px solid #ddd; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
+                    style="max-width: 1275px; margin-left: 253px; border: 1px solid #ddd; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
                     <div style="padding: 2px; background-color: rgb(219, 48, 119); border-radius: 6px;"></div>
                     <div class="container-fluid py-3 px-2" style="padding: 20px;">
                         <!-- Phần header của List of Rooms -->
@@ -22,13 +27,12 @@ include_once __DIR__ . '/../../partials/heading.php';
                             <h5>Danh sách phòng</h5>
                             <a href="./manage_room.php" class="btn text-white"
                                 style="background-color: rgb(219, 48, 119);">
-                                <i class="fas fa-plus me-1"></i>Tạo mới
+                                <i class="fas fa-plus me-1"></i>Thêm phòng mới
                             </a>
 
                         </div>
 
                         <div class="col-auto py-3">
-
                             <?php
                             // Số dòng trên mỗi trang
                             $rowsPerPage = 10;
@@ -61,7 +65,7 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 echo '<table class="table table-bordered table-striped table-hover mt-3">';
                                 echo '<thead class="table-primary">';
                                 echo '<tr>';
-                                echo '<th>Stt</th>';
+                                echo '<th>STT</th>';
                                 echo '<th>Mã phòng</th>';
                                 echo '<th>Tên phòng</th>';
                                 echo '<th>Mã dãy</th>';
@@ -86,7 +90,7 @@ include_once __DIR__ . '/../../partials/heading.php';
                                     echo '<td>' . htmlspecialchars($row["MaPhong"]) . '</td>';
                                     echo '<td>' . htmlspecialchars($row["TenPhong"]) . '</td>';
                                     echo '<td>' . htmlspecialchars($row["MaDay"]) . '</td>';
-                                    echo '<td>' . htmlspecialchars($row["GiaThue"]) . '</td>';
+                                    echo '<td>' . htmlspecialchars(number_format($row['GiaThue'], 2)) . '</td>';
                                     echo '<td>' . htmlspecialchars($row["LoaiPhong"]) . '</td>';
                                     echo '<td>' . htmlspecialchars($row["TrangThaiSuDung"]) . '</td>';
                                     echo '<td>' . htmlspecialchars($row["SucChua"]) . '</td>';
@@ -99,9 +103,9 @@ include_once __DIR__ . '/../../partials/heading.php';
                                             Hoạt động
                                         </button>
                                         <div id="actionDropdownMenu' . htmlspecialchars($stt) . '" class="dropdown-menu position-absolute p-0" style="display: none; min-width: 100px;">
-                                            <a class="dropdown-item py-2" href="view_room.php?msv=' . htmlspecialchars($row['MaPhong']) . '">Xem</a>
-                                            <a class="dropdown-item py-2" href="manage_room.php?msv=' . htmlspecialchars($row['MaPhong']) . '">Sửa</a>
-                                            <a class="dropdown-item py-2" href="delete_room.php?msv=' . htmlspecialchars($row['MaPhong']) . '">Xoá</a>
+                                            <a class="dropdown-item py-2" href="view_room.php?id=' . htmlspecialchars($row['MaPhong']) . '">Xem</a>
+                                            <a class="dropdown-item py-2" href="manage_room.php?id=' . htmlspecialchars($row['MaPhong']) . '">Sửa</a>
+                                            <a class="dropdown-item py-2" href="delete_room.php?id=' . htmlspecialchars($row['MaPhong']) . '">Xoá</a>
                                         </div>
                                     </div>
                                   </td>';
