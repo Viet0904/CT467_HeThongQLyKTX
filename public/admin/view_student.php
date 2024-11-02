@@ -4,8 +4,9 @@ $msv = $_GET['msv'];  // Lấy msv của sinh viên từ URL để truy vấn
 $sql = "SELECT SinhVien.*, Lop.TenLop, Phong.*
         FROM SinhVien
         JOIN Lop ON SinhVien.MaLop = Lop.MaLop
-        LEFT JOIN Phong ON SinhVien.MaPhong = Phong.MaPhong
-        WHERE MaSinhVien = :msv";
+        LEFT JOIN ThuePhong ON SinhVien.MaSinhVien = ThuePhong.MaSinhVien
+        LEFT JOIN Phong ON ThuePhong.MaPhong = Phong.MaPhong
+        WHERE SinhVien.MaSinhVien = :msv";
 $stmt = $dbh->prepare($sql);
 $stmt->execute(['msv' => $msv]);
 $student = $stmt->fetch(PDO::FETCH_ASSOC);

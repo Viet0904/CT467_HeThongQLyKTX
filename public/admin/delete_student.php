@@ -1,33 +1,66 @@
 <?php
-// Kết nối với cơ sở dữ liệu
-include_once __DIR__ . '/../../config/dbadmin.php';
+include_once __DIR__ . '/../../config/dbadmin.php'; // Kết nối cơ sở dữ liệu
+include_once __DIR__ . '/../../partials/header.php'; // Tiêu đề trang
+include_once __DIR__ . '/../../partials/heading.php'; // Đường dẫn
 
-// Kiểm tra xem có mã sinh viên trong query string không
-if (isset($_GET['msv'])) {
-    // Lấy mã sinh viên từ query string
-    $maSinhVien = $_GET['msv'];
+$maSinhVien = isset($_GET['msv']) ? $_GET['msv'] : null;
+$sinhVien = [];
 
-    try {
-        // Chuẩn bị câu truy vấn DELETE
-        $query = "DELETE FROM SinhVien WHERE MaSinhVien = :maSinhVien";
-        $stmt = $dbh->prepare($query);
-        
-        // Gắn giá trị cho tham số :maSinhVien
-        $stmt->bindParam(':maSinhVien', $maSinhVien, PDO::PARAM_STR);
-
-        // Thực thi câu truy vấn
-        if ($stmt->execute()) {
-            // Nếu xoá thành công, chuyển hướng về trang danh sách sinh viên
-            header("Location: manage_student.php");
-            exit();
-        } else {
-            echo "Xoá không thành công.";
-        }
-    } catch (PDOException $e) {
-        // Xử lý lỗi nếu có
-        echo "Lỗi: " . $e->getMessage();
+// Kiểm tra xem mã sinh viên có tồn tại
+if ($maSinhVien) {
+    // Lấy thông tin sinh viên
+    $stmt = $dbh->prepare("SELECT * FROM SinhVien WHERE MaSinhVien = :maSinhVien");
+    $stmt->execute([':maSinhVien' => $maSinhVien]);
+    $sinhVien = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if (!$sinhVien) {
+        echo "<div class='alert alert-danger'>Sinh viên không tồn tại.</div>";
+        exit;
     }
-} else {
-    echo "Không tìm thấy mã sinh viên.";
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Xử lý việc xóa sinh viên
+    $stmt = $dbh->prepare("DELETE FROM SinhVien WHERE MaSinhVien = :maSinhVien");
+    if ($stmt->execute([':maSinhVien' => $maSinhVien])) {
+        // Chuyển hướng về danh sách sinh viên sau khi xóa thành công
+        echo "<script>alert('Xóa sinh viên thành công.')</script>";
+        header("Location: student_list.php?success=1");
+        exit;
+    } else {
+        echo "<div class='alert alert-danger'>Có lỗi xảy ra khi xóa sinh viên.</div>";
+    }
 }
 ?>
+
+<body>
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <?php include_once __DIR__ . '/sidebar.php'; ?>
+            <div class="col px-0">
+                <div class="my-2" style="margin-left: 260px;">
+                    <div class="modal-header-1">
+                        <h5 class="modal-title mt-2">Xoá sinh viên</h5>
+                    </div>
+
+                    <div class="modal-user mt-3">
+                        <form action="" method="POST">
+                            <div class="alert alert-warning">
+                                <h6>Bạn có chắc chắn muốn xoá sinh viên <strong><?php echo htmlspecialchars($sinhVien['HoTen']); ?></strong> (Mã sinh viên: <strong><?php echo htmlspecialchars($sinhVien['MaSinhVien']); ?></strong>)?</h6>
+                            </div>
+                            <div class="row-add d-flex justify-content-center align-items-center mt-2">
+                                <div class="mx-2">
+                                    <button type="submit" class="btn btn-danger">Xoá</button>
+                                </div>
+                                <div class="mx-2">
+                                    <a href="student_list.php" class="btn btn-secondary">Trở về</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

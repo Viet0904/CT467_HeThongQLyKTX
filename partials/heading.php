@@ -8,7 +8,7 @@
 
         <!-- Phần thông tin tài khoản người dùng -->
         <div class="d-flex align-items-center position-relative me-3">
-            <img src="../public/images/user.jpg" class="rounded-circle" alt="User Avatar" width="40" height="40">
+           
             <span class="me-2 ms-2" id="userDropdown" style="cursor: pointer;" onclick="toggleDropdown(event)">Quản trị
                 viên</span>
             <span style="cursor: pointer; font-size: 12px;" onclick="toggleDropdown(event)">▼</span>

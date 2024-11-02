@@ -52,9 +52,10 @@ include_once __DIR__ . '/../../partials/heading.php';
                             $offset = ($currentPage - 1) * $rowsPerPage;
 
                             // Truy vấn SQL với LIMIT và OFFSET
-                            $sinhvien = "SELECT SinhVien.*, Lop.TenLop 
+                            $sinhvien = "SELECT SinhVien.*, Lop.TenLop, ThuePhong.MaPhong 
                             FROM SinhVien 
                             JOIN Lop ON SinhVien.MaLop = Lop.MaLop 
+                            LEFT JOIN ThuePhong ON SinhVien.MaSinhVien = ThuePhong.MaSinhVien 
                             LIMIT $rowsPerPage OFFSET $offset";
 
                             $result = $dbh->query($sinhvien);
