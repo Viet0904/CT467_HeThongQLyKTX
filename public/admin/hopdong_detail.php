@@ -23,6 +23,7 @@ $contractId = $_GET['MaHopDong'] ?? null;
                                         <th>Số Tiền</th>
                                         <th>Ngày Thanh Toán</th>
                                         <th>Nhân Viên</th>
+                                        <th>Hành Động</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -32,9 +33,20 @@ $contractId = $_GET['MaHopDong'] ?? null;
                                     while ($payment = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                         echo "<tr>
                                                 <td>{$payment['ThangNam']}</td>
-                                                <td>{$payment['SoTien']}</td>
+                                                <td>" . number_format($payment['SoTien'], 2) . "</td>
                                                 <td>{$payment['NgayThanhToan']}</td>
                                                 <td>{$payment['Hoten']}</td>
+                                                <td>
+                                                    <div class='dropdown'>
+                                                        <button class='btn btn-secondary dropdown-toggle' type='button' id='actionDropdownMenu{$payment['MaHopDong']}' data-bs-toggle='dropdown' aria-expanded='false'>
+                                                            Hành động
+                                                        </button>
+                                                        <ul class='dropdown-menu' aria-labelledby='actionDropdownMenu{$payment['MaHopDong']}'>
+                                                            <li><a class='dropdown-item' href='manage_payment.php?id={$payment['MaHopDong']}'>Sửa</a></li>
+                                                            <li><a class='dropdown-item' href='delete_payment.php?id={$payment['MaHopDong']}' onclick='return confirm(\"Bạn có chắc chắn muốn xóa khoản thanh toán này?\");'>Xoá</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
                                               </tr>";
                                     }
                                     ?>
@@ -47,4 +59,22 @@ $contractId = $_GET['MaHopDong'] ?? null;
         </div>
     </div>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz4fnFO9gybBogGzPztE1M5rZG/8Xlqh8fATrSWJZDmmW4Ll48dWkOVbCH"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+    integrity="sha384-shoIXUoVOFk60M7DuE4bfOY1pNIqcd9tPCSZrhTDQTXkNv8El+fEfXksqNhUNuUc"
+    crossorigin="anonymous"></script>
+<script>
+    // Đóng tất cả các dropdown nếu click bên ngoài
+    window.onclick = function(event) {
+        // Kiểm tra nếu click bên ngoài dropdown
+        if (!event.target.matches('.dropdown-toggle')) {
+            var dropdowns = document.querySelectorAll('.dropdown-menu');
+            dropdowns.forEach(function(dropdown) {
+                dropdown.classList.remove('show');
+            });
+        }
+    };
+</script>
 </html>
