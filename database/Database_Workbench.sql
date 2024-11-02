@@ -19,6 +19,60 @@ VALUES
 ('B', 'Khu Ký Túc Xá B'),
 ('C', 'Khu Ký Túc Xá C');
 
+-- Tạo bảng Day
+CREATE TABLE Day (
+    MaDay VARCHAR(10) PRIMARY KEY,
+    TenDay VARCHAR(50),
+    MaKhuKTX VARCHAR(10),
+    FOREIGN KEY (MaKhuKTX) REFERENCES KhuKTX(MaKhuKTX)
+);
+INSERT INTO Day (MaDay, TenDay, MaKhuKTX) VALUES 
+('AA01', 'AA01', 'A'),
+('AA02', 'AA02', 'A'),
+('AB01', 'AB01', 'A'),
+('AB02', 'AB02', 'A'),
+('AB08', 'AB08', 'A'),
+('AB09', 'AB09', 'A'),
+('AB11', 'AB11', 'A'),
+('AB12', 'AB12', 'A'),
+('AB13', 'AB13', 'A'),
+('AB14', 'AB14', 'A'),
+('AB15', 'AB15', 'A'),
+('AB19', 'AB19', 'A'),
+('AB20', 'AB20', 'A'),
+('AB21', 'AB21', 'A'),
+('AB22', 'AB22', 'A'),
+('AB23', 'AB23', 'A'),
+('AC01', 'AC01', 'A'),
+('AC02', 'AC02', 'A'),
+('AC03', 'AC03', 'A'),
+('AC04', 'AC04', 'A'),
+('AC05', 'AC05', 'A'),
+('AC06', 'AC06', 'A'),
+('AC07', 'AC07', 'A'),
+('AC08', 'AC08', 'A'),
+('AC09', 'AC09', 'A'),
+('AC10', 'AC10', 'A'),
+('AC11', 'AC11', 'A'),
+('AC12', 'AC12', 'A'),
+('AC15', 'AC15', 'A'),
+('AD01', 'AD01', 'A'),
+('AD02', 'AD02', 'A'),
+('BB01', 'BB01', 'B'),
+('BB02', 'BB02', 'B'),
+('BB03', 'BB03', 'B'),
+('BB04', 'BB04', 'B'),
+('BB05', 'BB05', 'B'),
+('BB06', 'BB06', 'B'),
+('BB07', 'BB07', 'B'),
+('BB08', 'BB08', 'B'),
+('CA01', 'CA01', 'C'),
+('CA02', 'CA02', 'C'),
+('CA06', 'CA06', 'C'),
+('CA07', 'CA07', 'C'),
+('CA08', 'CA08', 'C'),
+('CA09', 'CA09', 'C'),
+('CC01', 'CC01', 'C');
 
 -- Tạo bảng Lop
 CREATE TABLE Lop (
@@ -123,60 +177,7 @@ VALUES
 ('Z9', 'Ngôn ngữ Pháp');
 
 
--- Tạo bảng Day
-CREATE TABLE Day (
-    MaDay VARCHAR(10) PRIMARY KEY,
-    TenDay VARCHAR(50),
-    MaKhuKTX VARCHAR(10),
-    FOREIGN KEY (MaKhuKTX) REFERENCES KhuKTX(MaKhuKTX)
-);
-INSERT INTO Day (MaDay, TenDay, MaKhuKTX) VALUES 
-('AA01', 'AA01', 'A'),
-('AA02', 'AA02', 'A'),
-('AB01', 'AB01', 'A'),
-('AB02', 'AB02', 'A'),
-('AB08', 'AB08', 'A'),
-('AB09', 'AB09', 'A'),
-('AB11', 'AB11', 'A'),
-('AB12', 'AB12', 'A'),
-('AB13', 'AB13', 'A'),
-('AB14', 'AB14', 'A'),
-('AB15', 'AB15', 'A'),
-('AB19', 'AB19', 'A'),
-('AB20', 'AB20', 'A'),
-('AB21', 'AB21', 'A'),
-('AB22', 'AB22', 'A'),
-('AB23', 'AB23', 'A'),
-('AC01', 'AC01', 'A'),
-('AC02', 'AC02', 'A'),
-('AC03', 'AC03', 'A'),
-('AC04', 'AC04', 'A'),
-('AC05', 'AC05', 'A'),
-('AC06', 'AC06', 'A'),
-('AC07', 'AC07', 'A'),
-('AC08', 'AC08', 'A'),
-('AC09', 'AC09', 'A'),
-('AC10', 'AC10', 'A'),
-('AC11', 'AC11', 'A'),
-('AC12', 'AC12', 'A'),
-('AC15', 'AC15', 'A'),
-('AD01', 'AD01', 'A'),
-('AD02', 'AD02', 'A'),
-('BB01', 'BB01', 'B'),
-('BB02', 'BB02', 'B'),
-('BB03', 'BB03', 'B'),
-('BB04', 'BB04', 'B'),
-('BB05', 'BB05', 'B'),
-('BB06', 'BB06', 'B'),
-('BB07', 'BB07', 'B'),
-('BB08', 'BB08', 'B'),
-('CA01', 'CA01', 'C'),
-('CA02', 'CA02', 'C'),
-('CA06', 'CA06', 'C'),
-('CA07', 'CA07', 'C'),
-('CA08', 'CA08', 'C'),
-('CA09', 'CA09', 'C'),
-('CC01', 'CC01', 'C');
+
 
 -- Tạo bảng Phong
 CREATE TABLE Phong (
@@ -191,7 +192,7 @@ CREATE TABLE Phong (
     SoChoThucTe INT,
     DaO INT,
     GhiChu TEXT,
-    LoaiPhong VARCHAR(10),
+    LoaiPhong ENUM('Nam', 'Nữ') NOT NULL,
     FOREIGN KEY (MaDay) REFERENCES Day(MaDay)
 );
 
@@ -230,19 +231,16 @@ CREATE TABLE SinhVien (
     KhoaHoc INT,
     NgaySinh DATE,
     ChucVu VARCHAR(50),
-    MaDay VARCHAR(10),
     MaLop VARCHAR(10),
-	MaPhongDangKy varchar(10) default null,
     Password VARCHAR(255),
-    FOREIGN KEY (MaLop) REFERENCES Lop(MaLop),
-    FOREIGN KEY (MaDay) REFERENCES Day(MaDay)
+    FOREIGN KEY (MaLop) REFERENCES Lop(MaLop)
 );
 
 -- Chèn dữ liệu mẫu vào bảng SinhVien
-INSERT INTO SinhVien (MaSinhVien, HoTen, SDT,Email, MaLop, DiaChi, GioiTinh, KhoaHoc, NgaySinh,ChucVu,MaDay, Password)
+INSERT INTO SinhVien (MaSinhVien, HoTen, SDT,Email, MaLop, DiaChi, GioiTinh, KhoaHoc, NgaySinh,ChucVu, Password)
 VALUES
-('B2111908', 'Nguyễn Quốc Việt', '0123456789','vietb2111908@student.ctu.edu.vn' ,'V7', 'An Giang', 'Nam',  47, '2003-4-9', 'Thành Viên ANXK', 'AC05', '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
-('B2111893', 'Trương Huỳnh Tú Như', '0987654321','nhub211189@student.ctu.edu.vn'  ,'V7', 'Bạc Liêu', 'Nữ', 47, '2003-12-9','Thành Viên ANXK','BB01', '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO');
+('B2111908', 'Nguyễn Quốc Việt', '0123456789','vietb2111908@student.ctu.edu.vn' ,'V7', 'An Giang', 'Nam',  47, '2003-4-9', 'Thành Viên ANXK',  '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
+('B2111893', 'Trương Huỳnh Tú Như', '0987654321','nhub211189@student.ctu.edu.vn'  ,'V7', 'Bạc Liêu', 'Nữ', 47, '2003-12-9','Thành Viên ANXK','$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO');
 
 
 
@@ -291,6 +289,20 @@ CREATE TABLE TT_ThuePhong (
     MaNhanVien VARCHAR(10),
     PRIMARY KEY (MaHopDong, ThangNam),
     FOREIGN KEY (MaHopDong) REFERENCES ThuePhong(MaHopDong),
+    FOREIGN KEY (MaNhanVien) REFERENCES NhanVien(MaNhanVien)
+);
+
+-- Tạo bảng đăng ký phòng
+CREATE TABLE dangKyPhong (
+    MaDangKy INT PRIMARY KEY AUTO_INCREMENT,
+	MaSinhVien VARCHAR(8),
+	MaPhong VARCHAR(10),
+    TrangThaiDangKy ENUM('Đang Chờ Duyệt', 'Đã Duyệt', 'Đã Huỷ', 'Từ chối') DEFAULT 'Đang Chờ Duyệt',
+	NgayDangKy DATE,
+    ngayDuyet DATE,
+	MaNhanVien VARCHAR(8),
+    FOREIGN KEY (MaSinhVien) REFERENCES SinhVien(MaSinhVien),
+    FOREIGN KEY (MaPhong) REFERENCES Phong(MaPhong),
     FOREIGN KEY (MaNhanVien) REFERENCES NhanVien(MaNhanVien)
 );
 

@@ -15,19 +15,49 @@ END //
 DELIMITER ;
 -- Lấy MaPhongDangKy của SinhVien
 DELIMITER //
-CREATE FUNCTION GetMaPhongDangKy(p_MaSinhVien VARCHAR(8))
+CREATE FUNCTION GetMaPhongDangKy(maSinhVienInput VARCHAR(8))
 RETURNS VARCHAR(10)
 DETERMINISTIC
 BEGIN
-    DECLARE v_MaPhongDangKy VARCHAR(10);
-    SELECT MaPhongDangKy INTO v_MaPhongDangKy
-    FROM SinhVien
-    WHERE MaSinhVien = p_MaSinhVien;
-    RETURN v_MaPhongDangKy;
+    DECLARE maPhongDangKy VARCHAR(10);
+    SELECT MaPhong INTO maPhongDangKy
+    FROM dangKyPhong
+    WHERE MaSinhVien = maSinhVienInput;
+    RETURN maPhongDangKy;
 END //
 DELIMITER ;
 
+DELIMITER //
+CREATE PROCEDURE GetDangKyPhongBySinhVien(
+    IN p_MaSinhVien VARCHAR(8)
+)
+BEGIN
+    SELECT *
+    FROM dangKyPhong
+    WHERE MaSinhVien = p_MaSinhVien;
+END //
+DELIMITER ;
+-- GetPhongDangKyInfo
+DELIMITER //
+CREATE PROCEDURE GetPhongDangKyInfo(
+    IN p_MaSinhVien VARCHAR(8),
+    IN p_GioiTinh VARCHAR(10)
+)
+BEGIN
+    SELECT
+        p.*,
+        dkp.*,
+        IF(dkp.MaSinhVien IS NOT NULL, dkp.TrangThaiDangKy, '') AS TrangThaiDangKy
+    FROM
+        Phong p
+    LEFT JOIN
+        dangKyPhong dkp ON p.MaPhong = dkp.MaPhong AND dkp.MaSinhVien = p_MaSinhVien
+    WHERE
+        p.LoaiPhong = p_GioiTinh AND (p.SoChoThucTe -  p.DaO) > 0;
+END //
+DELIMITER ;
 
+--         IF(dkp.MaSinhVien IS NOT NULL, dkp.TrangThaiDangKy, '') AS TrangThaiDangKy
 -- Tính số chỗ còn trống của 1 phòng
 DELIMITER //
 CREATE PROCEDURE TimPhongConTrongGioiTinh (IN gioiTinhInput VARCHAR(10))
@@ -68,20 +98,20 @@ DELIMITER ;
 
 
 --  Tính tổng tiền thuê phòng của một sinh viên
-DELIMITER //
-CREATE FUNCTION TongTienThuePhong(maSinhVien VARCHAR(10), soThangO INT) 
-RETURNS DECIMAL(10,2)
-DETERMINISTIC
-BEGIN
-    DECLARE giaThue DECIMAL(10,2);
-    SELECT p.GiaThue INTO giaThue
-    FROM Phong p
-    JOIN SinhVien s ON s.MaDay = p.MaDay
-    WHERE s.MaSinhVien = maSinhVien;
-    RETURN giaThue * soThangO;
-END //
-DELIMITER ;
-SELECT TongTienThuePhong('SV01', 6) AS TongTien;
+-- DELIMITER //
+-- CREATE FUNCTION TongTienThuePhong(maSinhVien VARCHAR(10), soThangO INT) 
+-- RETURNS DECIMAL(10,2)
+-- DETERMINISTIC
+-- BEGIN
+--     DECLARE giaThue DECIMAL(10,2);
+--     SELECT p.GiaThue INTO giaThue
+--     FROM Phong p
+--     JOIN SinhVien s ON s.MaDay = p.MaDay
+--     WHERE s.MaSinhVien = maSinhVien;
+--     RETURN giaThue * soThangO;
+-- END //
+-- DELIMITER ;
+-- SELECT TongTienThuePhong('SV01', 6) AS TongTien;
 
 
 
