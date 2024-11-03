@@ -1,6 +1,6 @@
 <?php
 include_once __DIR__ . '/../../partials/header.php';
-include_once __DIR__ . '/../../partials/heading.php';
+include_once __DIR__ . '/../../partials/navbar.php';
 ?>
 
 <body>
