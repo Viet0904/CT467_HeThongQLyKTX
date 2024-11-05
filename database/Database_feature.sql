@@ -46,16 +46,17 @@ CREATE PROCEDURE GetPhongDangKyInfo(
 BEGIN
     SELECT
         p.*,
-        dkp.*,
-        IF(dkp.MaSinhVien IS NOT NULL, dkp.TrangThaiDangKy, '') AS TrangThaiDangKy
+        dkp.*
     FROM
         Phong p
-    LEFT JOIN
-        dangKyPhong dkp ON p.MaPhong = dkp.MaPhong AND dkp.MaSinhVien = p_MaSinhVien
+	JOIN
+        dangKyPhong dkp ON dkp.MaSinhVien = p_MaSinhVien
     WHERE
         p.LoaiPhong = p_GioiTinh AND (p.SoChoThucTe -  p.DaO) > 0;
 END //
 DELIMITER ;
+
+call GetPhongDangKyInfo('b2111908','Nam')
 
 --         IF(dkp.MaSinhVien IS NOT NULL, dkp.TrangThaiDangKy, '') AS TrangThaiDangKy
 -- Tính số chỗ còn trống của 1 phòng
@@ -69,52 +70,6 @@ BEGIN
 END //
 DELIMITER ;
 
-
-DELIMITER //
-CREATE PROCEDURE GetSinhVienPhongDangKy(IN page_limit INT, IN page_offset INT)
-BEGIN
-    SELECT 
-        sv.HoTen AS TenSinhVien,
-        sv.MaSinhVien,
-        sv.GioiTinh,
-        sv.MaPhongDangKy,
-        p.LoaiPhong,
-        p.SucChua,
-        p.SoChoThucTe,
-        p.DaO,
-        (p.SoChoThucTe - p.DaO) AS ConTrong
-    FROM 
-        SinhVien sv
-    LEFT JOIN 
-        Phong p ON sv.MaPhongDangKy = p.MaPhong
-    WHERE 
-        sv.MaPhongDangKy IS NOT NULL
-    LIMIT page_limit OFFSET page_offset;
-END //
-DELIMITER ;
-
-
-
-
-
---  Tính tổng tiền thuê phòng của một sinh viên
--- DELIMITER //
--- CREATE FUNCTION TongTienThuePhong(maSinhVien VARCHAR(10), soThangO INT) 
--- RETURNS DECIMAL(10,2)
--- DETERMINISTIC
--- BEGIN
---     DECLARE giaThue DECIMAL(10,2);
---     SELECT p.GiaThue INTO giaThue
---     FROM Phong p
---     JOIN SinhVien s ON s.MaDay = p.MaDay
---     WHERE s.MaSinhVien = maSinhVien;
---     RETURN giaThue * soThangO;
--- END //
--- DELIMITER ;
--- SELECT TongTienThuePhong('SV01', 6) AS TongTien;
-
-
-
 -- Cập nhật đăng ký phòng cho sinh viên
 DELIMITER //
 CREATE PROCEDURE proc_dangkyphong(
@@ -123,49 +78,55 @@ CREATE PROCEDURE proc_dangkyphong(
 )
 BEGIN
     DECLARE v_error VARCHAR(255);
-
-    -- Check if the student already has a pending registration
-    IF EXISTS (SELECT 1 FROM SinhVien WHERE MaSinhVien = p_MaSinhVien AND MaPhongDangKy IS NOT NULL) THEN
-        SET v_error = 'Sinh viên đã đăng ký phòng rồi. Hãy Huỷ đăng ký phòng.';
+    -- Kiểm tra xem sinh viên đã đăng ký phòng chưa
+    IF EXISTS (
+        SELECT 1 FROM dangKyPhong
+        WHERE MaSinhVien = p_MaSinhVien
+          AND TrangThaiDangKy IN ('Đang Chờ Duyệt', 'Đã Duyệt')
+    ) THEN
+        SET v_error = 'Sinh viên đã đăng ký phòng rồi. Hãy huỷ đăng ký trước khi đăng ký mới.';
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = v_error;
     END IF;
-
-    -- Check if the room exists
-    IF NOT EXISTS (SELECT 1 FROM Phong WHERE MaPhong = p_MaPhong) THEN
+    -- Kiểm tra xem phòng có tồn tại không
+    IF NOT EXISTS (
+        SELECT 1 FROM Phong WHERE MaPhong = p_MaPhong
+    ) THEN
         SET v_error = 'Phòng không tồn tại.';
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = v_error;
     END IF;
-
-    -- Update the student's MaPhongDangKy field
-    UPDATE SinhVien
-    SET MaPhongDangKy = p_MaPhong
-    WHERE MaSinhVien = p_MaSinhVien;
-
-    -- Return success message
+    -- Thêm bản ghi vào bảng dangKyPhong, sử dụng NOW() để lưu ngày và giờ
+    INSERT INTO dangKyPhong (MaSinhVien, MaPhong, NgayDangKy)
+    VALUES (p_MaSinhVien, p_MaPhong, NOW());
+    -- Trả về thông báo thành công
     SELECT 'Đăng ký phòng thành công! Vui lòng chờ quản trị viên duyệt.' AS Message;
 END //
 DELIMITER ;
+
 -- Huỷ Đăng Ký Phòng
 DELIMITER //
-CREATE PROCEDURE proc_huyDangKyPhong(IN p_MaSinhVien VARCHAR(8))
+CREATE PROCEDURE proc_huyDangKyPhong(
+    IN p_MaSinhVien VARCHAR(8),
+    IN p_MaPhong VARCHAR(10)
+)
 BEGIN
-    DECLARE v_MaPhongDangKy VARCHAR(10);
     DECLARE v_error VARCHAR(255);
-
-    -- Check if the student exists and has a registered room
-    SELECT MaPhongDangKy INTO v_MaPhongDangKy
-    FROM SinhVien
-    WHERE MaSinhVien = p_MaSinhVien;
-
-    IF v_MaPhongDangKy IS NULL THEN
-        SET v_error = 'Sinh viên không có phòng đăng ký để hủy.';
+    -- Kiểm tra xem sinh viên có đăng ký phòng này với trạng thái 'Đang Chờ Duyệt' không
+    IF NOT EXISTS (
+        SELECT 1 FROM dangKyPhong
+        WHERE MaSinhVien = p_MaSinhVien
+          AND MaPhong = p_MaPhong
+          AND TrangThaiDangKy = 'Đang Chờ Duyệt'
+    ) THEN
+        SET v_error = 'Sinh viên không có đăng ký phòng đang chờ duyệt để hủy.';
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = v_error;
     ELSE
-        -- Update MaPhongDangKy to NULL
-        UPDATE SinhVien
-        SET MaPhongDangKy = NULL
-        WHERE MaSinhVien = p_MaSinhVien;
-        -- Return success message
+        -- Cập nhật trạng thái đăng ký thành 'Đã Huỷ'
+        UPDATE dangKyPhong
+        SET TrangThaiDangKy = 'Đã Huỷ'
+        WHERE MaSinhVien = p_MaSinhVien
+          AND MaPhong = p_MaPhong
+          AND TrangThaiDangKy = 'Đang Chờ Duyệt';
+        -- Trả về thông báo thành công
         SELECT 'Hủy đăng ký phòng thành công.' AS Message;
     END IF;
 END //
