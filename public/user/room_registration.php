@@ -23,15 +23,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['MaPhong'])) {
         $sql = "CALL proc_dangkyphong(:maSinhVien, :maPhong)";
     } elseif (isset($_POST['huy_dang_ky'])) {
         // Gọi thủ tục hủy đăng ký phòng
-        $sql = "CALL proc_huyDangKyPhong(:maSinhVien)";
+        $sql = "CALL proc_huyDangKyPhong(:maSinhVien, :maPhong)";
     }
 
     $stmt = $dbh->prepare($sql);
     $stmt->bindParam(':maSinhVien', $maSinhVien);
-    if (isset($_POST['dang_ky'])) {
-        $stmt->bindParam(':maPhong', $maPhong);
-    }
-
+    $stmt->bindParam(':maPhong', $maPhong);
     try {
         $stmt->execute();
         // Lấy thông báo từ stored procedure
@@ -59,6 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['MaPhong'])) {
     exit();
 }
 
+
 ?>
 
 <body>
@@ -70,21 +68,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['MaPhong'])) {
             <div class="col-auto py-3">
 
                 <?php
-                // Prepare and execute the stored procedure
-                $sql = "CALL GetPhongDangKyInfo(:maSinhVien, :gioiTinh)";
-                $stmt = $dbh->prepare($sql);
-                $stmt->bindParam(':maSinhVien', $maSinhVien);
-                $stmt->bindParam(':gioiTinh', $studentGender);
-                $stmt->execute();
 
-                // Fetch all results
-                $allResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                // Kiểm tra xem $_SESSION['GioiTinh'] đã tồn tại chưa
+                if (!isset($_SESSION['GioiTinh'])) {
+                    echo "Lỗi: Không tìm thấy thông tin giới tính của sinh viên trong session.";
+                    exit;
+                }
+
+                $studentGender = $_SESSION['GioiTinh']; // Lấy giới tính từ session
 
                 // Số dòng trên mỗi trang
                 $rowsPerPage = 10;
 
-                // Tính tổng số dòng dựa vào kết quả trả về từ $sql
-                $totalRows = count($allResults);
+                // Tính tổng số dòng
+                $totalRowsQuery = "SELECT COUNT(*) FROM Phong WHERE LoaiPhong = :studentGender AND (SoChoThucTe - DaO) > 0";
+
+                // Prepare the statement
+                $totalRowsStmt = $dbh->prepare($totalRowsQuery);
+
+                // Bind the parameter
+                $totalRowsStmt->bindParam(':studentGender', $studentGender, PDO::PARAM_STR);
+
+                // Execute the query
+                $totalRowsStmt->execute();
+
+                // Fetch the total number of rows
+                $totalRows = $totalRowsStmt->fetchColumn();
+
 
                 // Tính tổng số trang
                 $totalPages = ceil($totalRows / $rowsPerPage);
@@ -100,11 +110,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['MaPhong'])) {
                 // Tính chỉ số bắt đầu của dòng trên trang hiện tại
                 $offset = ($currentPage - 1) * $rowsPerPage;
 
-                // Lấy dữ liệu cho trang hiện tại
-                $result = array_slice($allResults, $offset, $rowsPerPage);
+                // Gọi thủ tục TimPhongConTrongGioiTinh với giá trị LIMIT và OFFSET trực tiếp trong câu truy vấn
+                // Gọi stored procedure với phân trang
+                $query = "CALL TimPhongConTrongGioiTinh(:gioiTinh)";
+                $stmt = $dbh->prepare($query);
+                $stmt->bindParam(':gioiTinh', $_SESSION['GioiTinh'], PDO::PARAM_STR);
+                $stmt->execute();
+                // Lấy tất cả dữ liệu vào mảng
+                $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                // Đóng con trỏ để giải phóng kết nối cho các truy vấn tiếp theo
+                $stmt->closeCursor();
 
-
-                if ($stmt->rowCount() > 0) {
+                if (count($rooms) > 0) {
                     echo '<table class="table table-bordered table-striped table-hover mt-3">';
                     echo '<thead class="table-primary">';
                     echo '<tr>';
@@ -127,44 +144,74 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['MaPhong'])) {
 
                     // Xuất dữ liệu của từng hàng
                     $stt = $offset + 1;
-                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                        echo '<tr>';
-                        echo '<td>' . $stt++ . '</td>';
-                        echo '<td>' . htmlspecialchars($row["MaPhong"]) . '</td>';
-                        echo '<td>' . htmlspecialchars($row["TenPhong"]) . '</td>';
-                        echo '<td>' . htmlspecialchars($row["MaDay"]) . '</td>';
-                        echo '<td>' . htmlspecialchars($row["GiaThue"]) . '</td>';
-                        echo '<td>' . htmlspecialchars($row["LoaiPhong"]) . '</td>';
-                        echo '<td>' . htmlspecialchars($row["TrangThaiSuDung"]) . '</td>';
-                        echo '<td>' . htmlspecialchars($row["SucChua"]) . '</td>';
-                        echo '<td>' . htmlspecialchars($row["SoChoThucTe"]) . '</td>';
-                        echo '<td>' . htmlspecialchars($row["DaO"]) . '</td>';
-                        echo '<td>' . htmlspecialchars($row["ConTrong"]) . '</td>';
-                        echo '<td>' . htmlspecialchars($row['TrangThaiDangKy']) . '</td>';
-                        if ($TrangThaiDangKy !== '') {
-                            echo '<td>
+                    foreach ($rooms as $row) {
+                        // Lấy `MaPhong` từ dòng hiện tại
+                        $maPhong = $row["MaPhong"];
+
+                        // Truy vấn bảng `dangKyPhong` với `MaPhong` và `MaSinhVien`
+                        $sqlDangKy = "
+                            SELECT *
+                            FROM dangKyPhong
+                            WHERE MaPhong = :maPhong AND MaSinhVien = :maSinhVien
+                            ORDER BY NgayDangKy DESC
+                            LIMIT 1
+                        ";
+                        $stmtDangKy = $dbh->prepare($sqlDangKy);
+                        $stmtDangKy->bindParam(':maPhong', $maPhong, PDO::PARAM_STR);
+                        $stmtDangKy->bindParam(':maSinhVien', $maSinhVien, PDO::PARAM_STR);
+                        $stmtDangKy->execute();
+                        $dangKy = $stmtDangKy->fetch(PDO::FETCH_ASSOC);
+                        $stmtDangKy->closeCursor();
+                        // Check điều kiện hiển thị
+                        if ($row["ConTrong"] > 0 && $row["LoaiPhong"] == $studentGender) {
+                            echo '<tr>';
+                            echo '<td>' . $stt++ . '</td>';
+                            echo '<td>' . htmlspecialchars($row["MaPhong"]) . '</td>';
+                            echo '<td>' . htmlspecialchars($row["TenPhong"]) . '</td>';
+                            echo '<td>' . htmlspecialchars($row["MaDay"]) . '</td>';
+                            echo '<td>' . htmlspecialchars($row["GiaThue"]) . '</td>';
+                            echo '<td>' . htmlspecialchars($row["LoaiPhong"]) . '</td>';
+                            echo '<td>' . htmlspecialchars($row["TrangThaiSuDung"]) . '</td>';
+                            echo '<td>' . htmlspecialchars($row["SucChua"]) . '</td>';
+                            echo '<td>' . htmlspecialchars($row["SoChoThucTe"]) . '</td>';
+                            echo '<td>' . htmlspecialchars($row["DaO"]) . '</td>';
+                            echo '<td>' . htmlspecialchars($row["ConTrong"]) . '</td>';
+                            // Hiển thị trạng thái đăng ký
+                            if ($dangKy) {
+                                $trangThaiDangKy = $dangKy['TrangThaiDangKy'];
+                            } else {
+                                $trangThaiDangKy = '';
+                            }
+                            echo '<td>' . htmlspecialchars($trangThaiDangKy) . '</td>';
+
+                            if (($dangKy && $dangKy['MaPhong'] != null) && ($dangKy && $dangKy['TrangThaiDangKy'] != 'Đã Huỷ')) {
+                                // The student has registered for this room
+                                echo '<td>
                                     <form method="POST" action="">
                                         <input type="hidden" name="MaPhong" value="' . htmlspecialchars($row["MaPhong"]) . '">
                                         <input type="hidden" name="huy_dang_ky" value="1">
                                         <button type="submit" class="btn btn-danger">Huỷ Đăng ký</button>
                                     </form>
                                 </td>';
-                        } else {
-                            echo '<td>
+                            } else {
+                                // The student has not registered for this room
+                                echo '<td>
                                     <form method="POST" action="">
                                         <input type="hidden" name="MaPhong" value="' . htmlspecialchars($row["MaPhong"]) . '">
                                         <input type="hidden" name="dang_ky" value="0">
                                         <button type="submit" class="btn btn-success">Đăng ký</button>
                                     </form>
                                 </td>';
+                                echo '</tr>';
+                            }
                         }
                     }
-
                     echo '</tbody>';
                     echo '</table>';
                 } else {
                     echo "Không có kết quả";
                 }
+
                 ?>
 
                 <!-- Pagination -->

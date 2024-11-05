@@ -298,11 +298,13 @@ CREATE TABLE dangKyPhong (
 	MaSinhVien VARCHAR(8),
 	MaPhong VARCHAR(10),
     TrangThaiDangKy ENUM('Đang Chờ Duyệt', 'Đã Duyệt', 'Đã Huỷ', 'Từ chối') DEFAULT 'Đang Chờ Duyệt',
-	NgayDangKy DATE,
+	NgayDangKy DATETIME,
     ngayDuyet DATE,
 	MaNhanVien VARCHAR(8),
     FOREIGN KEY (MaSinhVien) REFERENCES SinhVien(MaSinhVien),
     FOREIGN KEY (MaPhong) REFERENCES Phong(MaPhong),
     FOREIGN KEY (MaNhanVien) REFERENCES NhanVien(MaNhanVien)
 );
+
+
 
