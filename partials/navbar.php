@@ -1,4 +1,4 @@
-<!-- Phần Header trên cùng dành cho user--> 
+<!-- Phần Header trên cùng dành cho user-->
 <nav class="navbar navbar-expand-lg navbar-light bg-light py-1"
     style="border-bottom: 1px solid #dee2e6; margin-left: 250px;">
     <div class="container-fluid">
@@ -8,7 +8,7 @@
 
         <!-- Phần thông tin tài khoản người dùng -->
         <div class="d-flex align-items-center position-relative me-3">
-           
+
             <span class="me-2 ms-2" id="userDropdown" style="cursor: pointer;" onclick="toggleDropdown(event)">Tài khoản</span>
             <span style="cursor: pointer; font-size: 12px;" onclick="toggleDropdown(event)">▼</span>
 
@@ -22,5 +22,3 @@
         </div>
     </div>
 </nav>
-
-
