@@ -8,7 +8,7 @@
 
         <!-- Phần thông tin tài khoản người dùng -->
         <div class="d-flex align-items-center position-relative me-3">
-           
+
             <span class="me-2 ms-2" id="userDropdown" style="cursor: pointer;" onclick="toggleDropdown(event)">Quản trị
                 viên</span>
             <span style="cursor: pointer; font-size: 12px;" onclick="toggleDropdown(event)">▼</span>
@@ -23,5 +23,3 @@
         </div>
     </div>
 </nav>
-
-
