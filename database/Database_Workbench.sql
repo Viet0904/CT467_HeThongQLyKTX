@@ -228,7 +228,6 @@ CREATE TABLE SinhVien (
     Email VARCHAR(50),
     DiaChi VARCHAR(100),
     GioiTinh VARCHAR(10),
-    KhoaHoc INT,
     NgaySinh DATE,
     ChucVu VARCHAR(50),
     MaLop VARCHAR(10),
@@ -239,8 +238,8 @@ CREATE TABLE SinhVien (
 -- Chèn dữ liệu mẫu vào bảng SinhVien
 INSERT INTO SinhVien (MaSinhVien, HoTen, SDT,Email, MaLop, DiaChi, GioiTinh, KhoaHoc, NgaySinh,ChucVu, Password)
 VALUES
-('B2111908', 'Nguyễn Quốc Việt', '0123456789','vietb2111908@student.ctu.edu.vn' ,'V7', 'An Giang', 'Nam',  47, '2003-4-9', 'Thành Viên ANXK',  '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
-('B2111893', 'Trương Huỳnh Tú Như', '0987654321','nhub211189@student.ctu.edu.vn'  ,'V7', 'Bạc Liêu', 'Nữ', 47, '2003-12-9','Thành Viên ANXK','$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO');
+('B2111908', 'Nguyễn Quốc Việt', '0123456789','vietb2111908@student.ctu.edu.vn' ,'V7', 'An Giang', 'Nam',  '2003-4-9', 'Thành Viên ANXK',  '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
+('B2111893', 'Trương Huỳnh Tú Như', '0987654321','nhub211189@student.ctu.edu.vn'  ,'V7', 'Bạc Liêu', 'Nữ', '2003-12-9','Thành Viên ANXK','$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO');
 
 
 
@@ -274,7 +273,6 @@ CREATE TABLE ThuePhong (
     MaPhong VARCHAR(10),
     BatDau DATE,
     KetThuc DATE,
-    TienDatCoc DECIMAL(10, 2),
     GiaThueThucTe DECIMAL(10, 2),
     FOREIGN KEY (MaSinhVien) REFERENCES SinhVien(MaSinhVien),
     FOREIGN KEY (MaPhong) REFERENCES Phong(MaPhong)
@@ -292,19 +290,46 @@ CREATE TABLE TT_ThuePhong (
     FOREIGN KEY (MaNhanVien) REFERENCES NhanVien(MaNhanVien)
 );
 
--- Tạo bảng đăng ký phòng
-CREATE TABLE dangKyPhong (
-    MaDangKy INT PRIMARY KEY AUTO_INCREMENT,
-	MaSinhVien VARCHAR(8),
-	MaPhong VARCHAR(10),
-    TrangThaiDangKy ENUM('Đang Chờ Duyệt', 'Đã Duyệt', 'Đã Huỷ', 'Từ chối') DEFAULT 'Đang Chờ Duyệt',
-	NgayDangKy DATETIME,
-    ngayDuyet DATETIME,
-	MaNhanVien VARCHAR(8),
-    FOREIGN KEY (MaSinhVien) REFERENCES SinhVien(MaSinhVien),
-    FOREIGN KEY (MaPhong) REFERENCES Phong(MaPhong),
-    FOREIGN KEY (MaNhanVien) REFERENCES NhanVien(MaNhanVien)
+-- Tạo bảng DienNuoc
+CREATE TABLE DienNuoc (
+    MaGhiSo INT PRIMARY KEY AUTO_INCREMENT, -- Mã ghi sổ duy nhất cho mỗi tháng của mỗi phòng
+    MaPhong VARCHAR(10), -- Mã phòng
+    Thang INT,           -- Tháng ghi chỉ số
+    Nam INT,             -- Năm ghi chỉ số
+    LoaiChiSo ENUM('Dien', 'Nuoc') NOT NULL, 
+    ChiSoDau DECIMAL(10, 2) NOT NULL,  
+    ChiSoCuoi DECIMAL(10, 2) NOT NULL,
+    PhiSuDungPhong DECIMAL(15, 2) NULL,
+    DonGia DECIMAL(10, 2) NOT NULL,
+    NgayGhi DATE , 
+    HocKy ENUM('1', '2', '3') NOT NULL, -- Học kỳ
+    NamHoc VARCHAR(9) NOT NULL, -- Năm học
+    TrangThaiThanhToan BOOLEAN DEFAULT FALSE,
+    NgayThanhToan DATE,
+    FOREIGN KEY (MaPhong) REFERENCES Phong(MaPhong)
 );
+
+INSERT INTO DienNuoc (MaPhong, Thang, Nam, LoaiChiSo, ChiSoDau, ChiSoCuoi, DonGia, HocKy, NamHoc)
+VALUES 
+('AA01100', 10, 2024, 'Dien', 100, 150, 3500, '1', '2024-2025'),
+('AA01100', 10, 2024, 'Nuoc', 50, 70, 10000, '1', '2024-2025');
+
+
+
+
+-- Tạo bảng đăng ký phòng
+-- CREATE TABLE dangKyPhong (
+--     MaDangKy INT PRIMARY KEY AUTO_INCREMENT,
+-- 	MaSinhVien VARCHAR(8),
+-- 	MaPhong VARCHAR(10),
+--     TrangThaiDangKy ENUM('Đang Chờ Duyệt', 'Đã Duyệt', 'Đã Huỷ', 'Từ chối') DEFAULT 'Đang Chờ Duyệt',
+-- 	NgayDangKy DATETIME,
+--     ngayDuyet DATETIME,
+-- 	MaNhanVien VARCHAR(8),
+--     FOREIGN KEY (MaSinhVien) REFERENCES SinhVien(MaSinhVien),
+--     FOREIGN KEY (MaPhong) REFERENCES Phong(MaPhong),
+--     FOREIGN KEY (MaNhanVien) REFERENCES NhanVien(MaNhanVien)
+-- );
 
 
 
