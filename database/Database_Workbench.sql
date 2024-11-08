@@ -307,6 +307,7 @@ CREATE TABLE DienNuoc (
     TrangThaiThanhToan BOOLEAN DEFAULT FALSE,
     NgayThanhToan DATE,
     FOREIGN KEY (MaPhong) REFERENCES Phong(MaPhong)
+-- Tạo bảng đăng ký phòng
 );
 
 INSERT INTO DienNuoc (MaPhong, Thang, Nam, LoaiChiSo, ChiSoDau, ChiSoCuoi, DonGia, HocKy, NamHoc)
