@@ -18,7 +18,7 @@
                 <a class="dropdown-item py-2" href="./admin_profile.php">Thông tin</a>
                 <!-- Đường phân cách -->
                 <hr style="border: none; border-top: 1px solid #a9a9a9; margin: 1px 0;">
-                <a class="dropdown-item py-2" href="#">Thoát</a>
+                <a class="dropdown-item py-2" href="../index.php">Thoát</a>
             </div>
         </div>
     </div>

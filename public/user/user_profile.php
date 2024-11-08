@@ -1,88 +1,78 @@
 <?php
-include_once __DIR__ . '/../../config/dbadmin.php';
 include_once __DIR__ . '/../../partials/header.php';
-include_once __DIR__ . '/../../partials/heading.php';
+include_once __DIR__ . '/../../partials/navbar.php';
+include_once __DIR__ . '/../../config/dbadmin.php';
 
-$message = '';
-$maSinhVien = $_GET['msv'] ?? ''; // Lấy mã sinh viên từ URL nếu có
-
-// Lấy thông tin sinh viên nếu có mã sinh viên
-if ($maSinhVien) {
-    $stmt = $dbh->prepare("SELECT * FROM SinhVien WHERE MaSinhVien = :maSinhVien");
-    $stmt->execute([':maSinhVien' => $maSinhVien]);
-    $sinhVien = $stmt->fetch(PDO::FETCH_ASSOC);
+// Kiểm tra mã nhân viên đã lưu trong session
+if (!isset($_SESSION)) {
+    session_start();
 }
 
-// Thực hiện thêm hoặc cập nhật sinh viên khi form được submit
+if (isset($_SESSION['MaSinhVien'])) {
+    $maSinhVien = $_SESSION['MaSinhVien'];
+
+    // Truy vấn thông tin nhân viên từ DB
+    $query = "SELECT * FROM SinhVien WHERE MaSinhVien = ?";
+    $stmt = $dbh->prepare($query);
+    $stmt->bindValue(1, $maSinhVien);
+    $stmt->execute();
+    $sinhVien = $stmt->fetch(PDO::FETCH_ASSOC);
+} else {
+    echo "<script>alert('Vui lòng đăng nhập lại.'); window.location.href = '../index.php';</script>";
+    exit();
+}
+
+// Xử lý khi người dùng cập nhật thông tin
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $maSinhVien = $_POST['maSinhVien'] ?? $maSinhVien; // Lấy mã sinh viên từ POST nếu có, nếu không thì giữ giá trị từ URL
+    $khoaHoc = $_POST['khoaHoc'];
+    $maLop = $_POST['maLop'];
+    $maDay = $_POST['maDay'];
+    $firstName = $_POST['firstName'];
+    $ngaySinh = $_POST['ngaySinh'];
+    $chucVu = $_POST['chucVu'];
+    $gioiTinh = $_POST['gioiTinh'];
+    $contact = $_POST['contact'];
+    $email = $_POST['email'];
+    $address = $_POST['address'];
+    $password = $_POST['password'];
 
-    // Kiểm tra xem mã sinh viên có tồn tại trong CSDL không
-    $checkStmt = $dbh->prepare("SELECT * FROM SinhVien WHERE MaSinhVien = :maSinhVien");
-    $checkStmt->execute([':maSinhVien' => $maSinhVien]);
-    $sinhVien = $checkStmt->fetch(PDO::FETCH_ASSOC);
+    // Cập nhật thông tin nhân viên trong DB
+    $updateQuery = "UPDATE SinhVien SET KhoaHoc = ?, MaLop = ?, MaDay = ?, HoTen = ?, NgaySinh = ?, ChucVu = ?, GioiTinh = ?, SDT = ?, Email = ?, DiaChi = ?, Password = ? WHERE MaSinhVien = ?";
+    $stmt = $dbh->prepare($updateQuery);
+    $stmt->bindValue(1, $khoaHoc);
+    $stmt->bindValue(2, $maLop);
+    $stmt->bindValue(3, $maDay);
+    $stmt->bindValue(4, $firstName);
+    $stmt->bindValue(5, $ngaySinh);
+    $stmt->bindValue(6, $chucVu);
+    $stmt->bindValue(7, $gioiTinh);
+    $stmt->bindValue(8, $contact);
+    $stmt->bindValue(9, $email);
+    $stmt->bindValue(10, $address);
+    $stmt->bindValue(11, $password);
+    $stmt->bindValue(12, $maSinhVien); // MaSinhVien nên là tham số cuối cùng trong câu lệnh
+    $stmt->execute();
 
-    $data = [
-        ':maSinhVien' => $maSinhVien,
-        ':ten' => $_POST['firstName'],
-        ':lienHe' => $_POST['contact'],
-        ':email' => $_POST['email'],
-        ':maLop' => $_POST['maLop'],
-        ':diaChi' => $_POST['address'],
-        ':gioiTinh' => $_POST['gioiTinh'],
-        ':khoaHoc' => $_POST['khoaHoc'],
-        ':ngaySinh' => $_POST['ngaySinh'],
-        ':chucVu' => $_POST['chucVu'],
-        ':maDay' => $_POST['maDay'],
-        ':password' => password_hash($_POST['password'], PASSWORD_BCRYPT)
-    ];
-
-    // Tạo câu truy vấn SQL dựa trên kiểm tra tồn tại
-    if ($sinhVien) {
-        $sql = "UPDATE SinhVien SET HoTen = :ten, SDT = :lienHe, Email = :email, MaLop = :maLop, DiaChi = :diaChi, GioiTinh = :gioiTinh, KhoaHoc = :khoaHoc, NgaySinh = :ngaySinh, ChucVu = :chucVu, MaDay = :maDay, Password = :password WHERE MaSinhVien = :maSinhVien";
-    } else {
-        $sql = "INSERT INTO SinhVien (MaSinhVien, HoTen, SDT, Email, MaLop, DiaChi, GioiTinh, KhoaHoc, NgaySinh, ChucVu, MaDay, Password) VALUES (:maSinhVien, :ten, :lienHe, :email, :maLop, :diaChi, :gioiTinh, :khoaHoc, :ngaySinh, :chucVu, :maDay, :password)";
-    }
-
-    $stmt = $dbh->prepare($sql);
-    try {
-        // Thực thi câu truy vấn
-        $stmt->execute($data);
-        $message = $sinhVien ? "Cập nhật thành công!" : "Thêm mới thành công!";
-
-        echo "<script>alert('$message');</script>";
-        echo "<script>window.location.href='student_list.php';</script>";
-        exit;
-    } catch (PDOException $e) {
-        $message = "Lỗi: " . $e->getMessage();
-    }
+    echo "<script>alert('Cập nhật thông tin thành công!'); window.location.href = './user_profile.php';</script>";
 }
 ?>
 
 <body>
     <div class="container-fluid">
         <div class="row flex-nowrap">
-            <?php
-            include_once __DIR__ . '/sidebar.php';
-            ?>
+            <?php include_once __DIR__ . '/sidebar.php'; ?>
 
             <div class="col px-0">
                 <!-- Nội dung chính -->
                 <div class="my-2" style="margin-left: 260px;">
                     <div class="modal-header-1">
-                        <h5 class="modal-title mt-2">Đăng ký sinh viên mới</h5>
+                        <h5 class="modal-title mt-2">Hồ sơ sinh viên</h5>
                     </div>
 
-                    <!-- Hiển thị thông báo -->
-                    <?php if (!empty($message)): ?>
-                        <div class="alert alert-info mt-3"><?php echo $message; ?></div>
-                    <?php endif; ?>
-
                     <div class="modal-user">
-                        <form action="manage_student.php" method="POST">
+                        <form action="" method="POST">
+                            <h5 class="mt-1"><b>Hồ sơ</b></h5>
 
-                            <!-- School Details Section -->
-                            <h5 class="mt-1"><b>Chi tiết trường học</b></h5>
                             <div class="row row-add mb-3">
                                 <div class="col-md-4">
                                     <label for="maSinhVien" class="form-label"> Mã Sinh viên</label>
@@ -109,8 +99,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </div>
                             </div>
 
-                            <!-- Personal Information Section -->
-                            <h5><b>Thông tin cá nhân</b></h5>
                             <div class="row row-add mb-3">
                                 <div class="col-md-4">
                                     <label for="firstName" class="form-label">Tên</label>
@@ -171,20 +159,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                             </div>
 
-
-                            <!-- Submit Button -->
-                            <div class="text-end mt-2">
-                                <button type="submit" class="btn btn-primary"
-                                    style="background-color: #db3077;">Lưu</button>
+                            <div class="text-end mt-3">
+                                <button type="submit" class="btn btn-primary" style="background-color: #db3077;">Cập
+                                    nhật</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-    </div>
-    </div>
 </body>
 
 <!-- Bootstrap JS và Popper.js -->
