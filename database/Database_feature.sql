@@ -37,6 +37,29 @@ BEGIN
     WHERE MaSinhVien = p_MaSinhVien;
 END //
 DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE GetSinhVienPhongDangKy()
+BEGIN
+    SELECT 
+        dk.*,
+        sv.*,
+        p.*
+    FROM 
+        dangKyPhong dk
+    JOIN 
+        SinhVien sv ON dk.MaSinhVien = sv.MaSinhVien
+    JOIN 
+        Phong p ON dk.MaPhong = p.MaPhong
+    WHERE 
+        dk.TrangThaiDangKy = 'Đang Chờ Duyệt'
+    ORDER BY dk.NgayDangKy DESC;  
+END //
+DELIMITER ;
+
+
+
 -- GetPhongDangKyInfo
 DELIMITER //
 CREATE PROCEDURE GetPhongDangKyInfo(
@@ -131,3 +154,69 @@ BEGIN
     END IF;
 END //
 DELIMITER ;
+
+-- Khi Duyệt cấp nhật thông tin ThuePhong
+DELIMITER //
+
+CREATE PROCEDURE CreateRentalAgreement(
+    IN p_MaSinhVien VARCHAR(10),
+    IN p_MaPhong VARCHAR(10),
+    IN p_BatDau DATE,
+    IN p_KetThuc DATE,
+    IN p_TienDatCoc DECIMAL(10, 2),
+    IN p_GiaThueThucTe DECIMAL(10, 2),
+    IN p_MaNhanVien VARCHAR(10)
+)
+BEGIN
+    DECLARE v_MaHopDong VARCHAR(10);
+    -- Tạo mã hợp đồng (tùy chọn, có thể tùy chỉnh)
+    SET v_MaHopDong = CONCAT('HD', p_MaSinhVien, DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'));
+    -- Chèn vào bảng ThuePhong
+    INSERT INTO ThuePhong (MaHopDong, MaSinhVien, MaPhong, BatDau, KetThuc, TienDatCoc, GiaThueThucTe)
+    VALUES (v_MaHopDong, p_MaSinhVien, p_MaPhong, p_BatDau, p_KetThuc, p_TienDatCoc, p_GiaThueThucTe);
+
+    -- Chèn thanh toán đầu tiên vào TT_ThuePhong cho tháng đầu tiên
+    INSERT INTO TT_ThuePhong (MaHopDong, ThangNam, SoTien, NgayThanhToan, MaNhanVien)
+    VALUES (v_MaHopDong, p_BatDau, p_GiaThueThucTe, NOW(), p_MaNhanVien);
+
+END //
+DELIMITER ;
+ 
+
+
+--  Tạo Trigger Check Phòng
+DELIMITER //
+CREATE TRIGGER CheckPhongConstraints
+BEFORE INSERT ON Phong
+FOR EACH ROW
+BEGIN
+    -- Kiểm tra điều kiện SoChoThucTe <= SucChua
+    IF NEW.SoChoThucTe > NEW.SucChua THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Số chỗ thực tế không thể lớn hơn sức chứa.';
+    END IF;
+
+    -- Kiểm tra điều kiện DaO <= SoChoThucTe
+    IF NEW.DaO > NEW.SoChoThucTe THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Số người đã ở không thể lớn hơn số chỗ thực tế.';
+    END IF;
+END //
+CREATE TRIGGER CheckPhongConstraintsUpdate
+BEFORE UPDATE ON Phong
+FOR EACH ROW
+BEGIN
+    -- Kiểm tra điều kiện SoChoThucTe <= SucChua
+    IF NEW.SoChoThucTe > NEW.SucChua THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Số chỗ thực tế không thể lớn hơn sức chứa.';
+    END IF;
+
+    -- Kiểm tra điều kiện DaO <= SoChoThucTe
+    IF NEW.DaO > NEW.SoChoThucTe THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Số người đã ở không thể lớn hơn số chỗ thực tế.';
+    END IF;
+END //
+DELIMITER ;
+
