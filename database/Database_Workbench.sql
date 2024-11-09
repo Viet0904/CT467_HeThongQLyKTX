@@ -74,6 +74,8 @@ INSERT INTO Day (MaDay, TenDay, MaKhuKTX) VALUES
 ('CA09', 'CA09', 'C'),
 ('CC01', 'CC01', 'C');
 
+
+
 -- Tạo bảng Lop
 CREATE TABLE Lop (
     MaLop VARCHAR(10) PRIMARY KEY,
@@ -118,9 +120,9 @@ VALUES
 ('94', 'Sinh học'),
 ('95', 'Hệ thống thông tin'),
 ('96', 'Kỹ thuật phần mềm'),
-('B1', 'Kỹ thuật ô tô'),
-('B2', 'Kỹ thuật y sinh'),
-('B3', 'Kỹ thuật máy tính'),
+('1', 'Kỹ thuật ô tô'),
+('2', 'Kỹ thuật y sinh'),
+('3', 'Kỹ thuật máy tính'),
 ('D1', 'Truyền thông đa phương tiện'),
 ('D2', 'An toàn thông tin'),
 ('D3', 'Thống kê'),
@@ -184,39 +186,38 @@ CREATE TABLE Phong (
     MaPhong VARCHAR(10) PRIMARY KEY,
     TenPhong VARCHAR(50),
     DienTich INT,
-    SoGiuong INT,
     GiaThue DECIMAL(10, 2),
     MaDay VARCHAR(10),
     TrangThaiSuDung VARCHAR(20),
     SucChua INT,
     SoChoThucTe INT,
-    DaO INT,
-    GhiChu TEXT,
+    DaO INT DEFAULT 0,
+    GhiChu TEXT DEFAULT NULL,
     LoaiPhong ENUM('Nam', 'Nữ') NOT NULL,
     FOREIGN KEY (MaDay) REFERENCES Day(MaDay)
 );
 
-INSERT INTO Phong (MaPhong, TenPhong, DienTich, SoGiuong, GiaThue, MaDay, TrangThaiSuDung, SucChua, SoChoThucTe, DaO, LoaiPhong)
+INSERT INTO Phong (MaPhong, TenPhong, DienTich,GiaThue, MaDay, TrangThaiSuDung, SucChua, SoChoThucTe, LoaiPhong)
 VALUES
-('AA01100', 'AA01100', 30.0, 5, 190000.00, 'AA01', 'Đang sử dụng', 5, 5, 5, 'Nam'),
-('AA01101', 'AA01101', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 'Nam'),
-('AA01102', 'AA01102', 30.0, 4, 390000.00, 'AA01', 'Đang sử dụng', 4, 4, 4, 'Nam'),
-('AA01103', 'AA01103', 30.0, 7, 218000.00, 'AA01', 'Đang sử dụng', 7, 7, 7, 'Nam'),
-('AA01104', 'AA01104', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 'Nam'),
-('AA01105', 'AA01105', 30.0, 4, 190000.00, 'AA01', 'Đang sử dụng', 4, 4, 4, 'Nam'),
-('AA01106', 'AA01106', 30.0, 4, 390000.00, 'AA01', 'Đang sử dụng', 4, 4, 4, 'Nam'),
-('AA01201', 'AA01201', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 'Nam'),
-('AA01202', 'AA01202', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 7, 'Nam'),
-('AA01203', 'AA01203', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 'Nữ'),
-('AA01204', 'AA01204', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 'Nam'),
-('AA01205', 'AA01205', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 'Nam'),
-('AA01206', 'AA01206', 30.0, 4, 190000.00, 'AA01', 'Đang sử dụng', 4, 4, 4, 'Nữ'),
-('AA01208', 'AA01208', 30.0, 4, 190000.00, 'AA01', 'Đang sử dụng', 4, 4, 4, 'Nam'),
-('AA01209', 'AA01209', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 'Nam'),
-('AA01210', 'AA01210', 30.0, 3, 515000.00, 'AA01', 'Đang sử dụng', 3, 3, 3, 'Nữ'),
-('AA01211', 'AA01211', 30.0, 3, 190000.00, 'AA01', 'Đang sử dụng', 3, 3, 3, 'Nam'),
-('AA01212', 'AA01212', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 8, 'Nam'),
-('AA01213', 'AA01213', 30.0, 8, 190000.00, 'AA01', 'Đang sử dụng', 8, 8, 7, 'Nam');
+('A01100', 'AA01100', 30.0, 190000.00*5, 'AA01', 'Đang sử dụng', 5, 5, 'Nam'),
+('A01101', 'AA01101', 30.0, 190000.00*5, 'AA01', 'Đang sử dụng', 8, 8, 'Nam'),
+('A01102', 'AA01102', 30.0, 390000.00*5, 'AA01', 'Đang sử dụng', 4, 4, 'Nam'),
+('A01103', 'AA01103', 30.0, 218000.00*5, 'AA01', 'Đang sử dụng', 7, 7, 'Nam'),
+('A01104', 'AA01104', 30.0, 190000.00*5, 'AA01', 'Đang sử dụng', 8, 8, 'Nam'),
+('A01105', 'AA01105', 30.0, 190000.00*5, 'AA01', 'Đang sử dụng', 4, 4, 'Nam'),
+('A01106', 'AA01106', 30.0, 390000.00*5, 'AA01', 'Đang sử dụng', 4, 4, 'Nam'),
+('A01201', 'AA01201', 30.0, 190000.00*5, 'AA01', 'Đang sử dụng', 8, 8, 'Nam'),
+('A01202', 'AA01202', 30.0, 190000.00*5, 'AA01', 'Đang sử dụng', 8, 8, 'Nam'),
+('A01203', 'AA01203', 30.0, 190000.00*5, 'AA01', 'Đang sử dụng', 8, 8, 'Nữ'),
+('A01204', 'AA01204', 30.0, 190000.00*5, 'AA01', 'Đang sử dụng', 8, 8, 'Nam'),
+('A01205', 'AA01205', 30.0, 190000.00*5, 'AA01', 'Đang sử dụng', 8, 8, 'Nam'),
+('A01206', 'AA01206', 30.0, 190000.00*5, 'AA01', 'Đang sử dụng', 4, 4, 'Nữ'),
+('A01208', 'AA01208', 30.0, 190000.00*5, 'AA01', 'Đang sử dụng', 4, 4, 'Nam'),
+('A01209', 'AA01209', 30.0, 190000.00*5, 'AA01', 'Đang sử dụng', 8, 8, 'Nam'),
+('A01210', 'AA01210', 30.0, 515000.00*5, 'AA01', 'Đang sử dụng', 3, 3, 'Nữ'),
+('A01211', 'AA01211', 30.0, 190000.00*5, 'AA01', 'Đang sử dụng', 3, 3, 'Nam'),
+('A01212', 'AA01212', 30.0, 190000.00*5, 'AA01', 'Đang sử dụng', 8, 8, 'Nam'),
+('A01213', 'AA01213', 30.0, 190000.00*5, 'AA01', 'Đang sử dụng', 8, 8, 'Nam');
 
 
 
@@ -229,17 +230,17 @@ CREATE TABLE SinhVien (
     DiaChi VARCHAR(100),
     GioiTinh VARCHAR(10),
     NgaySinh DATE,
-    ChucVu VARCHAR(50),
+    ChucVu VARCHAR(50) DEFAULT NULL,
     MaLop VARCHAR(10),
     Password VARCHAR(255),
     FOREIGN KEY (MaLop) REFERENCES Lop(MaLop)
 );
 
 -- Chèn dữ liệu mẫu vào bảng SinhVien
-INSERT INTO SinhVien (MaSinhVien, HoTen, SDT,Email, MaLop, DiaChi, GioiTinh, KhoaHoc, NgaySinh,ChucVu, Password)
+INSERT INTO SinhVien (MaSinhVien, HoTen, SDT,Email, MaLop, DiaChi, GioiTinh,  NgaySinh,ChucVu, Password)
 VALUES
-('B2111908', 'Nguyễn Quốc Việt', '0123456789','vietb2111908@student.ctu.edu.vn' ,'V7', 'An Giang', 'Nam',  '2003-4-9', 'Thành Viên ANXK',  '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
-('B2111893', 'Trương Huỳnh Tú Như', '0987654321','nhub211189@student.ctu.edu.vn'  ,'V7', 'Bạc Liêu', 'Nữ', '2003-12-9','Thành Viên ANXK','$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO');
+('2111908', 'Nguyễn Quốc Việt', '0123456789','vietb2111908@student.ctu.edu.vn' ,'V7', 'An Giang', 'Nam',  '2003-4-9', 'Thành Viên ANXK',  '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
+('2111893', 'Trương Huỳnh Tú Như', '0987654321','nhub211189@student.ctu.edu.vn'  ,'V7', 'Bạc Liêu', 'Nữ', '2003-12-9','Thành Viên ANXK','$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO');
 
 
 
@@ -257,8 +258,8 @@ CREATE TABLE NhanVien (
 
 INSERT INTO NhanVien (MaNhanVien, HoTen, SDT, GioiTinh, NgaySinh, Password)
 VALUES
-('CB000001', 'Nguyễn Văn C', '0333555777',  'Nam', '1980-05-15', '$2y$10$XaJgTLKSk2FwThXYAkTq9.HG5DUTxL.ixJdoHGxbzQPloBUbdIjbK'),
-('CB000002', 'Lê Thị D', '0444666888',  'Nữ', '1985-06-20', '$2y$10$XaJgTLKSk2FwThXYAkTq9.HG5DUTxL.ixJdoHGxbzQPloBUbdIjbK');
+('B000001', 'Nguyễn Văn C', '0333555777',  'Nam', '1980-05-15', '$2y$10$XaJgTLKSk2FwThXYAkTq9.HG5DUTxL.ixJdoHGxbzQPloBUbdIjbK'),
+('B000002', 'Lê Thị D', '0444666888',  'Nữ', '1985-06-20', '$2y$10$XaJgTLKSk2FwThXYAkTq9.HG5DUTxL.ixJdoHGxbzQPloBUbdIjbK');
 
 
 
@@ -292,45 +293,45 @@ CREATE TABLE TT_ThuePhong (
 
 -- Tạo bảng DienNuoc
 CREATE TABLE DienNuoc (
-    MaGhiSo INT PRIMARY KEY AUTO_INCREMENT, -- Mã ghi sổ duy nhất cho mỗi tháng của mỗi phòng
-    MaPhong VARCHAR(10), -- Mã phòng
-    Thang INT,           -- Tháng ghi chỉ số
-    Nam INT,             -- Năm ghi chỉ số
-    LoaiChiSo ENUM('Dien', 'Nuoc') NOT NULL, 
-    ChiSoDau DECIMAL(10, 2) NOT NULL,  
-    ChiSoCuoi DECIMAL(10, 2) NOT NULL,
-    PhiSuDungPhong DECIMAL(15, 2) NULL,
-    DonGia DECIMAL(10, 2) NOT NULL,
-    NgayGhi DATE , 
-    HocKy ENUM('1', '2', '3') NOT NULL, -- Học kỳ
-    NamHoc VARCHAR(9) NOT NULL, -- Năm học
-    TrangThaiThanhToan BOOLEAN DEFAULT FALSE,
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    Thang INT,
+    NamHoc VARCHAR(50),
+    ChiSoDau INT,
+    ChiSoCuoi INT,
+    HocKi ENUM('1', '2','3'),
+    TrangThaiThanhToan ENUM('Đã Thanh Toán', 'Chưa Thánh Toán'),
     NgayThanhToan DATE,
+    Loai ENUM('Dien', 'Nuoc'),
+    DonGia DECIMAL(10, 2),
+    MaPhong VARCHAR(10),
     FOREIGN KEY (MaPhong) REFERENCES Phong(MaPhong)
--- Tạo bảng đăng ký phòng
 );
+INSERT INTO DienNuoc (Thang, NamHoc, ChiSoDau, ChiSoCuoi, HocKi, TrangThaiThanhToan, NgayThanhToan, Loai, DonGia, MaPhong) VALUES
+(1, '2023-2024', 120, 180, '1', 'Đã Thanh Toán', '2023-02-10', 'Dien', 10000.00, 'A01100'),
+(2, '2023-2024', 180, 220, '1', 'Đã Thanh Toán', '2023-03-12', 'Nuoc', 3000.00, 'A01101'),
+(3, '2023-2024', 220, 260, '1', 'Chưa Thanh Toán', '2023-04-15', 'Dien', 10000.00, 'A01102'),
+(4, '2023-2024', 260, 300, '2', 'Đã Thanh Toán', '2023-05-18', 'Nuoc', 3000.00, 'A01103'),
+(5, '2023-2024', 300, 350, '2', 'Chưa Thanh Toán', '2023-06-20', 'Dien', 10000.00, 'A01104'),
+(6, '2023-2024', 350, 400, '2', 'Đã Thanh Toán', '2023-07-22', 'Nuoc', 3000.00, 'A01105'),
+(7, '2023-2024', 400, 450, '3', 'Chưa Thanh Toán', '2023-08-25', 'Dien', 10000.00, 'A01106'),
+(8, '2023-2024', 450, 500, '3', 'Đã Thanh Toán', '2023-09-27', 'Nuoc', 3000.00, 'A01201'),
+(9, '2023-2024', 500, 550, '3', 'Chưa Thanh Toán', '2023-10-30', 'Dien', 10000.00, 'A01202'),
+(10, '2023-2024', 550, 600, '1', 'Đã Thanh Toán', '2023-11-05', 'Nuoc', 3000.00, 'A01203'),
+(11, '2023-2024', 600, 650, '1', 'Chưa Thanh Toán', '2023-12-08', 'Dien', 10000.00, 'A01204'),
+(12, '2023-2024', 650, 700, '2', 'Đã Thanh Toán', '2024-01-10', 'Nuoc', 3000.00, 'A01205'),
+(13, '2023-2024', 700, 750, '2', 'Chưa Thanh Toán', '2024-02-12', 'Dien', 10000.00, 'A01206'),
+(14, '2023-2024', 750, 800, '2', 'Đã Thanh Toán', '2024-03-15', 'Nuoc', 3000.00, 'A01208'),
+(15, '2023-2024', 800, 850, '3', 'Chưa Thanh Toán', '2024-04-18', 'Dien', 10000.00, 'A01209'),
+(16, '2023-2024', 850, 900, '3', 'Đã Thanh Toán', '2024-05-20', 'Nuoc', 3000.00, 'A01210'),
+(17, '2023-2024', 900, 950, '1', 'Chưa Thanh Toán', '2024-06-22', 'Dien', 10000.00, 'A01211'),
+(18, '2023-2024', 950, 1000, '1', 'Đã Thanh Toán', '2024-07-25', 'Nuoc', 3000.00, 'A01212'),
+(19, '2023-2024', 1000, 1050, '2', 'Chưa Thanh Toán', '2024-08-27', 'Dien', 10000.00, 'A01213'),
+(20, '2023-2024', 1050, 1100, '2', 'Đã Thanh Toán', '2024-09-30', 'Nuoc', 3000.00, 'A01100');
 
-INSERT INTO DienNuoc (MaPhong, Thang, Nam, LoaiChiSo, ChiSoDau, ChiSoCuoi, DonGia, HocKy, NamHoc)
-VALUES 
-('AA01100', 10, 2024, 'Dien', 100, 150, 3500, '1', '2024-2025'),
-('AA01100', 10, 2024, 'Nuoc', 50, 70, 10000, '1', '2024-2025');
 
 
 
 
--- Tạo bảng đăng ký phòng
--- CREATE TABLE dangKyPhong (
---     MaDangKy INT PRIMARY KEY AUTO_INCREMENT,
--- 	MaSinhVien VARCHAR(8),
--- 	MaPhong VARCHAR(10),
---     TrangThaiDangKy ENUM('Đang Chờ Duyệt', 'Đã Duyệt', 'Đã Huỷ', 'Từ chối') DEFAULT 'Đang Chờ Duyệt',
--- 	NgayDangKy DATETIME,
---     ngayDuyet DATETIME,
--- 	MaNhanVien VARCHAR(8),
---     FOREIGN KEY (MaSinhVien) REFERENCES SinhVien(MaSinhVien),
---     FOREIGN KEY (MaPhong) REFERENCES Phong(MaPhong),
---     FOREIGN KEY (MaNhanVien) REFERENCES NhanVien(MaNhanVien)
--- );
 
 
 

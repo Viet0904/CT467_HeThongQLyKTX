@@ -34,7 +34,7 @@
             <div class="modal-content p-2">
                 <div class="modal-header text-center d-block">
                     <h2 class="modal-title pt-3">
-                        Đăng nhập
+                        Đăng ký
                     </h2>
                 </div>
 
@@ -42,9 +42,36 @@
                     <form method="POST" name="login" id="login">
                         <div class="form-group">
                             <label for="usernameInput" class="pt-2">
-                                <i class="fas fa-user"></i> Tên admin:
+                                <i class="fas fa-user"></i> Mã đăng ký:
                             </label>
-                            <input class="form-control mt-1 border rounded-1" placeholder="Nhập tên Admin" id="usernameInput" name="username"></input>
+                            <input class="form-control mt-1 border rounded-1" placeholder="Nhập Mã đăng ký" id="usernameInput" name="MSSV"></input>
+                        </div>
+                        <div class="form-group">
+                            <label for="usernameInput" class="pt-2">
+                                <i class="fas fa-user"></i> Họ Tên:
+                            </label>
+                            <input class="form-control mt-1 border rounded-1" placeholder="Nhập Họ và Tên" id="usernameInput" name="username"></input>
+                        </div>
+                        <div class="form-group">
+                            <label for="usernameInput" class="pt-2">
+                                <i class="fas fa-user"></i> Email:
+                            </label>
+                            <input class="form-control mt-1 border rounded-1" placeholder="Nhập Email" id="Email" name="Email"></input>
+                        </div>
+                        <div class="form-group">
+                            <label class="pt-2">Giới tính:</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="gender" id="male" value="male" required>
+                                <label class="form-check-label" for="male">
+                                    Nam
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="gender" id="female" value="female" required>
+                                <label class="form-check-label" for="female">
+                                    Nữ
+                                </label>
+                            </div>
                         </div>
 
                         <div class="form-group">
