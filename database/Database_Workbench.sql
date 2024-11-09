@@ -258,8 +258,8 @@ CREATE TABLE NhanVien (
 
 INSERT INTO NhanVien (MaNhanVien, HoTen, SDT, GioiTinh, NgaySinh, Password)
 VALUES
-('B000001', 'Nguyễn Văn C', '0333555777',  'Nam', '1980-05-15', '$2y$10$XaJgTLKSk2FwThXYAkTq9.HG5DUTxL.ixJdoHGxbzQPloBUbdIjbK'),
-('B000002', 'Lê Thị D', '0444666888',  'Nữ', '1985-06-20', '$2y$10$XaJgTLKSk2FwThXYAkTq9.HG5DUTxL.ixJdoHGxbzQPloBUbdIjbK');
+('CB000001', 'Nguyễn Văn C', '0333555777',  'Nam', '1980-05-15', '$2y$10$XaJgTLKSk2FwThXYAkTq9.HG5DUTxL.ixJdoHGxbzQPloBUbdIjbK'),
+('CB000002', 'Lê Thị D', '0444666888',  'Nữ', '1985-06-20', '$2y$10$XaJgTLKSk2FwThXYAkTq9.HG5DUTxL.ixJdoHGxbzQPloBUbdIjbK');
 
 
 
