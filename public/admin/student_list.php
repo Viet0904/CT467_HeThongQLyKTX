@@ -70,7 +70,6 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 echo '<th>Giới tính</th>';
                                 echo '<th>Mã lớp</th>';
                                 echo '<th>Tên lớp</th>';
-                                echo '<th>Khoá</th>';
                                 echo '<th>Phòng</th>';
                                 echo '<th>Hoạt động</th>';
                                 echo '</tr>';
@@ -87,7 +86,6 @@ include_once __DIR__ . '/../../partials/heading.php';
                                     echo '<td>' . htmlspecialchars($row["GioiTinh"]) . '</td>';
                                     echo '<td>' . htmlspecialchars($row["MaLop"]) . '</td>';
                                     echo '<td>' . htmlspecialchars($row["TenLop"]) . '</td>';
-                                    echo '<td>' . htmlspecialchars($row["KhoaHoc"]) . '</td>';
                                     echo '<td>' . htmlspecialchars($row["MaPhong"]) . '</td>';
                                     echo '<td>
                                     <div class="dropdown position-relative">

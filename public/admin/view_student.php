@@ -11,7 +11,6 @@ $stmt = $dbh->prepare($sql);
 $stmt->execute(['msv' => $msv]);
 $student = $stmt->fetch(PDO::FETCH_ASSOC);
 
-
 include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
 ?>
@@ -63,10 +62,7 @@ include_once __DIR__ . '/../../partials/heading.php';
                                     <label for="chucVu"><b>Chức vụ</b></label>
                                     <p class="mt-1 mb-2 mx-3"><?php echo $student['ChucVu']; ?></p>
                                 </div>
-                                <div class="col-md-4">
-                                    <label for="department"><b>Khoá</b></label>
-                                    <p class="mt-1 mb-2 mx-3"><?php echo $student['KhoaHoc']; ?></p>
-                                </div>
+        
                             </div>
 
                             <!-- Đường phân cách -->
