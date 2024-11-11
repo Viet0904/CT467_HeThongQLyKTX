@@ -19,12 +19,8 @@ include_once __DIR__ . '/../../partials/heading.php';
                     <div class="container-fluid py-3" style="padding: 20px;">
                         <!-- Phần header của List of Rooms -->
                         <div class="d-flex justify-content-between align-items-center">
-                            <h5>Danh sách sinh viên</h5>
-                            <a href="./manage_student.php" class="btn text-white"
-                                style="background-color: rgb(219, 48, 119);">
-                                <i class="fas fa-plus me-1"></i>Tạo mới
-                            </a>
-
+                            <h5>Danh sách thuê phòng</h5>
+                        
                         </div>
 
                         <div class="col-auto py-3 ">
@@ -52,7 +48,7 @@ include_once __DIR__ . '/../../partials/heading.php';
                             $offset = ($currentPage - 1) * $rowsPerPage;
 
                             // Truy vấn SQL với LIMIT và OFFSET
-                            $sinhvien = "SELECT SinhVien.*, Lop.TenLop, ThuePhong.MaPhong 
+                            $sinhvien = "SELECT SinhVien.*, Lop.TenLop, ThuePhong.MaPhong
                             FROM SinhVien 
                             JOIN Lop ON SinhVien.MaLop = Lop.MaLop 
                             LEFT JOIN ThuePhong ON SinhVien.MaSinhVien = ThuePhong.MaSinhVien 
@@ -68,8 +64,7 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 echo '<th>Tên</th>';
                                 echo '<th>MSSV</th>';
                                 echo '<th>Giới tính</th>';
-                                echo '<th>Mã lớp</th>';
-                                echo '<th>Tên lớp</th>';
+                                echo '<th>Mã phòng</th>';
                                 echo '<th>Hoạt động</th>';
                                 echo '</tr>';
                                 echo '</thead>';
@@ -83,16 +78,15 @@ include_once __DIR__ . '/../../partials/heading.php';
                                     echo '<td>' . htmlspecialchars($row["HoTen"]) . '</td>';
                                     echo '<td>' . htmlspecialchars($row["MaSinhVien"]) . '</td>';
                                     echo '<td>' . htmlspecialchars($row["GioiTinh"]) . '</td>';
-                                    echo '<td>' . htmlspecialchars($row["MaLop"]) . '</td>';
-                                    echo '<td>' . htmlspecialchars($row["TenLop"]) . '</td>';
+                                    echo '<td>' . (!empty($row["MaPhong"]) ? htmlspecialchars($row["MaPhong"]) : "Chưa có phòng") . '</td>';
                                     echo '<td>
                                     <div class="dropdown position-relative">
                                         <button class="btn btn-outline-secondary dropdown-toggle" type="button" onclick="toggleActionDropdown(\'actionDropdownMenu' . htmlspecialchars($stt) . '\')">
                                             Hoạt động
                                         </button>
                                         <div id="actionDropdownMenu' . htmlspecialchars($stt) . '" class="dropdown-menu position-absolute p-0" style="display: none; min-width: 100px;">
-                                            <a class="dropdown-item py-2" href="view_student.php?msv=' . htmlspecialchars($row['MaSinhVien']) . '">Xem</a>
-                                            <a class="dropdown-item py-2" href="manage_student.php?msv=' . htmlspecialchars($row['MaSinhVien']) . '">Sửa</a>
+                                            <a class="dropdown-item py-2" href="view_thuephong.php?msv=' . htmlspecialchars($row['MaSinhVien']) . '">Xem</a>
+                                            <a class="dropdown-item py-2" href="manage_sv_thuephong.php?msv=' . htmlspecialchars($row['MaSinhVien']) . '">Sửa</a>
                                             <a class="dropdown-item py-2" href="delete_student.php?msv=' . htmlspecialchars($row['MaSinhVien']) . '">Xoá</a>
                                         </div>
                                     </div>
