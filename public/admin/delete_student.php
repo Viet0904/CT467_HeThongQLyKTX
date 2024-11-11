@@ -12,7 +12,7 @@ if ($maSinhVien) {
     $stmt = $dbh->prepare("SELECT * FROM SinhVien WHERE MaSinhVien = :maSinhVien");
     $stmt->execute([':maSinhVien' => $maSinhVien]);
     $sinhVien = $stmt->fetch(PDO::FETCH_ASSOC);
-    
+
     if (!$sinhVien) {
         echo "<div class='alert alert-danger'>Sinh viên không tồn tại.</div>";
         exit;
@@ -20,12 +20,17 @@ if ($maSinhVien) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Xóa các bản ghi liên quan trong bảng ThuePhong
+    $stmt = $dbh->prepare("DELETE FROM ThuePhong WHERE MaSinhVien = :maSinhVien");
+    $stmt->execute([':maSinhVien' => $maSinhVien]);
+
     // Xử lý việc xóa sinh viên
     $stmt = $dbh->prepare("DELETE FROM SinhVien WHERE MaSinhVien = :maSinhVien");
     if ($stmt->execute([':maSinhVien' => $maSinhVien])) {
-        // Chuyển hướng về danh sách sinh viên sau khi xóa thành công
-        echo "<script>alert('Xóa sinh viên thành công.')</script>";
-        header("Location: student_list.php?success=1");
+        echo "<script>
+            alert('Xóa sinh viên thành công.');
+            window.location.href = 'student_list.php?success=1';
+        </script>";
         exit;
     } else {
         echo "<div class='alert alert-danger'>Có lỗi xảy ra khi xóa sinh viên.</div>";
@@ -46,7 +51,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="modal-user mt-3">
                         <form action="" method="POST">
                             <div class="alert alert-warning">
-                                <h6>Bạn có chắc chắn muốn xoá sinh viên <strong><?php echo htmlspecialchars($sinhVien['HoTen']); ?></strong> (Mã sinh viên: <strong><?php echo htmlspecialchars($sinhVien['MaSinhVien']); ?></strong>)?</h6>
+                                <h6>Bạn có chắc chắn muốn xoá sinh viên
+                                    <strong><?php echo htmlspecialchars($sinhVien['HoTen']); ?></strong> (Mã sinh viên:
+                                    <strong><?php echo htmlspecialchars($sinhVien['MaSinhVien']); ?></strong>)?</h6>
                             </div>
                             <div class="row-add d-flex justify-content-center align-items-center mt-2">
                                 <div class="mx-2">
@@ -63,4 +70,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 </body>
+
 </html>
