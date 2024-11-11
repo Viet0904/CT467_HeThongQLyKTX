@@ -36,12 +36,31 @@ DELIMITER ;
 
 -- Trigger xử lý khi thêm diennuoc
 DELIMITER //
-CREATE TRIGGER check_duplicate BEFORE INSERT ON DienNuoc
+CREATE TRIGGER check_and_prevent BEFORE INSERT ON DienNuoc
 FOR EACH ROW
 BEGIN
     DECLARE msg VARCHAR(255);
+    -- Check for duplicate entries
     IF EXISTS (SELECT 1 FROM DienNuoc WHERE maPhong = NEW.maPhong AND thang = NEW.thang AND namhoc = NEW.namhoc AND hocki = NEW.hocki) THEN
         SET msg = 'Không thể thêm trùng dữ liệu. Vui lòng thêm lại';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg;
+    END IF;
+    -- Prevent negative values for PhiDien and PhiNuoc
+    IF NEW.PhiDien < 0 OR NEW.PhiNuoc < 0 THEN
+        SET msg = 'Phí Điện và Phí Nước không thể âm';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg;
+    END IF;
+END//
+DELIMITER ;
+-- Trigger to prevent negative values for PhiDien and PhiNuoc on update
+DELIMITER //
+CREATE TRIGGER prevent_negative_values_update
+BEFORE UPDATE ON DienNuoc
+FOR EACH ROW
+BEGIN
+    DECLARE msg VARCHAR(255);
+    IF NEW.PhiDien < 0 OR NEW.PhiNuoc < 0 THEN
+        SET msg = 'Phí Điện và Phí Nước không thể âm';
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg;
     END IF;
 END//

@@ -5,12 +5,12 @@ include_once __DIR__ . '/../../partials/heading.php';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     try {
         // Kết nối cơ sở dữ liệu và thực hiện truy vấn
-        $stmt = $dbh->prepare("INSERT INTO DienNuoc (maPhong, thang, namhoc, hocki) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$_POST['maPhong'], $_POST['thang'], $_POST['namhoc'], $_POST['hocki']]);
+        $stmt = $dbh->prepare("INSERT INTO DienNuoc (maPhong, thang, namhoc, hocki, PhiDien, PhiNuoc) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$_POST['maPhong'], $_POST['thang'], $_POST['namhoc'], $_POST['hocki'], $_POST['phiDien'], $_POST['phiNuoc']]);
         $successMessage = "Dữ liệu đã được thêm thành công.";
     } catch (PDOException $e) {
         if ($e->getCode() == '45000') {
-            $errorMessage = "Không thể thêm trùng dữ liệu. Vui lòng thêm lại";
+            $errorMessage = $e->getMessage();
             echo "<script>alert('{$errorMessage}');</script>";
         } else {
             exit("Error: " . $e->getMessage());

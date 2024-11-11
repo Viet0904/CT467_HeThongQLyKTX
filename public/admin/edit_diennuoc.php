@@ -2,20 +2,49 @@
 include_once __DIR__ . '/../../config/dbadmin.php';
 include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
-$maPhong = $_GET['maphong'] ?? '';
-$thang = $_GET['thang'] ?? '';
-$namhoc = $_GET['namhoc'] ?? '';
-$hocki = $_GET['hocki'] ?? '';
 
+$maPhong = '';
+$thang = '';
+$namhoc = '';
+$hocki = '';
 
-// Đoạn mã của bạn
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Gán giá trị từ $_POST
+    $maPhong = $_POST['maPhong'] ?? '';
+    $thang = $_POST['thang'] ?? '';
+    $namhoc = $_POST['namhoc'] ?? '';
+    $hocki = $_POST['hocki'] ?? '';
+
+    try {
+        // Kết nối cơ sở dữ liệu và thực hiện truy vấn cập nhật
+        $stmt = $dbh->prepare("UPDATE DienNuoc SET PhiDien = ?, PhiNuoc = ? WHERE MaPhong = ? AND Thang = ? AND NamHoc = ? AND HocKi = ?");
+        $stmt->execute([$_POST['phiDien'], $_POST['phiNuoc'], $maPhong, $thang, $namhoc, $hocki]);
+        $successMessage = "Dữ liệu đã được cập nhật thành công.";
+    } catch (PDOException $e) {
+        if ($e->getCode() == '45000') {
+            $errorMessage = $e->getMessage();
+            echo "<script>alert('{$errorMessage}');</script>";
+        } else {
+            exit("Error: " . $e->getMessage());
+        }
+    }
+    if (isset($successMessage)) {
+        echo "<script>alert('{$successMessage}');</script>";
+    }
+} else {
+    // Gán giá trị từ $_GET
+    $maPhong = $_GET['maphong'] ?? '';
+    $thang = $_GET['thang'] ?? '';
+    $namhoc = $_GET['namhoc'] ?? '';
+    $hocki = $_GET['hocki'] ?? '';
+}
+
+// Your code
 $stmt = $dbh->prepare("CALL GetDienNuoc(?, ?, ?, ?)");
 $stmt->execute([$maPhong, $thang, $namhoc, $hocki]);
 $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-
 ?>
-
 
 <body>
     <div class="container-fluid">
@@ -37,8 +66,7 @@ $data = $stmt->fetch(PDO::FETCH_ASSOC);
                     <?php endif; ?>
 
                     <div class="modal-user">
-                        <form action="add_diennuoc.php" method="POST">
-
+                        <form action="edit_diennuoc.php" method="POST">
                             <!-- School Details Section -->
                             <h5 class="mt-1"><b>Chi tiết Phòng</b></h5>
                             <div class="row row-add mb-3">
@@ -58,18 +86,8 @@ $data = $stmt->fetch(PDO::FETCH_ASSOC);
                                 <div class="col-md-4">
                                     <labe for="thang" class="form-label">Tháng</label>
                                         <select class="form-control" id="thang" name="thang" required>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                            <option value="6">6</option>
-                                            <option value="7">7</option>
-                                            <option value="8">8</option>
-                                            <option value="9">9</option>
-                                            <option value="10">10</option>
-                                            <option value="11">11</option>
-                                            <option value="11">12</option>
+                                            <option value="<?php echo htmlspecialchars($thang); ?>" selected><?php echo htmlspecialchars($thang); ?></option>
+
                                         </select>
                                 </div>
                             </div>
@@ -77,33 +95,26 @@ $data = $stmt->fetch(PDO::FETCH_ASSOC);
                                 <div class="col-md-4">
                                     <label for="namhoc" class="form-label">Năm Học</label>
                                     <select class="form-control" id="namhoc" name="namhoc" required>
-                                        <?php
-                                        $currentYear = date('Y');
-                                        for ($year = 2020; $year <= $currentYear; $year++): ?>
-                                            <option value="<?= $year ?>"><?= $year ?></option>
-                                        <?php endfor; ?>
+                                        <option value="<?php echo htmlspecialchars($namhoc); ?>" selected><?php echo htmlspecialchars($namhoc); ?></option>
                                     </select>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="hocki" class="form-label">Học kì</label>
                                     <select class="form-control" id="hocki" name="hocki" required>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
+                                        <option value="<?php echo htmlspecialchars($hocki); ?>" selected><?php echo htmlspecialchars($hocki); ?></option>
                                     </select>
                                 </div>
                             </div>
                             <div class="row row-add mb-3">
                                 <div class="col-md-4">
                                     <label for="phiDien" class="form-label">Phí sử dụng Điện</label>
-                                    <input type="number" class="form-control" id="phiDien" name="phiDien" required>
+                                    <input type="number" class="form-control" id="phiDien" name="phiDien" value="<?php echo htmlspecialchars($data['PhiDien']); ?>" required>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="phiNuoc" class="form-label">Phí sử dụng Nước</label>
-                                    <input type="number" class="form-control" id="phiNuoc" name="phiNuoc" required>
+                                    <input type="number" class="form-control" id="phiNuoc" name="phiNuoc" value="<?php echo htmlspecialchars($data['PhiNuoc']); ?>" required>
                                 </div>
                             </div>
-
                             <!-- Submit Button -->
                             <div class="text-end mt-2">
                                 <button type="submit" class="btn btn-primary"

@@ -377,6 +377,7 @@ CREATE TABLE DienNuoc (
     FOREIGN KEY (MaPhong) REFERENCES Phong(MaPhong)
 );
 
+
 -- Chèn dữ liệu mẫu vào bảng DienNuoc
 INSERT INTO DienNuoc (Thang, NamHoc, PhiDien, PhiNuoc, HocKi, MaPhong)
 VALUES

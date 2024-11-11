@@ -160,7 +160,7 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         <div id="actionDropdownMenu' . htmlspecialchars($stt) . '" class="dropdown-menu position-absolute p-0" style="display: none; min-width: 100px;">
                                             <a class="dropdown-item py-2" href="add_diennuoc.php?maphong=' . htmlspecialchars($row['MaPhong']) . '">Thêm</a>
                                             <a class="dropdown-item py-2" href="edit_diennuoc.php?maphong=' . htmlspecialchars($row['MaPhong']) . '&thang=' . htmlspecialchars($row['Thang']) . '&namhoc=' . htmlspecialchars($row['NamHoc']) . '&hocki=' . htmlspecialchars($row['HocKi']) . '">Sửa</a>
-                                            <a class="dropdown-item py-2" href="delete_diennuoc.php?maphong=' . htmlspecialchars($row['MaPhong']) . '&thang=' . htmlspecialchars($row['Thang']) . '&namhoc=' . htmlspecialchars($row['NamHoc']) . '&hocki=' . htmlspecialchars($row['HocKi']) . '">Xoá</a>
+                                            <a class="dropdown-item py-2" href="delete_diennuoc.php?id=' . htmlspecialchars($row['ID']) . '">Xoá</a>
                                         </div>
                                     </div>';
 
