@@ -58,10 +58,7 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <!-- Phần header của List of Rooms -->
                         <div class="d-flex justify-content-between align-items-center">
                             <h5>Danh sách phòng</h5>
-                            <a href="./manage_room.php" class="btn text-white"
-                                style="background-color: rgb(219, 48, 119);">
-                                <i class="fas fa-plus me-1"></i>Thêm phòng mới
-                            </a>
+
                         </div>
 
                         <form id="searchForm" method="post" action="manage_diennuoc.php">
@@ -124,14 +121,15 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             echo '<tr>';
                             echo '<th class="text-center" width="3%">STT</th>';
                             echo '<th class="text-center" width="7%">Tháng</th>';
+                            echo '<th class="text-center" width="7%">Mã phòng</th>';
                             echo '<th class="text-center" width="10%">Loại</th>';
-                            echo '<th class="text-center" width="14%">Phí sử dụng của phòng (VNĐ)</th>';
-                            echo '<th class="text-center" width="14%">Số tiền phải đóng của sinh viên (VNĐ)</th>';
+                            echo '<th class="text-center" width="10%">Phí sử dụng của phòng (VNĐ)</th>';
+                            echo '<th class="text-center" width="10%">Số tiền phải đóng của sinh viên (VNĐ)</th>';
                             echo '<th class="text-center" width="14%">Tổng số tiền phải đóng của sinh viên (VNĐ)</th>';
                             echo '<th class="text-center" width="14%">Tổng số tiền còn lại phải đóng của phòng (VNĐ)</th>';
                             echo '<th class="text-center" width="12%">Ngày đóng</th>';
                             echo '<th class="text-center" width="12%">Năm học, học kỳ</th>';
-                            echo '<th class="text-center" width="8%">Thanh toán<br>trực tuyến</th>';
+                            echo '<th class="text-center" width="8%">Hoạt Động</th>';
                             echo '</tr>';
                             echo '</thead>';
                             echo '<tbody>';
@@ -143,17 +141,29 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 echo '<tr>';
                                 echo '<td class="text-center fw-bold" rowspan="2">' . $stt . '</td>';
                                 echo '<td class="text-center" rowspan="2">' . htmlspecialchars($row['Thang']) . '</td>';
+                                echo '<td class="text-center" rowspan="2">' . htmlspecialchars($row['MaPhong']) . '</td>';
                                 echo '<td>Đơn giá điện</td>';
                                 echo '<td class="text-end">' . number_format($row['PhiDien'], 0, ',', '.') . '</td>';
                                 echo '<td class="text-end">' . number_format($row['PhiDien'], 0, ',', '.') . '</td>';
                                 echo '<td class="text-end" rowspan="2">' . number_format($row['TongTien'], 0, ',', '.') . '</td>';
                                 echo '<td class="text-end" rowspan="2">' . number_format($row['TongTien'], 0, ',', '.') . '</td>';
                                 echo '<td rowspan="2">' . htmlspecialchars($row['NgayThanhToan']) . '</td>';
-                                echo '<td rowspan="2">' . htmlspecialchars($row['NamHoc']) . '</td>';
+                                echo '<td rowspan="2">' .
+                                    htmlspecialchars($row['NamHoc']) . ', ' . htmlspecialchars($row['HocKi'])
+                                    . '</td>';
                                 echo '<td class="text-center" rowspan="2">';
-                                if ($stt == 1) {
-                                    echo '<button class="btn btn-primary btn-sm" onclick="goToDongPhiQR(2,' . $row['Thang'] . ', 2025, 1)">Đóng phí qua QRCode</button>';
-                                }
+                                echo '
+                                    <div class="dropdown position-relative">
+                                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" onclick="toggleActionDropdown(\'actionDropdownMenu' . htmlspecialchars($stt) . '\')">
+                                            Hoạt động
+                                        </button>
+                                        <div id="actionDropdownMenu' . htmlspecialchars($stt) . '" class="dropdown-menu position-absolute p-0" style="display: none; min-width: 100px;">
+                                            <a class="dropdown-item py-2" href="add_diennuoc.php?maphong=' . htmlspecialchars($row['MaPhong']) . '">Thêm</a>
+                                            <a class="dropdown-item py-2" href="edit_diennuoc.php?maphong=' . htmlspecialchars($row['MaPhong']) . '&thang=' . htmlspecialchars($row['Thang']) . '&namhoc=' . htmlspecialchars($row['NamHoc']) . '&hocki=' . htmlspecialchars($row['HocKi']) . '">Sửa</a>
+                                            <a class="dropdown-item py-2" href="delete_diennuoc.php?maphong=' . htmlspecialchars($row['MaPhong']) . '&thang=' . htmlspecialchars($row['Thang']) . '&namhoc=' . htmlspecialchars($row['NamHoc']) . '&hocki=' . htmlspecialchars($row['HocKi']) . '">Xoá</a>
+                                        </div>
+                                    </div>';
+
                                 echo '</td>';
                                 echo '</tr>';
 
@@ -169,15 +179,6 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             echo '</tbody>';
                             echo '</table>';
                             ?>
-
-
-
-
-
-
-
-
-
 
                             <!-- Pagination -->
                             <?php
