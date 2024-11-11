@@ -22,26 +22,29 @@ $roomId = $_GET['MaPhong'] ?? null;
                                         <th>Mã Hợp Đồng</th>
                                         <th>Ngày Bắt Đầu</th>
                                         <th>Ngày Kết Thúc</th>
-                                        <th>Tiền Đặt Cọc</th>
-                                        <th>Giá Thuê Thực Tế</th>
+                                        <th>Giá Thuê</th>
                                         <th>Hành Động</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php
-                                    $stmt = $dbh->prepare("SELECT * FROM ThuePhong WHERE MaPhong = :MaPhong");
+                                <?php
+                                    $stmt = $dbh->prepare("
+                                        SELECT ThuePhong.MaHopDong, ThuePhong.BatDau, ThuePhong.KetThuc, Phong.GiaThue
+                                        FROM ThuePhong
+                                        JOIN Phong ON ThuePhong.MaPhong = Phong.MaPhong
+                                        WHERE ThuePhong.MaPhong = :MaPhong
+                                    ");
                                     $stmt->execute([':MaPhong' => $roomId]);
                                     while ($contract = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                         echo "<tr>
                                                 <td>{$contract['MaHopDong']}</td>
                                                 <td>{$contract['BatDau']}</td>
                                                 <td>{$contract['KetThuc']}</td>
-                                                <td>" . number_format($contract['TienDatCoc'], 2) . "</td>
-                                                <td>" . number_format($contract['GiaThueThucTe'], 2) . "</td>
+                                                <td>" . number_format($contract['GiaThue'], 2) . "</td>
                                                 <td><a href='hopdong_detail.php?MaHopDong={$contract['MaHopDong']}' class='btn btn-outline-info'>Xem chi tiết</a></td>
-                                              </tr>";
+                                            </tr>";
                                     }
-                                    ?>
+                                ?>
                                 </tbody>
                             </table>
                         </div>
