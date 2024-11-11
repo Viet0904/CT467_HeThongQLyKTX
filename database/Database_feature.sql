@@ -86,3 +86,56 @@ BEGIN
       AND HocKi = hocki;
 END//
 DELIMITER ;
+
+-- Function xoá dòng 
+DELIMITER //
+CREATE PROCEDURE DeleteDienNuocByID(IN p_ID INT)
+BEGIN
+    DELETE FROM DienNuoc WHERE ID = p_ID;
+END //
+DELIMITER ; 
+
+-- Viết 1 PROCEDURE chứa Transction để thanh toán điện nước
+DELIMITER //
+CREATE PROCEDURE ThanhToanDienNuoc (
+    IN p_MaPhong VARCHAR(10),
+    IN p_Thang INT,
+    IN p_NamHoc VARCHAR(50),
+    IN p_HocKi ENUM('1', '2', '3'),
+    OUT p_Message VARCHAR(255),
+    OUT p_ErrorCode INT
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        -- Nếu có lỗi, rollback và trả về mã lỗi
+        ROLLBACK;
+        SET p_Message = 'Lỗi khi thanh toán điện nước';
+        SET p_ErrorCode = 1;
+    END;
+
+    -- Bắt đầu giao dịch
+    START TRANSACTION;
+
+    -- Cập nhật ngày thanh toán và kiểm tra nếu thành công
+    UPDATE DienNuoc
+    SET NgayThanhToan = NOW(), TongTien = IF(ROW_COUNT() > 0, 0, TongTien)
+    WHERE MaPhong = p_MaPhong
+      AND Thang = p_Thang
+      AND NamHoc = p_NamHoc
+      AND HocKi = p_HocKi;
+
+    -- Kiểm tra nếu cập nhật thành công
+    IF ROW_COUNT() > 0 THEN
+        COMMIT;
+        SET p_Message = 'Thanh toán thành công';
+        SET p_ErrorCode = 0;
+    ELSE
+        ROLLBACK;
+        SET p_Message = 'Không tìm thấy bản ghi để cập nhật';
+        SET p_ErrorCode = 2;
+    END IF;
+END //
+DELIMITER ;
+
+

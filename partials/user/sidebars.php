@@ -13,6 +13,7 @@
         <li class="section-header">Danh sách chính</li>
         <li class="p-0 ms-1"><a href="./room_list.php" class="py-2 ps-3"><i class="fas fa-door-open"></i> Danh sách phòng</a></li>
 
+
         <!-- Reports Section -->
         <li class="section-header">Báo cáo</li>
         <li class="p-0 ms-1"><a href="report_price.php" class="py-2 ps-3"><i class="fas fa-chart-line"></i> Doanh thu hàng tháng</a></li>
