@@ -23,7 +23,7 @@ require_once __DIR__ . '/../../config/dbadmin.php';
                                 <i class="fas fa-door-open"></i>
                                 <div class="card-title">Tổng số phòng</div>
                                 <div class="card-number">
-                                    <?php                                    
+                                    <?php
                                     $sqlPhong = "SELECT MaPhong FROM Phong";
                                     $resultPhong = $dbh->prepare($sqlPhong);
                                     $resultPhong->execute();
@@ -36,7 +36,7 @@ require_once __DIR__ . '/../../config/dbadmin.php';
                                 <i class="fas fa-users"></i>
                                 <div class="card-title">Tổng sinh viên</div>
                                 <div class="card-number">
-                                <?php                             
+                                    <?php
                                     $sqlSinhVien = "SELECT MaSinhVien FROM SinhVien";
                                     $resultSinhVien = $dbh->prepare($sqlSinhVien);
                                     $resultSinhVien->execute();
@@ -55,13 +55,24 @@ require_once __DIR__ . '/../../config/dbadmin.php';
                             <div class="card">
                                 <i class="fas fa-coins"></i>
                                 <div class="card-title">Tổng doanh thu</div>
-                                <div class="card-number">$8,500.00</div>
+                                <div class="card-number">
+                                    <?php
+                                    // Truy vấn tổng tiền từ bảng DienNuoc
+                                    $sqlDoanhThu = "SELECT SUM(TongTien) AS TongDoanhThu FROM DienNuoc";
+                                    $resultDoanhThu = $dbh->prepare($sqlDoanhThu);
+                                    $resultDoanhThu->execute();
+                                    $tongDoanhThu = $resultDoanhThu->fetch(PDO::FETCH_ASSOC)['TongDoanhThu'];
+
+                                    // Hiển thị tổng doanh thu đã format theo kiểu tiền tệ
+                                    echo htmlspecialchars(number_format($tongDoanhThu, 2)) . " VND";
+                                    ?>
+                                </div>
                             </div>
                             <div class="card">
                                 <i class="fas fa-cogs"></i>
                                 <div class="card-title">Tổng nhân viên</div>
                                 <div class="card-number">
-                                <?php                                   
+                                    <?php
                                     $sqlNhanVien = "SELECT MaNhanVien FROM NhanVien";
                                     $resultNhanVien = $dbh->prepare($sqlNhanVien);
                                     $resultNhanVien->execute();
