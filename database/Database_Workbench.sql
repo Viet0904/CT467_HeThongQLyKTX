@@ -263,9 +263,9 @@ VALUES
 ('B2111925', 'Trần Văn Q', '0123456796', 'q.b2111925@student.ctu.edu.vn', 'V7', 'Vĩnh Long', 'Nam', '2003-09-26', 'Thành Viên ANXK', ''),
 ('B2111926', 'Phạm Thị R', '0123456797', 'r.b2111926@student.ctu.edu.vn', 'V7', 'Đồng Tháp', 'Nữ', '2003-10-27', 'Thành Viên ANXK', ''),
 ('B2111927', 'Hoàng Văn S', '0123456798', 's.b2111927@student.ctu.edu.vn', 'V7', 'Kiên Giang', 'Nam', '2003-11-28', 'Thành Viên ANXK', ''),
-('B2111928', 'Đỗ Thị T', '0123456799', 't.b2111928@student.ctu.edu.vn', 'V7', 'Bến Tre', 'Nữ', '2003-12-29', 'Thành Viên ANXK', '');
-
-
+('B2111928', 'Đỗ Thị T', '0123456799', 't.b2111928@student.ctu.edu.vn', 'V7', 'Bến Tre', 'Nữ', '2003-12-29', 'Thành Viên ANXK', '')
+('B2111894', 'Nguyễn Hồng Tuấn Phát', '0783727647','phatb2111894@student.ctu.edu.vn' ,'V7', 'Cần Thơ', 'Nam',  '2003-11-24', 'Không',  '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
+('B2105647', 'Lê Thị Tiến', '0900900900','tienb2105647@student.ctu.edu.vn'  ,'V7', 'Kiên Giang', 'Nữ', '2002-7-8','Không','$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO');
 
 -- Tạo bảng NhanVien
 CREATE TABLE NhanVien (

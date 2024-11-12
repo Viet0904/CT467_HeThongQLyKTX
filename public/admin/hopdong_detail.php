@@ -27,8 +27,15 @@ $contractId = $_GET['MaHopDong'] ?? null;
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php
-                                    $stmt = $dbh->prepare("SELECT TT.*, NV.Hoten FROM TT_ThuePhong TT LEFT JOIN NhanVien NV ON TT.MaNhanVien = NV.MaNhanVien WHERE TT.MaHopDong = :MaHopDong");
+                                <?php
+                                    $stmt = $dbh->prepare("
+                                        SELECT TT.ThangNam, Phong.GiaThue AS SoTien, TT.NgayThanhToan, NV.Hoten 
+                                        FROM TT_ThuePhong TT 
+                                        LEFT JOIN ThuePhong TP ON TT.MaHopDong = TP.MaHopDong
+                                        LEFT JOIN Phong ON TP.MaPhong = Phong.MaPhong
+                                        LEFT JOIN NhanVien NV ON TT.MaNhanVien = NV.MaNhanVien 
+                                        WHERE TT.MaHopDong = :MaHopDong
+                                    ");
                                     $stmt->execute([':MaHopDong' => $contractId]);
                                     while ($payment = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                         echo "<tr>
@@ -38,16 +45,16 @@ $contractId = $_GET['MaHopDong'] ?? null;
                                                 <td>{$payment['Hoten']}</td>
                                                 <td>
                                                     <div class='dropdown'>
-                                                        <button class='btn btn-secondary dropdown-toggle' type='button' id='actionDropdownMenu{$payment['MaHopDong']}' data-bs-toggle='dropdown' aria-expanded='false'>
+                                                        <button class='btn btn-secondary dropdown-toggle' type='button' id='actionDropdownMenu{$contractId}' data-bs-toggle='dropdown' aria-expanded='false'>
                                                             Hành động
                                                         </button>
-                                                        <ul class='dropdown-menu' aria-labelledby='actionDropdownMenu{$payment['MaHopDong']}'>
-                                                            <li><a class='dropdown-item' href='manage_payment.php?id={$payment['MaHopDong']}'>Sửa</a></li>
-                                                            <li><a class='dropdown-item' href='delete_payment.php?id={$payment['MaHopDong']}' onclick='return confirm(\"Bạn có chắc chắn muốn xóa khoản thanh toán này?\");'>Xoá</a></li>
+                                                        <ul class='dropdown-menu' aria-labelledby='actionDropdownMenu{$contractId}'>
+                                                            <li><a class='dropdown-item' href='manage_payment.php?id={$contractId}'>Sửa</a></li>
+                                                            <li><a class='dropdown-item' href='delete_payment.php?id={$contractId}' onclick='return confirm(\"Bạn có chắc chắn muốn xóa khoản thanh toán này?\");'>Xoá</a></li>
                                                         </ul>
                                                     </div>
                                                 </td>
-                                              </tr>";
+                                            </tr>";
                                     }
                                     ?>
                                 </tbody>
