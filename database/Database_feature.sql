@@ -150,75 +150,67 @@ END //
 DELIMITER ;
 
 
-
-
+-- Hàm Đăng ký 
 DELIMITER //
-
-CREATE PROCEDURE ThemDangKyPhong(
+CREATE PROCEDURE DangKyPhong(
     IN p_MaSinhVien VARCHAR(10),
     IN p_MaPhong VARCHAR(10),
     IN p_BatDau DATE,
     IN p_KetThuc DATE,
-    IN p_MaNhanVien VARCHAR(10)
+    OUT p_Message VARCHAR(100)
 )
 BEGIN
-    DECLARE v_MaHopDong VARCHAR(10);
+    DECLARE v_GioiTinhSV VARCHAR(10);
+    DECLARE v_LoaiPhong ENUM('Nam', 'Nữ');
+    DECLARE v_SoChoConLai INT;
     DECLARE v_GiaThue DECIMAL(10, 2);
-    DECLARE v_LastID INT;
-    DECLARE v_CurrentDate DATE;
-    DECLARE v_ThangNam DATE;
-    
-    -- Kiểm tra sinh viên tồn tại
-    IF NOT EXISTS (SELECT 1 FROM SinhVien WHERE MaSinhVien = p_MaSinhVien) THEN
+    DECLARE v_HopDongID INT;
+    DECLARE v_Count INT;
+    -- Kiểm tra sinh viên đã đăng ký phòng chưa
+    SELECT COUNT(*) INTO v_Count 
+    FROM ThuePhong 
+    WHERE MaSinhVien = p_MaSinhVien;
+    IF v_Count > 0 THEN
+        SET p_Message = 'Sinh viên đã có phòng';
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Sinh viên không tồn tại';
+        SET MESSAGE_TEXT = p_Message;
     END IF;
-    
-    -- Kiểm tra phòng tồn tại và còn chỗ trống
-    IF NOT EXISTS (SELECT 1 FROM Phong WHERE MaPhong = p_MaPhong 
-        AND SoChoThucTe - DaO > 0
-        AND ((BatDau BETWEEN p_BatDau AND p_KetThuc) OR (KetThuc BETWEEN p_BatDau AND p_KetThuc)))) THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Phòng không tồn tại hoặc đã đầy';
-    END IF;
-    
-    -- Kiểm tra sinh viên đã có phòng trong khoảng thời gian này chưa
-    IF EXISTS (SELECT 1 FROM ThuePhong 
-        WHERE MaSinhVien = p_MaSinhVien 
-        AND ((BatDau BETWEEN p_BatDau AND p_KetThuc) 
-        OR (KetThuc BETWEEN p_BatDau AND p_KetThuc))) THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Sinh viên đã có phòng trong khoảng thời gian này';
-    END IF;
-    
-    -- Lấy giá thuê từ bảng Phong
-    SELECT GiaThue INTO v_GiaThue
+    -- Lấy thông tin giới tính của sinh viên
+    SELECT GioiTinh INTO v_GioiTinhSV
+    FROM SinhVien
+    WHERE MaSinhVien = p_MaSinhVien;
+    -- Lấy thông tin phòng
+    SELECT LoaiPhong, (SucChua - DaO), GiaThue INTO v_LoaiPhong, v_SoChoConLai, v_GiaThue
     FROM Phong
     WHERE MaPhong = p_MaPhong;
-    
-    -- Tạo mã hợp đồng mới
-    SELECT COALESCE(MAX(CAST(SUBSTRING(MaHopDong, 3) AS UNSIGNED)), 0) INTO v_LastID
-    FROM ThuePhong;
-    SET v_MaHopDong = CONCAT('HD', LPAD(v_LastID + 1, 6, '0'));
-    
+    -- Kiểm tra giới tính phòng
+    IF v_GioiTinhSV != v_LoaiPhong THEN
+        SET p_Message = 'Giới tính không phù hợp với loại phòng';
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = p_Message;
+    END IF;
+    -- Kiểm tra còn chỗ không
+    IF v_SoChoConLai <= 0 THEN
+        SET p_Message = 'Phòng đã đầy';
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = p_Message;
+    END IF;
+    -- Bắt đầu transaction
+    START TRANSACTION;
     -- Thêm vào bảng ThuePhong
-    INSERT INTO ThuePhong (MaHopDong, MaSinhVien, MaPhong, BatDau, KetThuc, GiaThueThucTe)
-    VALUES (v_MaHopDong, p_MaSinhVien, p_MaPhong, p_BatDau, p_KetThuc, v_GiaThue);
-    
-    -- Thêm vào bảng TT_ThuePhong cho từng tháng
-    SET v_CurrentDate = p_BatDau;
-    WHILE v_CurrentDate <= p_KetThuc DO
-        SET v_ThangNam = DATE(CONCAT(YEAR(v_CurrentDate), '-', MONTH(v_CurrentDate), '-01'));
-        
-        INSERT INTO TT_ThuePhong (MaHopDong, ThangNam, SoTien, NgayThanhToan, MaNhanVien)
-        VALUES (v_MaHopDong, v_ThangNam, v_GiaThue, NULL, p_MaNhanVien);
-        
-        SET v_CurrentDate = DATE_ADD(v_CurrentDate, INTERVAL 1 MONTH);
-    END WHILE;
-    
-    -- Trả về mã hợp đồng để tiện theo dõi
-    SELECT v_MaHopDong AS MaHopDong;
+    INSERT INTO ThuePhong (MaSinhVien, MaPhong, BatDau, KetThuc, GiaThueThucTe)
+    VALUES (p_MaSinhVien, p_MaPhong, p_BatDau, p_KetThuc, v_GiaThue);
+    -- Lấy ID của hợp đồng vừa thêm
+    SET v_HopDongID = LAST_INSERT_ID();
+    -- Thêm vào bảng TT_ThuePhong cho tháng đầu tiên
+    INSERT INTO TT_ThuePhong (MaHopDong, ThangNam, SoTien)
+    VALUES (v_HopDongID, p_BatDau, v_GiaThue);
+    -- Cập nhật số lượng người ở trong phòng
+    UPDATE Phong 
+    SET DaO = DaO + 1
+    WHERE MaPhong = p_MaPhong;
+    COMMIT;
+    SET p_Message = 'Đăng ký phòng thành công';
 END //
-
 DELIMITER ;
 
