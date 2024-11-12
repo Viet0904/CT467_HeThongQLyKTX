@@ -12,7 +12,7 @@
 
         <!-- Master List Section -->
         <li class="section-header">Danh sách chính</li>
-        <li class="p-0 ms-1"><a href="./dangkyphong_sv.php" class="py-2 ps-3"><i class="fas fa-users"></i>Đăng ký phòng cho KTX</a></li>
+        <li class="p-0 ms-1"><a href="./thuephong.php" class="py-2 ps-3"><i class="fas fa-users"></i>Đăng ký phòng cho KTX</a></li>
         <li class="p-0 ms-1"><a href="./room_list.php" class="py-2 ps-3"><i class="fas fa-door-open"></i> Danh sách phòng</a></li>
         <li class="p-0 ms-1"><a href="./ql_dangky_ktx.php" class="py-2 ps-3"><i class="fas fa-user-check"></i> Quản Điện Nước</a></li>
         <li class="p-0 ms-1"><a href="./ql_thuephong.php" class="py-2 ps-3"><i class="fas fa-bed"></i> Quản lý thuê phòng</a></li>

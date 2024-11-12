@@ -12,21 +12,16 @@ $currentPhong = '';
 // Xử lý form gửi đi
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $maPhong = $_POST['maPhong'];
-    $namHoc = date('Y');
-    $currentDate = date('Y-m-d');
 
-    $stmt = $dbh->prepare("SELECT HocKi FROM HocKi WHERE :currentDate BETWEEN BatDau AND KetThuc AND NamHoc = :namHoc");
+
+    $stmt = $dbh->prepare("SELECT HocKi, NamHoc FROM HocKi WHERE NamHoc = YEAR(CURRENT_DATE) AND CURRENT_DATE BETWEEN BatDau AND KetThuc LIMIT 1");
+
+    $stmt = $dbh->prepare($currentHocKiQuery);
+    $stmt->execute();
     $stmt->execute([
         ':currentDate' => $currentDate,
         ':namHoc' => $namHoc,
     ]);
-
-    $hocKi = $stmt->fetchColumn();
-
-    if (!$hocKi) {
-        $hocKi = '1'; // Default to '1' if no matching HocKi is found
-    }
-
 
     try {
         $stmt = $dbh->prepare("CALL DangKyPhong(:maSinhVien, :maPhong, :hocKi, :namHoc, @message)");
@@ -74,7 +69,7 @@ $hocKiList = $dbh->query("SELECT HocKi, NamHoc FROM HocKi")->fetchAll(PDO::FETCH
                                         <?php foreach ($sinhVienList as $SinhVien): ?>
                                             <option value="<?= htmlspecialchars($SinhVien['MaSinhVien']) ?>"
                                                 <?php echo ($currentPhong === $SinhVien['MaSinhVien']) ? 'selected' : ''; ?>>
-                                                <?= htmlspecialchars($SinhVien['MaPhMaSinhVienong']) ?>
+                                                <?= htmlspecialchars($SinhVien['MaSinhVien']) ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
