@@ -26,42 +26,48 @@ try {
     // Sau khi thêm hoặc cập nhật thông tin sinh viên
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $maSinhVien = $_POST['maSinhVien'] ?? $maSinhVien;
-
-        // Lấy thông tin sinh viên từ CSDL
+    
+        // Kiểm tra mã sinh viên trùng lặp
         $checkStmt = $dbh->prepare("SELECT * FROM SinhVien WHERE MaSinhVien = :maSinhVien");
         $checkStmt->execute([':maSinhVien' => $maSinhVien]);
         $sinhVien = $checkStmt->fetch(PDO::FETCH_ASSOC);
-
-        // Dữ liệu cho sinh viên
-        $data = [
-            ':maSinhVien' => $maSinhVien,
-            ':ten' => $_POST['firstName'],
-            ':lienHe' => $_POST['contact'],
-            ':email' => $_POST['email'],
-            ':maLop' => $_POST['maLop'],
-            ':diaChi' => $_POST['address'],
-            ':gioiTinh' => $_POST['gioiTinh'],
-            ':ngaySinh' => $_POST['ngaySinh'],
-            ':chucVu' => $_POST['chucVu'],
-            ':password' => password_hash($_POST['password'], PASSWORD_BCRYPT),
-        ];
-
-        // Tạo câu truy vấn SQL thêm vào hoặc cập nhật sinh viên
-        if ($sinhVien) {
-            $sql = "UPDATE SinhVien SET HoTen = :ten, SDT = :lienHe, Email = :email, MaLop = :maLop, DiaChi = :diaChi, GioiTinh = :gioiTinh, NgaySinh = :ngaySinh, ChucVu = :chucVu, Password = :password WHERE MaSinhVien = :maSinhVien";
+    
+        // Nếu sinh viên tồn tại và yêu cầu là thêm mới, hiển thị thông báo lỗi
+        if ($sinhVien && empty($_GET['msv'])) {
+            $message = "Mã sinh viên đã tồn tại. Vui lòng sử dụng mã khác.";
         } else {
-            $sql = "INSERT INTO SinhVien (MaSinhVien, HoTen, SDT, Email, MaLop, DiaChi, GioiTinh, NgaySinh, ChucVu, Password) VALUES (:maSinhVien, :ten, :lienHe, :email, :maLop, :diaChi, :gioiTinh, :ngaySinh, :chucVu, :password)";
+            // Dữ liệu cho sinh viên
+            $data = [
+                ':maSinhVien' => $maSinhVien,
+                ':ten' => $_POST['firstName'],
+                ':lienHe' => $_POST['contact'],
+                ':email' => $_POST['email'],
+                ':maLop' => $_POST['maLop'],
+                ':diaChi' => $_POST['address'],
+                ':gioiTinh' => $_POST['gioiTinh'],
+                ':ngaySinh' => $_POST['ngaySinh'],
+                ':chucVu' => $_POST['chucVu'],
+                ':password' => password_hash($_POST['password'], PASSWORD_BCRYPT),
+            ];
+    
+            // Tạo câu truy vấn SQL thêm vào hoặc cập nhật sinh viên
+            if ($sinhVien) {
+                $sql = "UPDATE SinhVien SET HoTen = :ten, SDT = :lienHe, Email = :email, MaLop = :maLop, DiaChi = :diaChi, GioiTinh = :gioiTinh, NgaySinh = :ngaySinh, ChucVu = :chucVu, Password = :password WHERE MaSinhVien = :maSinhVien";
+            } else {
+                $sql = "INSERT INTO SinhVien (MaSinhVien, HoTen, SDT, Email, MaLop, DiaChi, GioiTinh, NgaySinh, ChucVu, Password) VALUES (:maSinhVien, :ten, :lienHe, :email, :maLop, :diaChi, :gioiTinh, :ngaySinh, :chucVu, :password)";
+            }
+    
+            $stmt = $dbh->prepare($sql);
+            $stmt->execute($data);
+    
+            $message = $sinhVien ? "Cập nhật thành công!" : "Lưu thành công!";
+            
+            echo "<script>alert('$message');</script>";
+            echo "<script>window.location.href='student_list.php';</script>";
+            exit;
         }
-
-        $stmt = $dbh->prepare($sql);
-        $stmt->execute($data);
-
-        $message = $sinhVien ? "Cập nhật thành công!" : "Lưu thành công!";
-        
-        echo "<script>alert('$message');</script>";
-        echo "<script>window.location.href='student_list.php';</script>";
-        exit;
     }
+    
 } catch (PDOException $e) {
     $message = "Lỗi: " . $e->getMessage();
 }
