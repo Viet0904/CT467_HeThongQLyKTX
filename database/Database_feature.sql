@@ -155,8 +155,8 @@ DELIMITER //
 CREATE PROCEDURE DangKyPhong(
     IN p_MaSinhVien VARCHAR(10),
     IN p_MaPhong VARCHAR(10),
-    IN p_BatDau DATE,
-    IN p_KetThuc DATE,
+    IN p_HocKi ENUM('1', '2', '3'),
+    IN p_NamHoc VARCHAR(50),
     OUT p_Message VARCHAR(100)
 )
 BEGIN
@@ -166,12 +166,14 @@ BEGIN
     DECLARE v_GiaThue DECIMAL(10, 2);
     DECLARE v_HopDongID INT;
     DECLARE v_Count INT;
-    -- Kiểm tra sinh viên đã đăng ký phòng chưa
+    -- Kiểm tra sinh viên đã đăng ký phòng cho học kỳ và năm học cụ thể chưa
     SELECT COUNT(*) INTO v_Count 
     FROM ThuePhong 
-    WHERE MaSinhVien = p_MaSinhVien;
+    WHERE MaSinhVien = p_MaSinhVien
+      AND HocKi = p_HocKi
+      AND NamHoc = p_NamHoc;
     IF v_Count > 0 THEN
-        SET p_Message = 'Sinh viên đã có phòng';
+        SET p_Message = 'Sinh viên đã có phòng trong học kỳ này';
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = p_Message;
     END IF;
@@ -198,19 +200,17 @@ BEGIN
     -- Bắt đầu transaction
     START TRANSACTION;
     -- Thêm vào bảng ThuePhong
-    INSERT INTO ThuePhong (MaSinhVien, MaPhong, BatDau, KetThuc, GiaThueThucTe)
-    VALUES (p_MaSinhVien, p_MaPhong, p_BatDau, p_KetThuc, v_GiaThue);
+    INSERT INTO ThuePhong (MaSinhVien, MaPhong, HocKi, NamHoc, GiaThueThucTe)
+    VALUES (p_MaSinhVien, p_MaPhong, p_HocKi, p_NamHoc, v_GiaThue);
     -- Lấy ID của hợp đồng vừa thêm
     SET v_HopDongID = LAST_INSERT_ID();
-    -- Thêm vào bảng TT_ThuePhong cho tháng đầu tiên
+    -- Thêm vào bảng TT_ThuePhong cho tháng đầu tiên (tháng mặc định hoặc tháng đầu của học kỳ)
     INSERT INTO TT_ThuePhong (MaHopDong, ThangNam, SoTien)
-    VALUES (v_HopDongID, p_BatDau, v_GiaThue);
-    -- Cập nhật số lượng người ở trong phòng
-    UPDATE Phong 
-    SET DaO = DaO + 1
-    WHERE MaPhong = p_MaPhong;
+    VALUES (v_HopDongID, CURDATE(), v_GiaThue);
     COMMIT;
+    -- Thông báo đăng ký thành công
     SET p_Message = 'Đăng ký phòng thành công';
 END //
 DELIMITER ;
+
 
