@@ -18,34 +18,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $maPhong = $_POST['maPhong'];
     $batDau = date('Y-m-d');
     $ketThuc = date('Y-m-d', strtotime('+4 months'));
+    try {
+        $stmt = $dbh->prepare("CALL DangKyPhong(:maSinhVien, :maPhong, :batDau, :ketThuc, @message)");
+        $stmt->execute([
+            ':maSinhVien' => $maSinhVien,
+            ':maPhong' => $maPhong,
+            ':batDau' => $batDau,
+            ':ketThuc' => $ketThuc
+        ]);
 
-    // Truy vấn để lấy giá thuê của phòng
-    $query = "SELECT GiaThue FROM Phong WHERE MaPhong = :maPhong";
-    $stmt = $dbh->prepare($query);
-    $stmt->bindParam(':maPhong', $maPhong, PDO::PARAM_STR);
-    $stmt->execute();
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    // Lấy giá thuê từ kết quả truy vấn
-    $giaThueThucTe = $result['GiaThue'] ?? 0;
-
-    if (!$currentPhong) {
-        // Tạo mã hợp đồng mới
-        $newMaHopDong = 'HD' . str_pad(substr($dbh->query("SELECT MaHopDong FROM ThuePhong ORDER BY MaHopDong DESC LIMIT 1")->fetchColumn() ?? 'HD000000', 2) + 1, 6, '0', STR_PAD_LEFT);
-
-        // Thêm hợp đồng mới
-        $query = "INSERT INTO ThuePhong (MaHopDong, MaSinhVien, MaPhong, BatDau, KetThuc, GiaThueThucTe)
-                  VALUES (:maHopDong, :maSinhVien, :maPhong, :batDau, :ketThuc, :giaThueThucTe)";
-        $params = [':maHopDong' => $newMaHopDong, ':maSinhVien' => $maSinhVien, ':maPhong' => $maPhong, ':batDau' => $batDau, ':ketThuc' => $ketThuc, ':giaThueThucTe' => $giaThueThucTe];
-    } else {
-        // Cập nhật hợp đồng hiện tại
-        $query = "UPDATE ThuePhong SET MaPhong = :maPhong, BatDau = :batDau, KetThuc = :ketThuc, GiaThueThucTe = :giaThueThucTe WHERE MaSinhVien = :maSinhVien";
-        $params = [':maPhong' => $maPhong, ':batDau' => $batDau, ':ketThuc' => $ketThuc, ':giaThueThucTe' => $giaThueThucTe, ':maSinhVien' => $maSinhVien];
+        $message = $dbh->query("SELECT @message AS message")->fetch(PDO::FETCH_ASSOC)['message'];
+    } catch (PDOException $e) {
+        $message = $e->getMessage();
     }
-
-    $stmt = $dbh->prepare($query);
-    $message = $stmt->execute($params) ? ($currentPhong ? "Cập nhật phòng thành công!" : "Đăng ký phòng thành công!") : "Đã xảy ra lỗi.";
-    $currentPhong = $maPhong; // Cập nhật phòng hiện tại
+    if (!empty($message)) {
+        echo "<script>alert('" . htmlspecialchars($message, ENT_QUOTES, 'UTF-8') . "');</script>";
+    }
 }
 
 // Lấy danh sách phòng
@@ -122,7 +110,7 @@ $phongList = $dbh->query("SELECT MaPhong FROM Phong")->fetchAll(PDO::FETCH_ASSOC
     }
 
     // Đóng tất cả các dropdown nếu click bên ngoài
-    window.onclick = function (event) {
+    window.onclick = function(event) {
         var dropdownMenu = document.getElementById("dropdownMenu");
 
         // Đóng dropdown của tên admin nếu click bên ngoài
@@ -131,4 +119,5 @@ $phongList = $dbh->query("SELECT MaPhong FROM Phong")->fetchAll(PDO::FETCH_ASSOC
         }
     }
 </script>
+
 </html>
