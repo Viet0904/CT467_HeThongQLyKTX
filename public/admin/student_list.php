@@ -22,7 +22,7 @@ include_once __DIR__ . '/../../partials/heading.php';
                             <h5>Danh sách sinh viên</h5>
                             <a href="./manage_student.php" class="btn text-white"
                                 style="background-color: rgb(219, 48, 119);">
-                                <i class="fas fa-plus me-1"></i>Tạo mới
+                                <i class="fas fa-plus me-1"></i>Thêm sinh viên
                             </a>
 
                         </div>

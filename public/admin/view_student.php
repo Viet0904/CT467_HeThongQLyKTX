@@ -54,10 +54,7 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 </div>
                             </div>
                             <div class="row row-add">
-                                <div class="col-md-4">
-                                    <label for="maDay"><b>Mã dãy</b></label>
-                                    <p class="mt-1 mb-2 mx-3"><?php echo $student['MaDay']; ?></p>
-                                </div>
+                                
                                 <div class="col-md-4">
                                     <label for="chucVu"><b>Chức vụ</b></label>
                                     <p class="mt-1 mb-2 mx-3"><?php echo $student['ChucVu']; ?></p>
@@ -100,42 +97,6 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 <div class="col-md-12">
                                     <label for="address"><b>Địa chỉ</b></label>
                                     <p class="mb-2 mt-1 mx-3"><?php echo $student['DiaChi']; ?></p>
-                                </div>
-                            </div>
-
-                            <!-- Đường phân cách -->
-                            <hr style="border: none; border-top: 1px solid #a9a9a9; margin: 1px 0;">
-                            <!-- School Details Section -->
-                            <div class="col-md-4">
-                                <h5 class="mt-3"><b>Thông tin phòng</b></h5>
-                            </div>
-                            <div class="row row-add">
-                                <div class="col-md-4">
-                                    <label for="maPhong"> <b>Mã phòng</b></label>
-                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['MaPhong']; ?></p>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="tenPhong"><b>Tên Phòng</b></label>
-                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['TenPhong']; ?></p>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="maDay"><b>Mã dãy</b></label>
-                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['MaDay']; ?></p>
-                                </div>
-                            </div>
-
-                            <div class="row row-add">
-                                <div class="col-md-4">
-                                    <label for="maPhong"> <b>Diện tích</b></label>
-                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['DienTich']; ?></p>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="tenPhong"><b>Giá thuê</b></label>
-                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['GiaThue']; ?></p>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="maDay"><b>Loại phòng</b></label>
-                                    <p class="mb-2 mt-1 mx-3"><?php echo $student['LoaiPhong']; ?></p>
                                 </div>
                             </div>
 
