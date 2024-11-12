@@ -6,33 +6,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $MSSV = $_POST['MSSV'] ?? '0';
 
     $maPhong = $_POST['maPhong'] ?? '0';
+    // lấy ra HocKi
+    $currentHocKiQuery = "SELECT HocKi, NamHoc FROM HocKi WHERE NamHoc = YEAR(CURRENT_DATE) AND CURRENT_DATE BETWEEN BatDau AND KetThuc LIMIT 1";
+    $currentHocKiStmt = $dbh->prepare($currentHocKiQuery);
+    $currentHocKiStmt->execute();
+    $currentHocKi = $currentHocKiStmt->fetch(PDO::FETCH_ASSOC);
+    if (!$currentHocKi) {
+        die("Không tìm thấy học kỳ hiện tại.");
+    }
 
     $query = "SELECT SinhVien.*, Lop.TenLop, ThuePhong.MaPhong
               FROM SinhVien 
               JOIN Lop ON SinhVien.MaLop = Lop.MaLop 
               LEFT JOIN ThuePhong ON SinhVien.MaSinhVien = ThuePhong.MaSinhVien 
-              WHERE 1=1";
+              WHERE ThuePhong.HocKi = :hocKi AND ThuePhong.NamHoc = :namHoc
+              ";
 
     if ($MSSV !== '0') {
         $query .= " AND SinhVien.MaSinhVien = :MSSV";
     }
-    if ($maPhong !== '0') {
-        if ($maPhong === '1') {
-            $query .= " AND ThuePhong.MaPhong IS NULL";
-        } else {
-            $query .= " AND ThuePhong.MaPhong = :maPhong";
-        }
+    if ($maPhong == '0') {
+        $query .= " AND ThuePhong.MaPhong IS NULL";
+    } else {
+        $query .= " AND ThuePhong.MaPhong = :maPhong";
     }
     $rowsPerPage = 10;
     // Tính tổng số dòng cho truy vấn có điều kiện
     $countQuery = "SELECT COUNT(*) FROM ($query) AS total";
     $countStmt = $dbh->prepare($countQuery);
+    $countStmt->bindParam(':hocKi', $currentHocKi['HocKi'], PDO::PARAM_STR);
+    $countStmt->bindParam(':namHoc', $currentHocKi['NamHoc'], PDO::PARAM_STR);
 
     if ($MSSV !== '0') {
         $countStmt->bindParam(':MSSV', $MSSV, PDO::PARAM_STR);
     }
 
-    if ($maPhong !== '0' && $maPhong !== '1') {
+    if ($maPhong !== '0') {
         $countStmt->bindParam(':maPhong', $maPhong, PDO::PARAM_STR);
     }
 
@@ -57,12 +66,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $query .= " LIMIT $rowsPerPage OFFSET $offset";
 
     $stmt = $dbh->prepare($query);
+    $stmt->bindParam(':hocKi', $currentHocKi['HocKi'], PDO::PARAM_STR);
+    $stmt->bindParam(':namHoc', $currentHocKi['NamHoc'], PDO::PARAM_STR);
 
     if ($MSSV !== '0') {
         $stmt->bindParam(':MSSV', $MSSV, PDO::PARAM_STR);
     }
 
-    if ($maPhong !== '0' && $maPhong !== '1') {
+    if ($maPhong !== '0') {
         $stmt->bindParam(':maPhong', $maPhong, PDO::PARAM_STR);
     }
 
@@ -70,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = $stmt;
 } else {
     // lấy ra HocKi
-    $currentHocKiQuery = "SELECT HocKi, NamHoc FROM HocKi WHERE CURDATE() BETWEEN BatDau AND KetThuc LIMIT 1";
+    $currentHocKiQuery = "SELECT HocKi, NamHoc FROM HocKi WHERE NamHoc = YEAR(CURRENT_DATE) AND CURRENT_DATE BETWEEN BatDau AND KetThuc LIMIT 1";
     $currentHocKiStmt = $dbh->prepare($currentHocKiQuery);
     $currentHocKiStmt->execute();
     $currentHocKi = $currentHocKiStmt->fetch(PDO::FETCH_ASSOC);
@@ -101,6 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $hocKi = $currentHocKi['HocKi'];
     $namHoc = $currentHocKi['NamHoc'];
+    $offset = max(0, ($currentPage - 1) * $rowsPerPage);
     // Truy vấn SQL với LIMIT và OFFSET và điều kiện học kỳ hiện tại
     $sinhvien = "SELECT SinhVien.*, Lop.TenLop, ThuePhong.MaPhong
                     FROM SinhVien 
@@ -112,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt = $dbh->prepare($sinhvien);
     $stmt->bindParam(':hocKi', $hocKi, PDO::PARAM_STR);
     $stmt->bindParam(':namHoc', $namHoc, PDO::PARAM_STR);
-    $stmt->bindValue(':rowsPerPage', $rowsPerPage, PDO::PARAM_INT);
+    $stmt->bindValue(':rowsPerPage', (int)$rowsPerPage, PDO::PARAM_INT);
     $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
 
     try {
@@ -166,7 +178,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <label for="maPhong" class="form-label">Mã Phòng</label>
                                     <select class="form-select" id="maPhong" name="maPhong" aria-label="Select area" onchange="toggleSelect('maPhong', 'MSSV')">
                                         <option value="0">Tất cả</option>
-                                        <option value="1">Chưa có phòng</option>
                                         <?php
                                         $phongQuery = "SELECT MaPhong FROM Phong";
                                         $phongResult = $dbh->query($phongQuery);
