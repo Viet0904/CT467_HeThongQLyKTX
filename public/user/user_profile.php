@@ -11,9 +11,12 @@ if (!isset($_SESSION)) {
 if (isset($_SESSION['MaSinhVien'])) {
     $maSinhVien = $_SESSION['MaSinhVien'];
 
-    $query = "SELECT SinhVien.*, ThuePhong.MaPhong, ThuePhong.BatDau, ThuePhong.KetThuc, ThuePhong.GiaThueThucTe 
+    $query = "SELECT SinhVien.*, ThuePhong.* , Phong.*, Hocki.*
               FROM SinhVien 
               LEFT JOIN ThuePhong ON SinhVien.MaSinhVien = ThuePhong.MaSinhVien 
+              join Hocki on ThuePhong.HocKi = Hocki.HocKi
+              Join Phong ON ThuePhong.MaPhong = Phong.MaPhong
+              
               WHERE SinhVien.MaSinhVien = ?";
     $stmt = $dbh->prepare($query);
     $stmt->bindValue(1, $maSinhVien);
@@ -24,36 +27,7 @@ if (isset($_SESSION['MaSinhVien'])) {
     exit();
 }
 
-// Xử lý khi người dùng cập nhật thông tin
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $maLop = $_POST['maLop'];
-    $maDay = $_POST['maDay'];
-    $firstName = $_POST['firstName'];
-    $ngaySinh = $_POST['ngaySinh'];
-    $chucVu = $_POST['chucVu'];
-    $gioiTinh = $_POST['gioiTinh'];
-    $contact = $_POST['contact'];
-    $email = $_POST['email'];
-    $address = $_POST['address'];
 
-    // Cập nhật thông tin nhân viên trong DB
-    $updateQuery = "UPDATE SinhVien SET  MaLop = ?, MaDay = ?, HoTen = ?, NgaySinh = ?, ChucVu = ?, GioiTinh = ?, SDT = ?, Email = ?, DiaChi = ?, Password = ? WHERE MaSinhVien = ?";
-    $stmt = $dbh->prepare($updateQuery);
-    $stmt->bindValue(2, $maLop);
-    $stmt->bindValue(3, $maDay);
-    $stmt->bindValue(4, $firstName);
-    $stmt->bindValue(5, $ngaySinh);
-    $stmt->bindValue(6, $chucVu);
-    $stmt->bindValue(7, $gioiTinh);
-    $stmt->bindValue(8, $contact);
-    $stmt->bindValue(9, $email);
-    $stmt->bindValue(10, $address);
-    $stmt->bindValue(11, $password);
-    $stmt->bindValue(12, $maSinhVien); // MaSinhVien nên là tham số cuối cùng trong câu lệnh
-    $stmt->execute();
-
-    echo "<script>alert('Cập nhật thông tin thành công!'); window.location.href = './user_profile.php';</script>";
-}
 ?>
 
 <body>

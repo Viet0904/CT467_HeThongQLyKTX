@@ -141,7 +141,7 @@ LIMIT $rowsPerPage OFFSET $offset";
 
                                 <div class="col-md-6 col-lg-3">
                                     <label for="maPhong" class="form-label">Mã Phòng</label>
-                                    <select class="form-select" id="maPhong" name="maPhong" aria-label="Select area" onchange="toggleSelect('MSSV', 'maPhong')">
+                                    <select class="form-select" id="maPhong" name="maPhong" aria-label="Select area" onchange="toggleSelect('maPhong', 'MSSV')">
                                         <option value="0">Tất cả</option>
                                         <option value="1">Chưa có phòng</option>
                                         <?php
