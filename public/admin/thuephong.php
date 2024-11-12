@@ -4,7 +4,7 @@ include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
 
 $message = '';
-$maSinhVien = $_GET['msv'] ?? '';
+// $maSinhVien = $_GET['msv'] ?? '';
 
 $currentPhong = '';
 
@@ -12,16 +12,17 @@ $currentPhong = '';
 // Xử lý form gửi đi
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $maPhong = $_POST['maPhong'];
+    $maSinhVien = $_POST['maSinhVien'];
 
 
-    $stmt = $dbh->prepare("SELECT HocKi, NamHoc FROM HocKi WHERE NamHoc = YEAR(CURRENT_DATE) AND CURRENT_DATE BETWEEN BatDau AND KetThuc LIMIT 1");
+    $currentHocKiQuery = "SELECT HocKi, NamHoc FROM HocKi WHERE NamHoc = YEAR(CURRENT_DATE) AND CURRENT_DATE BETWEEN BatDau AND KetThuc LIMIT 1";
 
     $stmt = $dbh->prepare($currentHocKiQuery);
     $stmt->execute();
-    $stmt->execute([
-        ':currentDate' => $currentDate,
-        ':namHoc' => $namHoc,
-    ]);
+    $listHocKi = $stmt->fetch(PDO::FETCH_ASSOC);
+    $hocKi = $listHocKi['HocKi'];
+    $namHoc = $listHocKi['NamHoc'];
+
 
     try {
         $stmt = $dbh->prepare("CALL DangKyPhong(:maSinhVien, :maPhong, :hocKi, :namHoc, @message)");
@@ -58,14 +59,14 @@ $hocKiList = $dbh->query("SELECT HocKi, NamHoc FROM HocKi")->fetchAll(PDO::FETCH
                         <h5 class="modal-title mt-2">Đăng ký phòng</h5>
                     </div>
 
-                    <div class="modal-user">
-                        <form action="manage_sv_thuephong.php?msv=<?php echo htmlspecialchars($maSinhVien); ?>" method="POST">
+                    <div class="modal-user mt-3">
+                        <form action="thuephong.php" method="POST">
                             <input type="hidden" name="maSinhVien" value="<?php echo htmlspecialchars($maSinhVien); ?>">
                             <div class="row row-add mb-3">
                                 <div class="col-md-4">
-                                    <label for="maPhong" class="form-label">Mã Sinh Viên</label>
-                                    <select class="form-control" id="maPhong" name="maPhong" required>
-                                        <option value="">Chọn mã phòng</option>
+                                    <label for="maSinhVien" class="form-label">Mã Sinh Viên</label>
+                                    <select class="form-control" id="maSinhVien" name="maSinhVien" required>
+                                        <option value="">Chọn mã sinh viên</option>
                                         <?php foreach ($sinhVienList as $SinhVien): ?>
                                             <option value="<?= htmlspecialchars($SinhVien['MaSinhVien']) ?>"
                                                 <?php echo ($currentPhong === $SinhVien['MaSinhVien']) ? 'selected' : ''; ?>>
@@ -86,9 +87,6 @@ $hocKiList = $dbh->query("SELECT HocKi, NamHoc FROM HocKi")->fetchAll(PDO::FETCH
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
-
-
-
                                 <div class="text-end mt-2">
                                     <button type="submit" class="btn btn-primary" style="background-color: #db3077;">Lưu</button>
                                 </div>
