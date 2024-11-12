@@ -45,7 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "<script>alert('" . htmlspecialchars($message, ENT_QUOTES, 'UTF-8') . "');</script>";
     }
 }
-
+//  Lấy Danh Sách Sinh Viên
+$sinhVienList = $dbh->query("SELECT MaSinhVien FROM SinhVien")->fetchAll(PDO::FETCH_ASSOC);
 // Lấy danh sách phòng
 $phongList = $dbh->query("SELECT MaPhong FROM Phong")->fetchAll(PDO::FETCH_ASSOC);
 // Lấy Danh sách Học Ki và năm học
@@ -67,6 +68,18 @@ $hocKiList = $dbh->query("SELECT HocKi, NamHoc FROM HocKi")->fetchAll(PDO::FETCH
                             <input type="hidden" name="maSinhVien" value="<?php echo htmlspecialchars($maSinhVien); ?>">
                             <div class="row row-add mb-3">
                                 <div class="col-md-4">
+                                    <label for="maPhong" class="form-label">Mã Sinh Viên</label>
+                                    <select class="form-control" id="maPhong" name="maPhong" required>
+                                        <option value="">Chọn mã phòng</option>
+                                        <?php foreach ($sinhVienList as $SinhVien): ?>
+                                            <option value="<?= htmlspecialchars($SinhVien['MaSinhVien']) ?>"
+                                                <?php echo ($currentPhong === $SinhVien['MaSinhVien']) ? 'selected' : ''; ?>>
+                                                <?= htmlspecialchars($SinhVien['MaPhMaSinhVienong']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
                                     <label for="maPhong" class="form-label">Mã Phòng</label>
                                     <select class="form-control" id="maPhong" name="maPhong" required>
                                         <option value="">Chọn mã phòng</option>
@@ -78,29 +91,7 @@ $hocKiList = $dbh->query("SELECT HocKi, NamHoc FROM HocKi")->fetchAll(PDO::FETCH
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
-                                <!-- <div class="col-md-4">
-                                    <label for="HocKi" class="form-label">Học kì</label>
-                                    <select class="form-control" id="HocKi" name="HocKi" required>
-                                        <option value="">Chọn học kì</option>
-                                        <?php foreach ($hocKiList as $phong): ?>
-                                            <option value="<?= htmlspecialchars($phong['HocKi']) ?>">
-                                                <?= htmlspecialchars($phong['HocKi']) ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
 
-                                <div class="col-md-4">
-                                    <label for="NamHoc" class="form-label">Năm Học</label>
-                                    <select class="form-control" id="NamHoc" name="NamHoc" required>
-                                        <option value="">Chọn năm học</option>
-                                        <?php foreach ($hocKiList as $phong): ?>
-                                            <option value="<?= htmlspecialchars($phong['NamHoc']) ?>">
-                                                <?= htmlspecialchars($phong['NamHoc']) ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div> -->
 
 
                                 <div class="text-end mt-2">

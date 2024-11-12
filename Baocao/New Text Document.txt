@@ -51,3 +51,42 @@
                                 </div>
                             </div>
                         </form>
+
+
+
+
+
+
+
+
+
+
+$rowsPerPage = 10;
+    $currentHocKiQuery = "SELECT HocKi, NamHoc FROM HocKi WHERE CURDATE() BETWEEN BatDau AND KetThuc LIMIT 1";
+    $currentHocKiStmt = $dbh->prepare($currentHocKiQuery);
+    $currentHocKiStmt->execute();
+    $currentHocKi = $currentHocKiStmt->fetch(PDO::FETCH_ASSOC);
+    if (!$currentHocKi) {
+        die("Không tìm thấy học kỳ hiện tại.");
+    }
+
+    // Tính tổng số dòng
+    $totalRowsQuery = "SELECT COUNT(*) FROM SinhVien 
+                        JOIN ThuePhong ON SinhVien.MaSinhVien = ThuePhong.MaSinhVien 
+                        WHERE ThuePhong.HocKi = :hocKi AND ThuePhong.NamHoc = :namHoc";
+    $totalRowsStmt = $dbh->prepare($totalRowsQuery);
+    $totalRowsStmt->execute([
+        ':hocKi' =>  $currentHocKi['HocKi'],
+        ':namHoc' =>  $currentHocKi['NamHoc'],
+    ]);
+    $totalRows = $totalRowsStmt->fetchColumn();
+    // Tính tổng số trang
+    $totalPages = ceil($totalRows / $rowsPerPage);
+
+    // Lấy trang hiện tại từ query string, nếu không có thì mặc định là trang 1
+    $currentPage = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+    if ($currentPage < 1) {
+        $currentPage = 1;
+    } elseif ($currentPage > $totalPages) {
+        $currentPage = $totalPages;
+    }
