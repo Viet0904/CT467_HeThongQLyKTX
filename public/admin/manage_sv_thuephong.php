@@ -4,127 +4,59 @@ include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
 
 $message = '';
-$maSinhVien = $_GET['msv'] ?? ''; // Lấy mã sinh viên từ URL nếu có
+$maSinhVien = $_GET['msv'] ?? '';
+$currentPhong = '';
 
-// Lấy thông tin sinh viên nếu có mã sinh viên
-if ($maSinhVien) {
-    $stmt = $dbh->prepare("SELECT sv.*, sv.MaSinhVien AS MaSV_SinhVien, p.*, tp.*
-    FROM SinhVien sv
-    LEFT JOIN Lop ON sv.MaLop = Lop.MaLop
-    LEFT JOIN ThuePhong tp ON sv.MaSinhVien = tp.MaSinhVien
-    LEFT JOIN Phong p ON tp.MaPhong = p.MaPhong
-    WHERE sv.MaSinhVien = :maSinhVien");
-    $stmt->execute([':maSinhVien' => $maSinhVien]);
-    $sinhVien = $stmt->fetch(PDO::FETCH_ASSOC);
-}
+// Kiểm tra sinh viên đã có phòng
+$query = "SELECT MaPhong FROM ThuePhong WHERE MaSinhVien = :maSinhVien LIMIT 1";
+$stmt = $dbh->prepare($query);
+$stmt->execute([':maSinhVien' => $maSinhVien]);
+$currentPhong = $stmt->fetchColumn();
 
-// Lấy danh sách mã phòng và mã dãy từ bảng Phong
-$stmtPhong = $dbh->prepare("SELECT MaPhong, MaDay FROM Phong");
-$stmtPhong->execute();
-$phongList = $stmtPhong->fetchAll(PDO::FETCH_ASSOC);
+// Xử lý form gửi đi
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $maPhong = $_POST['maPhong'];
+    $batDau = date('Y-m-d');
+    $ketThuc = date('Y-m-d', strtotime('+4 months'));
 
-// Truy vấn để lấy mã hợp đồng cuối cùng
-$sql = "SELECT MaHopDong FROM ThuePhong ORDER BY MaHopDong DESC LIMIT 1";
-$stmt = $dbh->prepare($sql);
-$stmt->execute();
-$result = $stmt->fetch(PDO::FETCH_ASSOC);
+    // Truy vấn để lấy giá thuê của phòng
+    $query = "SELECT GiaThue FROM Phong WHERE MaPhong = :maPhong";
+    $stmt = $dbh->prepare($query);
+    $stmt->bindParam(':maPhong', $maPhong, PDO::PARAM_STR);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if ($result) {
-    // Lấy số từ mã hợp đồng cuối cùng
-    $lastId = intval(substr($result['MaHopDong'], 2)) + 1;
-    // Tạo mã hợp đồng mới
-    $newMaHopDong = 'HD' . str_pad($lastId, 6, '0', STR_PAD_LEFT);
-} else {
-    // Nếu chưa có hợp đồng nào, mã bắt đầu từ HD000001
-    $newMaHopDong = 'HD000001';
-}
+    // Lấy giá thuê từ kết quả truy vấn
+    $giaThueThucTe = $result['GiaThue'] ?? 0;
 
-// Bắt đầu transaction
-$dbh->beginTransaction();
+    if (!$currentPhong) {
+        // Tạo mã hợp đồng mới
+        $newMaHopDong = 'HD' . str_pad(substr($dbh->query("SELECT MaHopDong FROM ThuePhong ORDER BY MaHopDong DESC LIMIT 1")->fetchColumn() ?? 'HD000000', 2) + 1, 6, '0', STR_PAD_LEFT);
 
-try {
-    // Các truy vấn khác
-    // Sau khi thêm hoặc cập nhật thông tin sinh viên
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $maSinhVien = $_POST['maSinhVien'] ?? $maSinhVien;
-
-        // Lấy thông tin sinh viên từ CSDL
-        $checkStmt = $dbh->prepare("SELECT * FROM SinhVien WHERE MaSinhVien = :maSinhVien");
-        $checkStmt->execute([':maSinhVien' => $maSinhVien]);
-        $sinhVien = $checkStmt->fetch(PDO::FETCH_ASSOC);
-
-        // Sau khi lưu sinh viên, kiểm tra và cập nhật bảng thuê phòng
-        $maPhong = $_POST['maPhong']; // Lấy mã phòng từ form
-
-        // Truy vấn để lấy giá thuê của phòng
-        $query = "SELECT GiaThue FROM Phong WHERE MaPhong = :maPhong";
-        $stmt = $dbh->prepare($query);
-        $stmt->bindParam(':maPhong', $maPhong, PDO::PARAM_STR);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        // Lấy giá thuê từ kết quả truy vấn
-        $giaThue = $result['GiaThue'];
-
-        // Kiểm tra nếu sinh viên đã có hợp đồng thuê phòng
-        $checkThuePhongStmt = $dbh->prepare("SELECT * FROM ThuePhong WHERE MaSinhVien = :maSinhVien");
-        $checkThuePhongStmt->execute([':maSinhVien' => $maSinhVien]);
-        $thuePhong = $checkThuePhongStmt->fetch(PDO::FETCH_ASSOC);
-
-        // Dữ liệu thuê phòng
-        $thuePhongData = [
-            ':maSinhVien' => $maSinhVien,
-            ':maHopDong' => $newMaHopDong,
-            ':maPhong' => $maPhong,
-            ':batDau' => date('Y-m-d'), 
-            ':ketThuc' => date('Y-m-d', strtotime('+4 month')),
-            ':giaThueThucTe' => $giaThue, 
-        ];
-
-        if ($thuePhong) {
-            // Cập nhật thông tin thuê phòng
-            $sqlThuePhong = "UPDATE ThuePhong SET MaHopDong = :maHopDong, MaPhong = :maPhong, BatDau = :batDau, KetThuc = :ketThuc, GiaThueThucTe = :giaThueThucTe WHERE MaSinhVien = :maSinhVien";
-        } else {
-            // Thêm thông tin thuê phòng mới
-            $sqlThuePhong = "INSERT INTO ThuePhong (MaSinhVien, MaHopDong, MaPhong, BatDau, KetThuc, GiaThueThucTe) VALUES (:maSinhVien, :maHopDong, :maPhong, :batDau, :ketThuc, :giaThueThucTe)";
-        }
-
-        $stmtThuePhong = $dbh->prepare($sqlThuePhong);
-        $stmtThuePhong->execute($thuePhongData);
-
-        // Xác nhận transaction
-        $dbh->commit();
-        $message = $sinhVien ? "Cập nhật thành công!" : "Lưu thành công!";
-
-        // Lấy lại thông tin sinh viên sau khi thêm hoặc cập nhật phòng
-        $stmt = $dbh->prepare("SELECT sv.*, sv.MaSinhVien AS MaSV_SinhVien, p.MaPhong AS MaPhong, tp.*
-        FROM SinhVien sv
-        LEFT JOIN Lop ON sv.MaLop = Lop.MaLop
-        LEFT JOIN ThuePhong tp ON sv.MaSinhVien = tp.MaSinhVien
-        LEFT JOIN Phong p ON tp.MaPhong = p.MaPhong
-        WHERE sv.MaSinhVien = :maSinhVien");
-        $stmt->execute([':maSinhVien' => $maSinhVien]);
-        $sinhVien = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        echo "<script>alert('$message');</script>";
-        echo "<script>window.location.href='dangkyphong_sv.php';</script>";
-        
-        exit;
+        // Thêm hợp đồng mới
+        $query = "INSERT INTO ThuePhong (MaHopDong, MaSinhVien, MaPhong, BatDau, KetThuc, GiaThueThucTe)
+                  VALUES (:maHopDong, :maSinhVien, :maPhong, :batDau, :ketThuc, :giaThueThucTe)";
+        $params = [':maHopDong' => $newMaHopDong, ':maSinhVien' => $maSinhVien, ':maPhong' => $maPhong, ':batDau' => $batDau, ':ketThuc' => $ketThuc, ':giaThueThucTe' => $giaThueThucTe];
+    } else {
+        // Cập nhật hợp đồng hiện tại
+        $query = "UPDATE ThuePhong SET MaPhong = :maPhong, BatDau = :batDau, KetThuc = :ketThuc, GiaThueThucTe = :giaThueThucTe WHERE MaSinhVien = :maSinhVien";
+        $params = [':maPhong' => $maPhong, ':batDau' => $batDau, ':ketThuc' => $ketThuc, ':giaThueThucTe' => $giaThueThucTe, ':maSinhVien' => $maSinhVien];
     }
-} catch (PDOException $e) {
-    $message = "Lỗi: " . $e->getMessage();
+
+    $stmt = $dbh->prepare($query);
+    $message = $stmt->execute($params) ? ($currentPhong ? "Cập nhật phòng thành công!" : "Đăng ký phòng thành công!") : "Đã xảy ra lỗi.";
+    $currentPhong = $maPhong; // Cập nhật phòng hiện tại
 }
+
+// Lấy danh sách phòng
+$phongList = $dbh->query("SELECT MaPhong FROM Phong")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <body>
     <div class="container-fluid">
         <div class="row flex-nowrap">
-            <?php
-            include_once __DIR__ . '/sidebar.php';
-            ?>
-
+            <?php include_once __DIR__ . '/sidebar.php'; ?>
             <div class="col px-0">
-                <!-- Nội dung chính -->
                 <div class="my-2" style="margin-left: 260px;">
                     <div class="modal-header-1">
                         <h5 class="modal-title mt-2">Đăng ký phòng</h5>
@@ -132,11 +64,12 @@ try {
 
                     <!-- Hiển thị thông báo -->
                     <?php if (!empty($message)): ?>
-                        <div class="alert alert-info mt-3"><?php echo $message; ?></div>
+                        <div class="alert alert-info mt-3"><?php echo htmlspecialchars($message); ?></div>
                     <?php endif; ?>
 
                     <div class="modal-user">
-                        <form action="manage_sv_thuephong.php" method="POST">
+                        <form action="manage_sv_thuephong.php?msv=<?php echo htmlspecialchars($maSinhVien); ?>" method="POST">
+                            <input type="hidden" name="maSinhVien" value="<?php echo htmlspecialchars($maSinhVien); ?>">
                             <div class="row row-add mb-3">
                                 <div class="col-md-4">
                                     <label for="maPhong" class="form-label">Mã Phòng</label>
@@ -144,30 +77,21 @@ try {
                                         <option value="">Chọn mã phòng</option>
                                         <?php foreach ($phongList as $phong): ?>
                                             <option value="<?= htmlspecialchars($phong['MaPhong']) ?>"
-                                                <?php echo (isset($sinhVien['MaPhong']) && $sinhVien['MaPhong'] === $phong['MaPhong']) ? 'selected' : '' ?>>
-                                                <?php echo htmlspecialchars($phong['MaPhong']) ?>
+                                                <?php echo ($currentPhong === $phong['MaPhong']) ? 'selected' : ''; ?>>
+                                                <?= htmlspecialchars($phong['MaPhong']) ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
-
                                 </div>
-                                
-
                             </div>
-
-
-                            <!-- Submit Button -->
                             <div class="text-end mt-2">
-                                <button type="submit" class="btn btn-primary"
-                                    style="background-color: #db3077;">Lưu</button>
+                                <button type="submit" class="btn btn-primary" style="background-color: #db3077;">Lưu</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-
-    </div>
     </div>
 </body>
 
@@ -207,5 +131,4 @@ try {
         }
     }
 </script>
-
 </html>

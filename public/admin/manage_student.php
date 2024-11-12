@@ -4,7 +4,7 @@ include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
 
 $message = '';
-$maSinhVien = $_GET['msv'] ?? ''; // Lấy mã sinh viên từ URL nếu có
+$maSinhVien = $_GET['msv'] ?? ''; // Lấy mã sinh viên từ URL
 
 // Lấy thông tin sinh viên nếu có mã sinh viên
 if ($maSinhVien) {
