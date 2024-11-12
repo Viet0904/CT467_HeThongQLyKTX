@@ -29,9 +29,10 @@ $roomId = $_GET['MaPhong'] ?? null;
                                 <tbody>
                                 <?php
                                     $stmt = $dbh->prepare("
-                                        SELECT ThuePhong.MaHopDong, ThuePhong.BatDau, ThuePhong.KetThuc, Phong.GiaThue
+                                        SELECT ThuePhong.MaHopDong, HocKi.BatDau, HocKi.KetThuc, Phong.GiaThue
                                         FROM ThuePhong
                                         JOIN Phong ON ThuePhong.MaPhong = Phong.MaPhong
+                                        JOIN HocKi ON ThuePhong.HocKi = HocKi.HocKi
                                         WHERE ThuePhong.MaPhong = :MaPhong
                                     ");
                                     $stmt->execute([':MaPhong' => $roomId]);
@@ -44,7 +45,7 @@ $roomId = $_GET['MaPhong'] ?? null;
                                                 <td><a href='hopdong_detail.php?MaHopDong={$contract['MaHopDong']}' class='btn btn-outline-info'>Xem chi tiết</a></td>
                                             </tr>";
                                     }
-                                ?>
+                                    ?>
                                 </tbody>
                             </table>
                         </div>
