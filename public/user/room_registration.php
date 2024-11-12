@@ -1,6 +1,6 @@
 <?php
 include_once __DIR__ . '/../../partials/header.php';
-include_once __DIR__ . '/../../partials/heading.php';
+include_once __DIR__ . '/../../partials/user/heading.php';
 require_once __DIR__ . '/../../config/dbadmin.php';
 session_start();
 $maSinhVien = $_SESSION['MaSinhVien'];
