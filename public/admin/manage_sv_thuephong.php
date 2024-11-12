@@ -5,26 +5,24 @@ include_once __DIR__ . '/../../partials/heading.php';
 
 $message = '';
 $maSinhVien = $_GET['msv'] ?? '';
+
 $currentPhong = '';
 
-// Kiểm tra sinh viên đã có phòng
-$query = "SELECT MaPhong FROM ThuePhong WHERE MaSinhVien = :maSinhVien LIMIT 1";
-$stmt = $dbh->prepare($query);
-$stmt->execute([':maSinhVien' => $maSinhVien]);
-$currentPhong = $stmt->fetchColumn();
 
 // Xử lý form gửi đi
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $maPhong = $_POST['maPhong'];
-    $batDau = date('Y-m-d');
-    $ketThuc = date('Y-m-d', strtotime('+4 months'));
+    $namHoc = $_POST['NamHoc'] ?? '';
+    $hocKi = isset($_POST['HocKi']) ? (string)$_POST['HocKi'] : '1'; // Default to '1' if not provided
+
+
     try {
-        $stmt = $dbh->prepare("CALL DangKyPhong(:maSinhVien, :maPhong, :batDau, :ketThuc, @message)");
+        $stmt = $dbh->prepare("CALL DangKyPhong(:maSinhVien, :maPhong, :hocKi, :namHoc, @message)");
         $stmt->execute([
             ':maSinhVien' => $maSinhVien,
             ':maPhong' => $maPhong,
-            ':batDau' => $batDau,
-            ':ketThuc' => $ketThuc
+            ':hocKi' => $hocKi,
+            ':namHoc' => $namHoc,
         ]);
 
         $message = $dbh->query("SELECT @message AS message")->fetch(PDO::FETCH_ASSOC)['message'];
@@ -38,6 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Lấy danh sách phòng
 $phongList = $dbh->query("SELECT MaPhong FROM Phong")->fetchAll(PDO::FETCH_ASSOC);
+// Lấy Danh sách Học Ki và năm học
+$hocKiList = $dbh->query("SELECT HocKi, NamHoc FROM HocKi")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <body>
@@ -49,11 +49,6 @@ $phongList = $dbh->query("SELECT MaPhong FROM Phong")->fetchAll(PDO::FETCH_ASSOC
                     <div class="modal-header-1">
                         <h5 class="modal-title mt-2">Đăng ký phòng</h5>
                     </div>
-
-                    <!-- Hiển thị thông báo -->
-                    <?php if (!empty($message)): ?>
-                        <div class="alert alert-info mt-3"><?php echo htmlspecialchars($message); ?></div>
-                    <?php endif; ?>
 
                     <div class="modal-user">
                         <form action="manage_sv_thuephong.php?msv=<?php echo htmlspecialchars($maSinhVien); ?>" method="POST">
@@ -71,10 +66,34 @@ $phongList = $dbh->query("SELECT MaPhong FROM Phong")->fetchAll(PDO::FETCH_ASSOC
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
-                            </div>
-                            <div class="text-end mt-2">
-                                <button type="submit" class="btn btn-primary" style="background-color: #db3077;">Lưu</button>
-                            </div>
+                                <div class="col-md-4">
+                                    <label for="HocKi" class="form-label">Học kì</label>
+                                    <select class="form-control" id="HocKi" name="HocKi" required>
+                                        <option value="">Chọn học kì</option>
+                                        <?php foreach ($hocKiList as $phong): ?>
+                                            <option value="<?= htmlspecialchars($phong['HocKi']) ?>">
+                                                <?= htmlspecialchars($phong['HocKi']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="NamHoc" class="form-label">Năm Học</label>
+                                    <select class="form-control" id="NamHoc" name="NamHoc" required>
+                                        <option value="">Chọn năm học</option>
+                                        <?php foreach ($hocKiList as $phong): ?>
+                                            <option value="<?= htmlspecialchars($phong['NamHoc']) ?>">
+                                                <?= htmlspecialchars($phong['NamHoc']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+
+
+                                <div class="text-end mt-2">
+                                    <button type="submit" class="btn btn-primary" style="background-color: #db3077;">Lưu</button>
+                                </div>
                         </form>
                     </div>
                 </div>
