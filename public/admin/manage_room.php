@@ -10,7 +10,6 @@ $roomData = [
     'TenPhong' => '',
     'LoaiPhong' => 'Nam',
     'DienTich' => '',
-    'SoGiuong' => '',
     'SucChua' => '',
     'SoChoThucTe' => '',
     'DaO' => '',
@@ -82,8 +81,8 @@ if ($roomId) {
                                     <input type="text" class="form-control" id="dientich" name="dientich" value="<?php echo $roomData['DienTich']; ?>" required>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="sogiuong" class="form-label">Số giường</label>
-                                    <input type="number" class="form-control" id="sogiuong" name="sogiuong" value="<?php echo $roomData['SoGiuong']; ?>" required>
+                                    <label for="giathue" class="form-label">Giá thuê</label>
+                                    <input type="text" class="form-control" id="giathue" name="giathue" value="<?php echo number_format($roomData['GiaThue'], 2); ?>" required>
                                 </div>
                             </div>
 
@@ -103,13 +102,6 @@ if ($roomId) {
                                 <div class="col-md-3">
                                     <label for="trong" class="form-label">Còn trống</label>
                                     <input type="number" class="form-control" id="trong" name="trong" value="<?php echo $roomData['ConTrong']; ?>" readonly>
-                                </div>
-                            </div>
-
-                            <div class="row row-add mb-3">
-                                <div class="col-md-12">
-                                    <label for="giathue" class="form-label">Giá thuê</label>
-                                    <input type="text" class="form-control" id="giathue" name="giathue" value="<?php echo number_format($roomData['GiaThue'], 2); ?>" required>
                                 </div>
                             </div>
 

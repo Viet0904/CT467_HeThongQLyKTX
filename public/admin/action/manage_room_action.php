@@ -8,7 +8,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $tenPhong = $_POST['tenphong'];
     $loaiPhong = $_POST['loaiphong'];
     $dienTich = $_POST['dientich'];
-    $soGiuong = $_POST['sogiuong'];
     $sucChua = $_POST['succhua'];
     $soChoThucTe = $_POST['sochothucte'];
     $daO = $_POST['dao'];
@@ -30,14 +29,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (!$oldExists){
             // Thêm mới
-            $stmt = $dbh->prepare("INSERT INTO Phong (MaPhong, MaDay, TenPhong, LoaiPhong, DienTich, SoGiuong, SucChua, SoChoThucTe, DaO, GiaThue, TrangThaiSuDung) VALUES (:MaPhong, :MaDay, :TenPhong, :LoaiPhong, :DienTich, :SoGiuong, :SucChua, :SoChoThucTe, :DaO, :GiaThue, :TrangThaiSuDung)");
+            $stmt = $dbh->prepare("INSERT INTO Phong (MaPhong, MaDay, TenPhong, LoaiPhong, DienTich, SucChua, SoChoThucTe, DaO, GiaThue, TrangThaiSuDung) VALUES (:MaPhong, :MaDay, :TenPhong, :LoaiPhong, :DienTich, :SucChua, :SoChoThucTe, :DaO, :GiaThue, :TrangThaiSuDung)");
             $stmt->execute([
                 ':MaPhong' => $maPhong,
                 ':MaDay' => $maDay,
                 ':TenPhong' => $tenPhong,
                 ':LoaiPhong' => $loaiPhong,
                 ':DienTich' => $dienTich,
-                ':SoGiuong' => $soGiuong,
                 ':SucChua' => $sucChua,
                 ':SoChoThucTe' => $soChoThucTe,
                 ':DaO' => $daO,
@@ -55,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     echo "<script>alert('Mã phòng mới đã tồn tại. Vui lòng nhập mã phòng khác.');</script>";
                 }else {
                     // Nếu mã phòng mới chưa tồn tại, tiến hành cập nhật mã phòng
-                    $stmt = $dbh->prepare("UPDATE Phong SET MaPhong = :MaPhong, MaDay = :MaDay, TenPhong = :TenPhong, LoaiPhong = :LoaiPhong, DienTich = :DienTich, SoGiuong = :SoGiuong, SucChua = :SucChua, SoChoThucTe = :SoChoThucTe, DaO = :DaO, GiaThue = :GiaThue, TrangThaiSuDung = :TrangThaiSuDung WHERE MaPhong = :OldMaPhong");
+                    $stmt = $dbh->prepare("UPDATE Phong SET MaPhong = :MaPhong, MaDay = :MaDay, TenPhong = :TenPhong, LoaiPhong = :LoaiPhong, DienTich = :DienTich, SucChua = :SucChua, SoChoThucTe = :SoChoThucTe, DaO = :DaO, GiaThue = :GiaThue, TrangThaiSuDung = :TrangThaiSuDung WHERE MaPhong = :OldMaPhong");
                     $stmt->execute([
                         ':MaPhong' => $maPhong,
                         ':OldMaPhong' => $oldMaPhong,
@@ -63,7 +61,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         ':TenPhong' => $tenPhong,
                         ':LoaiPhong' => $loaiPhong,
                         ':DienTich' => $dienTich,
-                        ':SoGiuong' => $soGiuong,
                         ':SucChua' => $sucChua,
                         ':SoChoThucTe' => $soChoThucTe,
                         ':DaO' => $daO,
@@ -75,14 +72,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
             }else{
                 // Cập nhật thông tin phòng hiện tại
-                $stmt = $dbh->prepare("UPDATE Phong SET MaDay = :MaDay, TenPhong = :TenPhong, LoaiPhong = :LoaiPhong, DienTich = :DienTich, SoGiuong = :SoGiuong, SucChua = :SucChua, SoChoThucTe = :SoChoThucTe, DaO = :DaO, GiaThue = :GiaThue, TrangThaiSuDung = :TrangThaiSuDung WHERE MaPhong = :OldMaPhong");
+                $stmt = $dbh->prepare("UPDATE Phong SET MaDay = :MaDay, TenPhong = :TenPhong, LoaiPhong = :LoaiPhong, DienTich = :DienTich, SucChua = :SucChua, SoChoThucTe = :SoChoThucTe, DaO = :DaO, GiaThue = :GiaThue, TrangThaiSuDung = :TrangThaiSuDung WHERE MaPhong = :OldMaPhong");
                 $stmt->execute([
                     ':OldMaPhong' => $oldMaPhong,
                     ':MaDay' => $maDay,
                     ':TenPhong' => $tenPhong,
                     ':LoaiPhong' => $loaiPhong,
                     ':DienTich' => $dienTich,
-                    ':SoGiuong' => $soGiuong,
                     ':SucChua' => $sucChua,
                     ':SoChoThucTe' => $soChoThucTe,
                     ':DaO' => $daO,
