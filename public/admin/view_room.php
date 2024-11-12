@@ -39,7 +39,7 @@ if ($roomId) {
                                 <div class="col-md-8">
                                     <div class="status-toggle">
                                         <span>Hoạt động</span>
-                                        <input type="checkbox" checked enabled>
+                                        <input type="checkbox" checked disabled>
                                     </div>
                                 </div>
                             </div>
@@ -67,32 +67,25 @@ if ($roomId) {
                                     <p class="mt-1 mb-2 mx-3"><?php echo htmlspecialchars($roomData['DienTich']); ?></p>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="sogiuong"><b>Số giường</b></label>
-                                    <p class="mt-1 mb-2 mx-3"><?php echo htmlspecialchars($roomData['SoGiuong']); ?></p>
-                                </div>
-                            </div>
-
-                            <div class="row row-add">
-                                <div class="col-md-4">
-                                    <label for="succhua"><b>Sức chứa</b></label>
-                                    <p class="mb-2 mt-1 mx-3"><?php echo htmlspecialchars($roomData['SucChua']); ?></p>
-                                </div>
-                                <div class="col-md-4">
                                     <label for="giathue"><b>Giá thuê</b></label>
                                     <p class="mb-2 mt-1 mx-3"><?php echo number_format($roomData['GiaThue'], 2); ?></p>
                                 </div>
                             </div>
 
                             <div class="row row-add">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
+                                    <label for="succhua"><b>Sức chứa</b></label>
+                                    <p class="mb-2 mt-1 mx-3"><?php echo htmlspecialchars($roomData['SucChua']); ?></p>
+                                </div>
+                                <div class="col-md-3">
                                     <label for="socho"><b>Số chỗ thực tế</b></label>
                                     <p class="mb-2 mt-1 mx-3"><?php echo htmlspecialchars($roomData['SoChoThucTe']); ?></p>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label for="dao"><b>Đã ở</b></label>
                                     <p class="mb-2 mt-1 mx-3"><?php echo htmlspecialchars($roomData['DaO']); ?></p>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label for="trong"><b>Còn trống</b></label>
                                     <p class="mb-2 mt-1 mx-3"><?php echo htmlspecialchars($roomData['SoChoThucTe'] - $roomData['DaO']); ?></p>
                                 </div>

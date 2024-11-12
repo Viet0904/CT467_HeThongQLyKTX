@@ -20,15 +20,25 @@ if ($roomId) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Xử lý việc xóa phòng
-    $stmt = $dbh->prepare("DELETE FROM Phong WHERE MaPhong = :id");
-    if ($stmt->execute([':id' => $roomId])) {
-        // Chuyển hướng về danh sách phòng sau khi xóa thành công
-        echo "<script>alert('Xóa phòng thành công.')</script>";
-        header("Location: room_list.php?success=1");
-        exit;
+    // Gọi stored procedure XoaPhongVaDuLieuLienQuan
+    $stmt = $dbh->prepare("CALL XoaPhongVaDuLieuLienQuan(:MaPhong, @Message, @ErrorCode)");
+    $stmt->bindParam(':MaPhong', $roomId, PDO::PARAM_STR);
+
+    if ($stmt->execute()) {
+        // Lấy kết quả thông báo và mã lỗi từ biến OUT của stored procedure
+        $stmt = $dbh->query("SELECT @Message AS Message, @ErrorCode AS ErrorCode");
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        $message = $result['Message'];
+        $errorCode = $result['ErrorCode'];
+
+        if ($errorCode == 0) {
+            echo "<script>alert('{$message}'); window.location.href='room_list.php';</script>";
+        } else {
+            echo "<script>alert('{$message}'); window.location.href='room_list.php';</script>";
+        }
     } else {
-        echo "<div class='alert alert-danger'>Có lỗi xảy ra khi xóa phòng.</div>";
+        echo "<script>alert('Có lỗi xảy ra khi gọi stored procedure.'); window.location.href='room_list.php';</script>";
     }
 }
 ?>
