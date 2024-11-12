@@ -2,7 +2,106 @@
 include_once __DIR__ . '/../../config/dbadmin.php';
 include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $MSSV = $_POST['MSSV'] ?? '0';
+
+    $maPhong = $_POST['maPhong'] ?? '0';
+
+    $query = "SELECT SinhVien.*, Lop.TenLop, ThuePhong.MaPhong
+              FROM SinhVien 
+              JOIN Lop ON SinhVien.MaLop = Lop.MaLop 
+              LEFT JOIN ThuePhong ON SinhVien.MaSinhVien = ThuePhong.MaSinhVien 
+              WHERE 1=1";
+
+    if ($MSSV !== '0') {
+        $query .= " AND SinhVien.MaSinhVien = :MSSV";
+    }
+    if ($maPhong !== '0') {
+        if ($maPhong === '1') {
+            $query .= " AND ThuePhong.MaPhong IS NULL";
+        } else {
+            $query .= " AND ThuePhong.MaPhong = :maPhong";
+        }
+    }
+    $rowsPerPage = 10;
+    // Tính tổng số dòng cho truy vấn có điều kiện
+    $countQuery = "SELECT COUNT(*) FROM ($query) AS total";
+    $countStmt = $dbh->prepare($countQuery);
+
+    if ($MSSV !== '0') {
+        $countStmt->bindParam(':MSSV', $MSSV, PDO::PARAM_STR);
+    }
+
+    if ($maPhong !== '0' && $maPhong !== '1') {
+        $countStmt->bindParam(':maPhong', $maPhong, PDO::PARAM_STR);
+    }
+
+    $countStmt->execute();
+    $totalRows = $countStmt->fetchColumn();
+
+    // Tính tổng số trang
+    $totalPages = ceil($totalRows / $rowsPerPage);
+
+    // Lấy trang hiện tại từ query string, nếu không có thì mặc định là trang 1
+    $currentPage = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+    if ($currentPage < 1) {
+        $currentPage = 1;
+    } elseif ($currentPage > $totalPages) {
+        $currentPage = $totalPages;
+    }
+
+
+    // Tính chỉ số bắt đầu của dòng trên trang hiện tại
+    $offset = ($currentPage - 1) * $rowsPerPage;
+
+    $query .= " LIMIT $rowsPerPage OFFSET $offset";
+
+    $stmt = $dbh->prepare($query);
+
+    if ($MSSV !== '0') {
+        $stmt->bindParam(':MSSV', $MSSV, PDO::PARAM_STR);
+    }
+
+    if ($maPhong !== '0' && $maPhong !== '1') {
+        $stmt->bindParam(':maPhong', $maPhong, PDO::PARAM_STR);
+    }
+
+    $stmt->execute();
+    $result = $stmt;
+} else {
+
+    // Số dòng trên mỗi trang
+    $rowsPerPage = 10;
+    // Tính tổng số dòng
+    $totalRowsQuery = "SELECT COUNT(*) FROM SinhVien";
+    $totalRowsResult = $dbh->query($totalRowsQuery);
+    $totalRows = $totalRowsResult->fetchColumn();
+
+    // Tính tổng số trang
+    $totalPages = ceil($totalRows / $rowsPerPage);
+
+    // Lấy trang hiện tại từ query string, nếu không có thì mặc định là trang 1
+    $currentPage = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+    if ($currentPage < 1) {
+        $currentPage = 1;
+    } elseif ($currentPage > $totalPages) {
+        $currentPage = $totalPages;
+    }
+
+    // Tính chỉ số bắt đầu của dòng trên trang hiện tại
+    $offset = ($currentPage - 1) * $rowsPerPage;
+
+    // Truy vấn SQL với LIMIT và OFFSET
+    $sinhvien = "SELECT SinhVien.*, Lop.TenLop, ThuePhong.MaPhong
+FROM SinhVien 
+JOIN Lop ON SinhVien.MaLop = Lop.MaLop 
+LEFT JOIN ThuePhong ON SinhVien.MaSinhVien = ThuePhong.MaSinhVien 
+LIMIT $rowsPerPage OFFSET $offset";
+
+    $result = $dbh->query($sinhvien);
+}
 ?>
+
 
 <body>
     <div class="container-fluid">
@@ -20,41 +119,65 @@ include_once __DIR__ . '/../../partials/heading.php';
                         <!-- Phần header của List of Rooms -->
                         <div class="d-flex justify-content-between align-items-center">
                             <h5>Danh sách thuê phòng</h5>
-                        
-                        </div>
 
+                        </div>
+                        </form>
+                        <form id="searchForm" method="POST" action="">
+                            <div class="row g-3">
+                                <div class="col-md-6 col-lg-3">
+                                    <label for="MSSV" class="form-label">MSSV</label>
+                                    <select class="form-select" id="MSSV" name="MSSV" aria-label="Select availability" onchange="toggleSelect('MSSV', 'maPhong')">
+                                        <option value="0">Tất cả</option>
+                                        <?php
+                                        $sinhvienQuery = "SELECT MaSinhVien FROM SinhVien";
+                                        $sinhvienResult = $dbh->query($sinhvienQuery);
+                                        while ($row = $sinhvienResult->fetch(PDO::FETCH_ASSOC)) {
+                                            echo '<option value="' . htmlspecialchars($row['MaSinhVien']) . '">' . htmlspecialchars($row['MaSinhVien']) . '</option>';
+                                        }
+                                        ?>
+
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6 col-lg-3">
+                                    <label for="maPhong" class="form-label">Mã Phòng</label>
+                                    <select class="form-select" id="maPhong" name="maPhong" aria-label="Select area" onchange="toggleSelect('MSSV', 'maPhong')">
+                                        <option value="0">Tất cả</option>
+                                        <option value="1">Chưa có phòng</option>
+                                        <?php
+                                        $phongQuery = "SELECT MaPhong FROM Phong";
+                                        $phongResult = $dbh->query($phongQuery);
+                                        while ($row = $phongResult->fetch(PDO::FETCH_ASSOC)) {
+                                            echo '<option value="' . htmlspecialchars($row['MaPhong']) . '">' . htmlspecialchars($row['MaPhong']) . '</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary" aria-label="Search rooms">
+                                        <i class="bi bi-search me-2"></i>Search
+                                    </button>
+                                </div>
+                            </div>
+                            <script>
+                                function toggleSelect(selectedId, otherId) {
+                                    var selected = document.getElementById(selectedId);
+                                    var other = document.getElementById(otherId);
+                                    if (selected.value !== '0') {
+                                        other.disabled = true;
+                                    } else {
+                                        other.disabled = false;
+                                    }
+                                }
+                            </script>
+                        </form>
                         <div class="col-auto py-3 ">
 
                             <?php
-                            // Số dòng trên mỗi trang
-                            $rowsPerPage = 10;
-                            // Tính tổng số dòng
-                            $totalRowsQuery = "SELECT COUNT(*) FROM SinhVien";
-                            $totalRowsResult = $dbh->query($totalRowsQuery);
-                            $totalRows = $totalRowsResult->fetchColumn();
 
-                            // Tính tổng số trang
-                            $totalPages = ceil($totalRows / $rowsPerPage);
-
-                            // Lấy trang hiện tại từ query string, nếu không có thì mặc định là trang 1
-                            $currentPage = isset($_GET['page']) ? (int) $_GET['page'] : 1;
-                            if ($currentPage < 1) {
-                                $currentPage = 1;
-                            } elseif ($currentPage > $totalPages) {
-                                $currentPage = $totalPages;
-                            }
-
-                            // Tính chỉ số bắt đầu của dòng trên trang hiện tại
-                            $offset = ($currentPage - 1) * $rowsPerPage;
-
-                            // Truy vấn SQL với LIMIT và OFFSET
-                            $sinhvien = "SELECT SinhVien.*, Lop.TenLop, ThuePhong.MaPhong
-                            FROM SinhVien 
-                            JOIN Lop ON SinhVien.MaLop = Lop.MaLop 
-                            LEFT JOIN ThuePhong ON SinhVien.MaSinhVien = ThuePhong.MaSinhVien 
-                            LIMIT $rowsPerPage OFFSET $offset";
-
-                            $result = $dbh->query($sinhvien);
 
                             if ($result->rowCount() > 0) {
                                 echo '<table class="table table-bordered table-striped table-hover mt-3">';
@@ -169,7 +292,7 @@ include_once __DIR__ . '/../../partials/heading.php';
     }
 
     // Đóng tất cả các dropdown nếu click bên ngoài
-    window.onclick = function (event) {
+    window.onclick = function(event) {
         var dropdownMenu = document.getElementById("dropdownMenu");
 
         // Đóng dropdown của tên admin nếu click bên ngoài
@@ -177,7 +300,6 @@ include_once __DIR__ . '/../../partials/heading.php';
             dropdownMenu.style.display = "none"; // Đảm bảo đóng dropdown
         }
     }
-
 </script>
 
 </html>
