@@ -5,7 +5,7 @@ require_once __DIR__ . '/../../config/dbadmin.php';
 session_start();
 $maSinhVien = $_SESSION['MaSinhVien'];
 
-$query = "SELECT SinhVien.*, ThuePhong.MaPhong, ThuePhong.BatDau, ThuePhong.KetThuc, ThuePhong.GiaThueThucTe 
+$query = "SELECT SinhVien.*, ThuePhong.* 
             FROM SinhVien 
             LEFT JOIN ThuePhong ON SinhVien.MaSinhVien = ThuePhong.MaSinhVien 
             WHERE SinhVien.MaSinhVien = ?";
