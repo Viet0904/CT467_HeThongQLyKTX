@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
     // Tính chỉ số bắt đầu của dòng trên trang hiện tại
-    $offset = ($currentPage - 1) * $rowsPerPage;
+    $offset = max(0, ($currentPage - 1) * $rowsPerPage);
 
     $query .= " LIMIT $rowsPerPage OFFSET $offset";
 
@@ -69,14 +69,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->execute();
     $result = $stmt;
 } else {
+    // lấy ra HocKi
+    $currentHocKiQuery = "SELECT HocKi, NamHoc FROM HocKi WHERE CURDATE() BETWEEN BatDau AND KetThuc LIMIT 1";
+    $currentHocKiStmt = $dbh->prepare($currentHocKiQuery);
+    $currentHocKiStmt->execute();
+    $currentHocKi = $currentHocKiStmt->fetch(PDO::FETCH_ASSOC);
+    if (!$currentHocKi) {
+        die("Không tìm thấy học kỳ hiện tại.");
+    }
 
-    // Số dòng trên mỗi trang
-    $rowsPerPage = 10;
     // Tính tổng số dòng
-    $totalRowsQuery = "SELECT COUNT(*) FROM SinhVien";
-    $totalRowsResult = $dbh->query($totalRowsQuery);
-    $totalRows = $totalRowsResult->fetchColumn();
-
+    $rowsPerPage = 10;
+    $totalRowsQuery = "SELECT COUNT(*) FROM SinhVien 
+    JOIN ThuePhong ON SinhVien.MaSinhVien = ThuePhong.MaSinhVien 
+    WHERE ThuePhong.HocKi = :hocKi AND ThuePhong.NamHoc = :namHoc";
+    $totalRowsStmt = $dbh->prepare($totalRowsQuery);
+    $totalRowsStmt->execute([
+        ':hocKi' =>  $currentHocKi['HocKi'],
+        ':namHoc' =>  $currentHocKi['NamHoc'],
+    ]);
+    $totalRows = $totalRowsStmt->fetchColumn();
     // Tính tổng số trang
     $totalPages = ceil($totalRows / $rowsPerPage);
 
@@ -87,18 +99,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($currentPage > $totalPages) {
         $currentPage = $totalPages;
     }
-
-    // Tính chỉ số bắt đầu của dòng trên trang hiện tại
-    $offset = ($currentPage - 1) * $rowsPerPage;
-
-    // Truy vấn SQL với LIMIT và OFFSET
+    $hocKi = $currentHocKi['HocKi'];
+    $namHoc = $currentHocKi['NamHoc'];
+    // Truy vấn SQL với LIMIT và OFFSET và điều kiện học kỳ hiện tại
     $sinhvien = "SELECT SinhVien.*, Lop.TenLop, ThuePhong.MaPhong
-FROM SinhVien 
-JOIN Lop ON SinhVien.MaLop = Lop.MaLop 
-LEFT JOIN ThuePhong ON SinhVien.MaSinhVien = ThuePhong.MaSinhVien 
-LIMIT $rowsPerPage OFFSET $offset";
+                    FROM SinhVien 
+                    JOIN Lop ON SinhVien.MaLop = Lop.MaLop 
+                    LEFT JOIN ThuePhong ON SinhVien.MaSinhVien = ThuePhong.MaSinhVien 
+                    WHERE ThuePhong.HocKi = :hocKi AND ThuePhong.NamHoc = :namHoc
+                    LIMIT :rowsPerPage OFFSET :offset";
 
-    $result = $dbh->query($sinhvien);
+    $stmt = $dbh->prepare($sinhvien);
+    $stmt->bindParam(':hocKi', $hocKi, PDO::PARAM_STR);
+    $stmt->bindParam(':namHoc', $namHoc, PDO::PARAM_STR);
+    $stmt->bindValue(':rowsPerPage', $rowsPerPage, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+
+    try {
+        $stmt->execute();
+        $result = $stmt;
+    } catch (PDOException $e) {
+        echo "Xảy ra lỗi: " . $e->getMessage();
+        $result = null;
+    }
 }
 ?>
 

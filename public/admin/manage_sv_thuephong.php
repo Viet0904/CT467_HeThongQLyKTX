@@ -12,8 +12,20 @@ $currentPhong = '';
 // Xử lý form gửi đi
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $maPhong = $_POST['maPhong'];
-    $namHoc = $_POST['NamHoc'] ?? '';
-    $hocKi = isset($_POST['HocKi']) ? (string)$_POST['HocKi'] : '1'; // Default to '1' if not provided
+    $namHoc = date('Y');
+    $currentDate = date('Y-m-d');
+
+    $stmt = $dbh->prepare("SELECT HocKi FROM HocKi WHERE :currentDate BETWEEN BatDau AND KetThuc AND NamHoc = :namHoc");
+    $stmt->execute([
+        ':currentDate' => $currentDate,
+        ':namHoc' => $namHoc,
+    ]);
+
+    $hocKi = $stmt->fetchColumn();
+
+    if (!$hocKi) {
+        $hocKi = '1'; // Default to '1' if no matching HocKi is found
+    }
 
 
     try {
@@ -66,7 +78,7 @@ $hocKiList = $dbh->query("SELECT HocKi, NamHoc FROM HocKi")->fetchAll(PDO::FETCH
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
-                                <div class="col-md-4">
+                                <!-- <div class="col-md-4">
                                     <label for="HocKi" class="form-label">Học kì</label>
                                     <select class="form-control" id="HocKi" name="HocKi" required>
                                         <option value="">Chọn học kì</option>
@@ -88,7 +100,7 @@ $hocKiList = $dbh->query("SELECT HocKi, NamHoc FROM HocKi")->fetchAll(PDO::FETCH
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
-                                </div>
+                                </div> -->
 
 
                                 <div class="text-end mt-2">
