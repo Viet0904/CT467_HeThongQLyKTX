@@ -24,10 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($MSSV !== '0') {
         $query .= " AND SinhVien.MaSinhVien = :MSSV";
-    }
-    if ($maPhong == '0') {
-        $query .= " AND ThuePhong.MaPhong IS NULL";
     } else {
+
         $query .= " AND ThuePhong.MaPhong = :maPhong";
     }
     $rowsPerPage = 10;
@@ -39,11 +37,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($MSSV !== '0') {
         $countStmt->bindParam(':MSSV', $MSSV, PDO::PARAM_STR);
-    }
-
-    if ($maPhong !== '0') {
+    } else {
         $countStmt->bindParam(':maPhong', $maPhong, PDO::PARAM_STR);
     }
+
+
 
     $countStmt->execute();
     $totalRows = $countStmt->fetchColumn();
