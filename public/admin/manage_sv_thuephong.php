@@ -12,24 +12,18 @@ $currentPhong = '';
 // Xử lý form gửi đi
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $maPhong = $_POST['maPhong'];
-    $namHoc = date('Y');
-    $currentDate = date('Y-m-d');
 
-    $stmt = $dbh->prepare("SELECT HocKi FROM HocKi WHERE :currentDate BETWEEN BatDau AND KetThuc AND NamHoc = :namHoc");
-    $stmt->execute([
-        ':currentDate' => $currentDate,
-        ':namHoc' => $namHoc,
-    ]);
 
-    $hocKi = $stmt->fetchColumn();
-
-    if (!$hocKi) {
-        $hocKi = '1'; // Default to '1' if no matching HocKi is found
-    }
-
+    // lấy ra HocKi
+    $currentHocKiQuery = "SELECT HocKi, NamHoc FROM HocKi WHERE NamHoc = YEAR(CURRENT_DATE) AND CURRENT_DATE BETWEEN BatDau AND KetThuc LIMIT 1";
+    $currentHocKiStmt = $dbh->prepare($currentHocKiQuery);
+    $currentHocKiStmt->execute();
+    $currentHocKi = $currentHocKiStmt->fetch(PDO::FETCH_ASSOC);
+    $hocKi = $currentHocKi['HocKi'];
+    $namHoc = $currentHocKi['NamHoc'];
 
     try {
-        $stmt = $dbh->prepare("CALL DangKyPhong(:maSinhVien, :maPhong, :hocKi, :namHoc, @message)");
+        $stmt = $dbh->prepare("CALL ChuyenPhong(:maSinhVien, :maPhong, :hocKi, :namHoc, @message)");
         $stmt->execute([
             ':maSinhVien' => $maSinhVien,
             ':maPhong' => $maPhong,

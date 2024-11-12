@@ -215,4 +215,149 @@ DELIMITER ;
 
 
 
+-- Hàm Đăng ký 
+DELIMITER //
+CREATE PROCEDURE ChuyenPhong(
+    IN p_MaSinhVien VARCHAR(10),
+    IN p_MaPhong VARCHAR(10),
+    IN p_HocKi ENUM('1', '2', '3'),
+    IN p_NamHoc VARCHAR(50),
+    OUT p_Message VARCHAR(100)
+)
+BEGIN
+    DECLARE v_GioiTinhSV VARCHAR(10);
+    DECLARE v_LoaiPhong ENUM('Nam', 'Nữ');
+    DECLARE v_SoChoConLai INT;
+    DECLARE v_GiaThue DECIMAL(10, 2);
+    DECLARE v_HopDongID INT;
+    DECLARE v_Count INT;
+    DECLARE v_OldMaPhong VARCHAR(10);
+    DECLARE v_OldHopDongID INT;
+    -- Kiểm tra sinh viên đã đăng ký phòng cho học kỳ và năm học cụ thể chưa
+    SELECT COUNT(*) INTO v_Count 
+    FROM ThuePhong 
+    WHERE MaSinhVien = p_MaSinhVien
+      AND HocKi = p_HocKi
+      AND NamHoc = p_NamHoc;
+    IF v_Count > 0 THEN
+        -- Lấy thông tin phòng cũ và hợp đồng cũ
+        SELECT MaPhong, MaHopDong INTO v_OldMaPhong, v_OldHopDongID
+        FROM ThuePhong
+        WHERE MaSinhVien = p_MaSinhVien
+          AND HocKi = p_HocKi
+          AND NamHoc = p_NamHoc;
+    END IF;
+    -- Lấy thông tin giới tính của sinh viên
+    SELECT GioiTinh INTO v_GioiTinhSV
+    FROM SinhVien
+    WHERE MaSinhVien = p_MaSinhVien;
+    -- Lấy thông tin phòng mới
+    SELECT LoaiPhong, (SucChua - DaO), GiaThue INTO v_LoaiPhong, v_SoChoConLai, v_GiaThue
+    FROM Phong
+    WHERE MaPhong = p_MaPhong;
+    -- Kiểm tra giới tính phòng
+    IF v_GioiTinhSV != v_LoaiPhong THEN
+        SET p_Message = 'Giới tính không phù hợp với loại phòng';
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = p_Message;
+    END IF;
+    -- Kiểm tra còn chỗ không
+    IF v_SoChoConLai <= 0 THEN
 
+        SET p_Message = 'Phòng đã đầy';
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = p_Message;
+    END IF;
+    -- Bắt đầu transaction
+    START TRANSACTION;
+    -- Nếu sinh viên đã có phòng, xóa phòng cũ và hợp đồng cũ
+    IF v_Count > 0 THEN
+        DELETE FROM TT_ThuePhong WHERE MaHopDong = v_OldHopDongID;
+        DELETE FROM ThuePhong WHERE MaHopDong = v_OldHopDongID;
+    END IF;
+    -- Thêm vào bảng ThuePhong
+    INSERT INTO ThuePhong (MaSinhVien, MaPhong, HocKi, NamHoc, GiaThueThucTe)
+    VALUES (p_MaSinhVien, p_MaPhong, p_HocKi, p_NamHoc, v_GiaThue);
+    -- Lấy ID của hợp đồng vừa thêm
+    SET v_HopDongID = LAST_INSERT_ID();
+    -- Thêm vào bảng TT_ThuePhong cho tháng đầu tiên (tháng mặc định hoặc tháng đầu của học kỳ)
+    INSERT INTO TT_ThuePhong (MaHopDong, ThangNam, SoTien)
+    VALUES (v_HopDongID, CURDATE(), v_GiaThue);
+    COMMIT;
+    -- Thông báo đăng ký phòng thành công
+    SET p_Message = 'Đăng ký phòng thành công';
+END //
+DELIMITER ;
+-- Hàm Xoá Sinh Viên khỏi phòng
+DELIMITER //
+CREATE PROCEDURE XoaSinhVienKhoiPhong(
+    IN p_MaSinhVien VARCHAR(10),
+    OUT p_Message VARCHAR(100)
+)
+BEGIN
+    DECLARE v_HopDongID INT;
+    DECLARE v_Count INT;
+    -- Kiểm tra sinh viên có tồn tại trong ThuePhong không
+    SELECT COUNT(*) INTO v_Count 
+    FROM ThuePhong 
+    WHERE MaSinhVien = p_MaSinhVien;
+    IF v_Count = 0 THEN
+        SET p_Message = 'Sinh viên không tồn tại trong ThuePhong';
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = p_Message;
+    END IF;
+    -- Lấy ID của hợp đồng thuê phòng
+    SELECT MaHopDong INTO v_HopDongID
+    FROM ThuePhong
+    WHERE MaSinhVien = p_MaSinhVien;
+    -- Bắt đầu transaction
+    START TRANSACTION;
+    -- Xoá các bản ghi trong TT_ThuePhong
+    DELETE FROM TT_ThuePhong WHERE MaHopDong = v_HopDongID;
+    -- Xoá bản ghi trong ThuePhong
+    DELETE FROM ThuePhong WHERE MaHopDong = v_HopDongID;
+    COMMIT;
+    -- Thông báo xoá thành công
+    SET p_Message = 'Xoá sinh viên khỏi phòng thành công';
+END //
+DELIMITER ;
+
+
+
+
+
+DELIMITER //
+CREATE PROCEDURE XoaPhongVaDuLieuLienQuan(
+    IN p_MaPhong VARCHAR(10),
+    OUT p_Message VARCHAR(255),
+    OUT p_ErrorCode INT
+)
+BEGIN
+    DECLARE v_DaO INT;
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        -- Nếu có lỗi, rollback và trả về mã lỗi
+        ROLLBACK;
+        SET p_Message = 'Có lỗi xảy ra khi xóa phòng hoặc dữ liệu liên quan';
+        SET p_ErrorCode = 1;
+    END;
+    -- Kiểm tra số lượng người ở trong bảng ThuePhong
+    SELECT DaO INTO v_DaO
+    FROM Phong
+    WHERE MaPhong = p_MaPhong;
+    IF v_DaO = 0 THEN
+        -- Bắt đầu transaction
+        START TRANSACTION;
+        -- Xóa dữ liệu phòng trong bảng DienNuoc
+        DELETE FROM DienNuoc WHERE MaPhong = p_MaPhong;
+        -- Xóa phòng trong bảng Phong
+        DELETE FROM Phong WHERE MaPhong = p_MaPhong;
+        COMMIT;
+        SET p_Message = 'Xóa phòng và dữ liệu liên quan thành công';
+        SET p_ErrorCode = 0;
+    ELSE
+        SET p_Message = 'Không thể xóa phòng vì còn người ở';
+        SET p_ErrorCode = 2;
+    END IF;
+END //
+DELIMITER ;
