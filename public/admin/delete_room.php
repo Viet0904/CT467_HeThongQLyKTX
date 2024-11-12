@@ -20,33 +20,27 @@ if ($roomId) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Kiểm tra số lượng người ở trong bảng ThuePhong
-    if ($roomData['DaO'] == 0) {
-        // Nếu DaO = 0, thực hiện xóa phòng và dữ liệu liên quan trong bảng DienNuoc
-        $dbh->beginTransaction();
+    // Gọi stored procedure XoaPhongVaDuLieuLienQuan
+    $stmt = $dbh->prepare("CALL XoaPhongVaDuLieuLienQuan(:MaPhong, @Message, @ErrorCode)");
+    $stmt->bindParam(':MaPhong', $roomId, PDO::PARAM_STR);
 
-        try {
-            // Xóa dữ liệu phòng trong bảng DienNuoc
-            $stmt = $dbh->prepare("DELETE FROM DienNuoc WHERE MaPhong = :id");
-            $stmt->execute([':id' => $roomId]);
+    if ($stmt->execute()) {
+        // Lấy kết quả thông báo và mã lỗi từ biến OUT của stored procedure
+        $stmt = $dbh->query("SELECT @Message AS Message, @ErrorCode AS ErrorCode");
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        $message = $result['Message'];
+        $errorCode = $result['ErrorCode'];
 
-            // Xóa phòng trong bảng Phong
-            $stmt = $dbh->prepare("DELETE FROM Phong WHERE MaPhong = :id");
-            $stmt->execute([':id' => $roomId]);
-
-            $dbh->commit();
-            echo "<script>alert('Xóa phòng và dữ liệu liên quan thành công.')</script>";
-            header("Location: room_list.php?success=1");
-            exit;
-        } catch (Exception $e) {
-            $dbh->rollBack();
-            echo "<script>alert('Có lỗi xảy ra khi xóa phòng hoặc dữ liệu liên quan.');window.location.href='room_list.php';</script>";
+        if ($errorCode == 0) {
+            echo "<script>alert('{$message}'); window.location.href='room_list.php';</script>";
+        } else {
+            echo "<script>alert('{$message}'); window.location.href='room_list.php';</script>";
         }
     } else {
-        echo "<script>alert('Không thể xóa phòng vì có người ở.');window.location.href='room_list.php';</script>";
+        echo "<script>alert('Có lỗi xảy ra khi gọi stored procedure.'); window.location.href='room_list.php';</script>";
     }
 }
-
 ?>
 
 <body>
