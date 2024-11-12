@@ -38,25 +38,31 @@ $contractId = $_GET['MaHopDong'] ?? null;
                                     ");
                                     $stmt->execute([':MaHopDong' => $contractId]);
                                     while ($payment = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                        // Kiểm tra và hiển thị "Chưa thanh toán" nếu NgayThanhToan là null
+                                        $ngayThanhToan = $payment['NgayThanhToan'] ?? "Chưa thanh toán";
+                                        $hoten = $payment['NgayThanhToan'] ? $payment['Hoten'] : ""; // Để trống nếu chưa thanh toán
+                                    
                                         echo "<tr>
                                                 <td>{$payment['ThangNam']}</td>
                                                 <td>" . number_format($payment['SoTien'], 2) . "</td>
-                                                <td>{$payment['NgayThanhToan']}</td>
-                                                <td>{$payment['Hoten']}</td>
-                                                <td>
-                                                    <div class='dropdown'>
-                                                        <button class='btn btn-secondary dropdown-toggle' type='button' id='actionDropdownMenu{$contractId}' data-bs-toggle='dropdown' aria-expanded='false'>
-                                                            Hành động
-                                                        </button>
-                                                        <ul class='dropdown-menu' aria-labelledby='actionDropdownMenu{$contractId}'>
-                                                            <li><a class='dropdown-item' href='manage_payment.php?id={$contractId}'>Sửa</a></li>
-                                                            <li><a class='dropdown-item' href='delete_payment.php?id={$contractId}' onclick='return confirm(\"Bạn có chắc chắn muốn xóa khoản thanh toán này?\");'>Xoá</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </td>
-                                            </tr>";
+                                                <td>{$ngayThanhToan}</td>
+                                                <td>{$hoten}</td>";
+                                        
+                                        echo "<td>
+                                                <div class='dropdown position-relative'>
+                                                    <button class='btn btn-outline-secondary dropdown-toggle' type='button' onclick='toggleActionDropdown(\"actionDropdownMenu" . htmlspecialchars($payment['ThangNam']) . "\")'>
+                                                        Hoạt động
+                                                    </button>
+                                                    <div id='actionDropdownMenu" . htmlspecialchars($payment['ThangNam']) . "' class='dropdown-menu position-absolute' style='display: none; min-width: 100px; top: 100%; left: 0;'>
+                                                    <a class='dropdown-item py-2' href='./process_payment.php?MaHopDong=" . htmlspecialchars($contractId) . "'>Thanh Toán</a>
+                                                    <a class='dropdown-item py-2' href='./manage_payment.php?MaHopDong=" . htmlspecialchars($contractId) . "'>Sửa</a>
+                                                </div>
+                                                </div>
+                                            </td>";
+                                        echo '</tr>';
                                     }
                                     ?>
+
                                 </tbody>
                             </table>
                         </div>
@@ -73,15 +79,32 @@ $contractId = $_GET['MaHopDong'] ?? null;
     integrity="sha384-shoIXUoVOFk60M7DuE4bfOY1pNIqcd9tPCSZrhTDQTXkNv8El+fEfXksqNhUNuUc"
     crossorigin="anonymous"></script>
 <script>
+    // Hàm mở và đóng dropdown khi bấm tên admin
+    function toggleDropdown(event) {
+        event.stopPropagation(); // Ngăn chặn sự kiện click bên ngoài
+        var dropdown = document.getElementById("dropdownMenu");
+        dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block"; // Toggle dropdown
+    }
+
+    // Hàm mở và đóng dropdown khi bấm vào nút Action
+    function toggleActionDropdown(id) {
+        var dropdown = document.getElementById(id);
+        if (dropdown.style.display === "none" || dropdown.style.display === "") {
+            dropdown.style.display = "block"; // Hiển thị dropdown
+        } else {
+            dropdown.style.display = "none"; // Ẩn dropdown
+        }
+    }
+
+
     // Đóng tất cả các dropdown nếu click bên ngoài
     window.onclick = function(event) {
-        // Kiểm tra nếu click bên ngoài dropdown
-        if (!event.target.matches('.dropdown-toggle')) {
-            var dropdowns = document.querySelectorAll('.dropdown-menu');
-            dropdowns.forEach(function(dropdown) {
-                dropdown.classList.remove('show');
-            });
+        var dropdownMenu = document.getElementById("dropdownMenu");
+
+        // Đóng dropdown của tên admin nếu click bên ngoài
+        if (!event.target.matches('#userDropdown') && !event.target.matches('.ms-1') && !dropdownMenu.contains(event.target)) {
+            dropdownMenu.style.display = "none"; // Đảm bảo đóng dropdown
         }
-    };
+    }
 </script>
 </html>
