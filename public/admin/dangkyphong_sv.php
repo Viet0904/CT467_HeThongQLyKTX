@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($MSSV !== '0') {
         $query .= " AND SinhVien.MaSinhVien = :MSSV";
     }
-    if ($maPhong !== '0') {
+    if ($maPhong == '0') {
         $query .= " AND ThuePhong.MaPhong IS NULL";
     } else {
         $query .= " AND ThuePhong.MaPhong = :maPhong";
