@@ -20,17 +20,33 @@ if ($roomId) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Xử lý việc xóa phòng
-    $stmt = $dbh->prepare("DELETE FROM Phong WHERE MaPhong = :id");
-    if ($stmt->execute([':id' => $roomId])) {
-        // Chuyển hướng về danh sách phòng sau khi xóa thành công
-        echo "<script>alert('Xóa phòng thành công.')</script>";
-        header("Location: room_list.php?success=1");
-        exit;
+    // Kiểm tra số lượng người ở trong bảng ThuePhong
+    if ($roomData['DaO'] == 0) {
+        // Nếu DaO = 0, thực hiện xóa phòng và dữ liệu liên quan trong bảng DienNuoc
+        $dbh->beginTransaction();
+
+        try {
+            // Xóa dữ liệu phòng trong bảng DienNuoc
+            $stmt = $dbh->prepare("DELETE FROM DienNuoc WHERE MaPhong = :id");
+            $stmt->execute([':id' => $roomId]);
+
+            // Xóa phòng trong bảng Phong
+            $stmt = $dbh->prepare("DELETE FROM Phong WHERE MaPhong = :id");
+            $stmt->execute([':id' => $roomId]);
+
+            $dbh->commit();
+            echo "<script>alert('Xóa phòng và dữ liệu liên quan thành công.')</script>";
+            header("Location: room_list.php?success=1");
+            exit;
+        } catch (Exception $e) {
+            $dbh->rollBack();
+            echo "<script>alert('Có lỗi xảy ra khi xóa phòng hoặc dữ liệu liên quan.');window.location.href='room_list.php';</script>";
+        }
     } else {
-        echo "<div class='alert alert-danger'>Có lỗi xảy ra khi xóa phòng.</div>";
+        echo "<script>alert('Không thể xóa phòng vì có người ở.');window.location.href='room_list.php';</script>";
     }
 }
+
 ?>
 
 <body>
