@@ -2,7 +2,7 @@
 include_once __DIR__ . '/../../config/dbadmin.php';
 include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
-
+session_start();
 $room_id = $_POST['room_id'] ?? '';
 $month = $_POST['month'] ?? 0;
 
@@ -58,7 +58,6 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <!-- Phần header của List of Rooms -->
                         <div class="d-flex justify-content-between align-items-center">
                             <h5>Danh sách phòng</h5>
-
                         </div>
 
                         <form id="searchForm" method="post" action="manage_diennuoc.php">
@@ -113,7 +112,6 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </form>
 
                         <div class="col-auto py-3">
-
                             <!-- Hiển thị table  -->
                             <?php
                             echo '<table class="table table-bordered table-striped">';

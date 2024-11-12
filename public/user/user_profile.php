@@ -11,8 +11,10 @@ if (!isset($_SESSION)) {
 if (isset($_SESSION['MaSinhVien'])) {
     $maSinhVien = $_SESSION['MaSinhVien'];
 
-    // Truy vấn thông tin nhân viên từ DB
-    $query = "SELECT * FROM SinhVien WHERE MaSinhVien = ?";
+    $query = "SELECT SinhVien.*, ThuePhong.MaPhong, ThuePhong.BatDau, ThuePhong.KetThuc, ThuePhong.GiaThueThucTe 
+              FROM SinhVien 
+              LEFT JOIN ThuePhong ON SinhVien.MaSinhVien = ThuePhong.MaSinhVien 
+              WHERE SinhVien.MaSinhVien = ?";
     $stmt = $dbh->prepare($query);
     $stmt->bindValue(1, $maSinhVien);
     $stmt->execute();
@@ -24,7 +26,6 @@ if (isset($_SESSION['MaSinhVien'])) {
 
 // Xử lý khi người dùng cập nhật thông tin
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $khoaHoc = $_POST['khoaHoc'];
     $maLop = $_POST['maLop'];
     $maDay = $_POST['maDay'];
     $firstName = $_POST['firstName'];
@@ -34,12 +35,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $contact = $_POST['contact'];
     $email = $_POST['email'];
     $address = $_POST['address'];
-    $password = $_POST['password'];
 
     // Cập nhật thông tin nhân viên trong DB
-    $updateQuery = "UPDATE SinhVien SET KhoaHoc = ?, MaLop = ?, MaDay = ?, HoTen = ?, NgaySinh = ?, ChucVu = ?, GioiTinh = ?, SDT = ?, Email = ?, DiaChi = ?, Password = ? WHERE MaSinhVien = ?";
+    $updateQuery = "UPDATE SinhVien SET  MaLop = ?, MaDay = ?, HoTen = ?, NgaySinh = ?, ChucVu = ?, GioiTinh = ?, SDT = ?, Email = ?, DiaChi = ?, Password = ? WHERE MaSinhVien = ?";
     $stmt = $dbh->prepare($updateQuery);
-    $stmt->bindValue(1, $khoaHoc);
     $stmt->bindValue(2, $maLop);
     $stmt->bindValue(3, $maDay);
     $stmt->bindValue(4, $firstName);
@@ -80,24 +79,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         value="<?php echo htmlspecialchars($sinhVien['MaSinhVien'] ?? ''); ?>" <?php echo !empty($maSinhVien) ? 'readonly' : ''; ?> required>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="khoaHoc" class="form-label">Khoá</label>
-                                    <input type="text" class="form-control" id="khoaHoc" name="khoaHoc"
-                                        value="<?php echo htmlspecialchars($sinhVien['KhoaHoc'] ?? ''); ?>">
-                                </div>
-                                <div class="col-md-4">
                                     <label for="maLop" class="form-label">Mã Lớp</label>
                                     <input type="text" class="form-control" id="maLop" name="maLop"
                                         value="<?php echo htmlspecialchars($sinhVien['MaLop'] ?? ''); ?>" required>
                                 </div>
                             </div>
-                            <div class="row row-add mb-3">
 
-                                <div class="col-md-4">
-                                    <label for="maDay" class="form-label">Mã Dãy</label>
-                                    <input type="text" class="form-control" id="maDay" name="maDay"
-                                        value="<?php echo htmlspecialchars($sinhVien['MaDay'] ?? ''); ?>" required>
-                                </div>
-                            </div>
 
                             <div class="row row-add mb-3">
                                 <div class="col-md-4">
@@ -106,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         value="<?php echo htmlspecialchars($sinhVien['HoTen'] ?? ''); ?>" required>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="ngaySinh" class="form-label">Ngày sinh</label>
+                                    <label for="ngaySinh" class="form-label">Ngày sinh (yy/mm/dd)</label>
                                     <input type="text" class="form-control" id="ngaySinh" name="ngaySinh"
                                         value="<?php echo htmlspecialchars($sinhVien['NgaySinh'] ?? ''); ?>" required>
                                 </div>
@@ -152,17 +139,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </div>
                             </div>
 
-                            <div class="col-md-12">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="text" class="form-control" id="password" name="password"
-                                    value="<?php echo htmlspecialchars($sinhVien['Password'] ?? ''); ?>" required>
+                            <div class="row row-add mb-3">
+
+                                <div class="col-md-4">
+                                    <label for="maDay" class="form-label">Mã Phòng</label>
+                                    <input type="text" class="form-control" id="maPhong" name="maPhong"
+                                        value="<?php echo htmlspecialchars($sinhVien['MaPhong'] ?? ''); ?>" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="maDay" class="form-label">Giá Thuê</label>
+                                    <input type="text" class="form-control" id="GiaThueThucTe" name="GiaThueThucTe"
+                                        value="<?php echo htmlspecialchars($sinhVien['GiaThueThucTe'] ?? ''); ?>" required>
+                                </div>
+
+                            </div>
+                            <div class="row row-add mb-3">
+
+                                <div class="col-md-4">
+                                    <label for="maDay" class="form-label">Ngày Bắt Đầu</label>
+                                    <input type="text" class="form-control" id="BatDau" name="BatDau"
+                                        value="<?php echo htmlspecialchars($sinhVien['BatDau'] ?? ''); ?>" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="maDay" class="form-label">Ngày Kết Thúc</label>
+                                    <input type="text" class="form-control" id="KetThuc" name="KetThuc"
+                                        value="<?php echo htmlspecialchars($sinhVien['KetThuc'] ?? ''); ?>" required>
+                                </div>
 
                             </div>
 
-                            <div class="text-end mt-3">
-                                <button type="submit" class="btn btn-primary" style="background-color: #db3077;">Cập
-                                    nhật</button>
-                            </div>
+
                         </form>
                     </div>
                 </div>
@@ -199,7 +205,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Đóng tất cả các dropdown nếu click bên ngoài
-    window.onclick = function (event) {
+    window.onclick = function(event) {
         var dropdownMenu = document.getElementById("dropdownMenu");
 
         // Đóng dropdown của tên admin nếu click bên ngoài
