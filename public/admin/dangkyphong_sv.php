@@ -2,7 +2,10 @@
 include_once __DIR__ . '/../../config/dbadmin.php';
 include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if (
+    $_SERVER['REQUEST_METHOD'] === 'POST'
+    && ($_POST['MSSV'] !== '0' || $_POST['maPhong'] !== '0')
+) {
     $MSSV = $_POST['MSSV'] ?? '0';
 
     $maPhong = $_POST['maPhong'] ?? '0';
