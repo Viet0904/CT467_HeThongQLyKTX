@@ -82,7 +82,12 @@ include_once __DIR__ . '/../../partials/heading.php';
                                     echo '<td>' . htmlspecialchars($row["MaNhanVien"]) . '</td>';
                                     echo '<td>' . htmlspecialchars($row["GioiTinh"]) . '</td>';
                                     echo '<td>' . htmlspecialchars($row["SDT"]) . '</td>';
-                                    echo '<td>' . htmlspecialchars($row["Role"]) . '</td>';
+                                    if ($row["Role"] === "Admin") {
+                                        echo '<td>Quản trị viên</td>';
+                                    } else {
+                                        echo '<td>Nhân viên văn phòng</td>';
+                                    }
+                                    
                                     echo '<td>
                                     <div class="dropdown position-relative">
                                         <button class="btn btn-outline-secondary dropdown-toggle" type="button" onclick="toggleActionDropdown(\'actionDropdownMenu' . htmlspecialchars($stt) . '\')">
