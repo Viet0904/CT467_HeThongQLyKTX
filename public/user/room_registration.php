@@ -14,6 +14,14 @@ $stmt->bindValue(1, $maSinhVien);
 $stmt->execute();
 $sinhVien = $stmt->fetch(PDO::FETCH_ASSOC);
 $maPhong = $sinhVien['MaPhong'];
+$query = "SELECT COUNT(*) as TongsoSV FROM ThuePhong WHERE MaPhong = ?";
+$stmt = $dbh->prepare($query);
+$stmt->bindValue(1, $maPhong);
+$stmt->execute();
+$tongSoSV = $stmt->fetch(PDO::FETCH_ASSOC)['TongsoSV'];
+if ($tongSoSV < 0) {
+    $tongSoSV = 1;
+}
 
 $query = "SELECT 
             dn.*
@@ -117,14 +125,18 @@ if (isset($_POST['payButtonClicked']) && $_POST['payButtonClicked'] == 'true') {
 
                             // In dữ liệu
                             foreach ($diennuoc as $row) {
+                                $phiDienTungSV = $row['PhiDien'] / $tongSoSV;
+                                $phiNuocTungSV = $row['PhiNuoc'] / $tongSoSV;
+                                $tongPhiSV = $phiDienTungSV + $phiNuocTungSV;
                                 echo '<tr>';
                                 echo '<td class="text-center fw-bold" rowspan="2">' . $stt . '</td>';
                                 echo '<td class="text-center" rowspan="2">' . htmlspecialchars($row['Thang']) . '</td>';
                                 echo '<td class="text-center" rowspan="2">' . htmlspecialchars($row['MaPhong']) . '</td>';
                                 echo '<td>Đơn giá điện</td>';
                                 echo '<td class="text-end">' . number_format($row['PhiDien'], 0, ',', '.') . '</td>';
-                                echo '<td class="text-end">' . number_format($row['PhiDien'], 0, ',', '.') . '</td>';
-                                echo '<td class="text-end" rowspan="2">' . number_format($row['TongTien'], 0, ',', '.') . '</td>';
+
+                                echo '<td class="text-end"">' . number_format($phiDienTungSV, 0, ',', '.') . '</td>';
+                                echo '<td class="text-end" rowspan="2">' . number_format($tongPhiSV, 0, ',', '.') . '</td>';
                                 echo '<td class="text-end" rowspan="2">' . number_format($row['TongTien'], 0, ',', '.') . '</td>';
                                 echo '<td rowspan="2">' . htmlspecialchars($row['NgayThanhToan']) . '</td>';
                                 echo '<td rowspan="2">' .
@@ -155,7 +167,7 @@ if (isset($_POST['payButtonClicked']) && $_POST['payButtonClicked'] == 'true') {
                                 echo '<tr>';
                                 echo '<td>Đơn giá nước</td>';
                                 echo '<td class="text-end">' . number_format($row['PhiNuoc'], 0, ',', '.') . '</td>';
-                                echo '<td class="text-end">' . number_format($row['PhiNuoc'], 0, ',', '.') . '</td>';
+                                echo '<td class="text-end">' . number_format($phiNuocTungSV, 0, ',', '.') . '</td>';
                                 echo '</tr>';
 
                                 $stt++;
