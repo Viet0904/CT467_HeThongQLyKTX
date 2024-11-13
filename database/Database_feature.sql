@@ -397,3 +397,217 @@ BEGIN
     -- Thông báo xoá thành công
     SET p_Message = 'Xoá sinh viên khỏi phòng và hệ thống thành công';
 END //
+
+-- Hàm Thêm Khu KTX
+DELIMITER //
+CREATE PROCEDURE ThemKhuKTX(
+    IN p_MaKhu VARCHAR(10),
+    IN p_TenKhu VARCHAR(50),
+    OUT p_Message VARCHAR(255),
+    OUT p_ErrorCode INT
+)
+BEGIN
+    DECLARE v_Count INT;
+    -- Kiểm tra mã khu đã tồn tại chưa
+    SELECT COUNT(*) INTO v_Count
+    FROM KhuKTX
+    WHERE MaKhuKTX = p_MaKhu;
+    IF v_Count > 0 THEN
+        SET p_Message = 'Mã khu đã tồn tại';
+        SET p_ErrorCode = 1;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = p_Message;
+    END IF;
+    -- Bắt đầu transaction
+    START TRANSACTION;
+    -- Thêm khu vào bảng KhuKTX
+    INSERT INTO KhuKTX (MaKhuKTX, TenKhuKTX)
+    VALUES (p_MaKhu, p_TenKhu);
+    COMMIT;
+    SET p_Message = 'Thêm khu KTX thành công';
+    SET p_ErrorCode = 0;
+END //
+DELIMITER ;
+-- Hàm Sửa Khu KTX
+DELIMITER //
+CREATE PROCEDURE SuaKhuKTX(
+    IN p_MaKhu VARCHAR(10),
+    IN p_TenKhu VARCHAR(50),
+    OUT p_Message VARCHAR(255),
+    OUT p_ErrorCode INT
+)
+BEGIN
+    DECLARE v_Count INT;
+    -- Kiểm tra mã khu có tồn tại không
+    SELECT COUNT(*) INTO v_Count
+    FROM KhuKTX
+    WHERE MaKhuKTX = p_MaKhu;
+
+    IF v_Count > 0 THEN
+        -- Nếu MaKhuKTX đã tồn tại, thực hiện cập nhật TenKhuKTX
+        START TRANSACTION;
+        UPDATE KhuKTX
+        SET TenKhuKTX = p_TenKhu
+        WHERE MaKhuKTX = p_MaKhu;
+        COMMIT;
+
+        SET p_Message = 'Cập nhật tên khu KTX thành công';
+        SET p_ErrorCode = 0;
+    ELSE
+        -- Nếu MaKhuKTX không tồn tại
+        SET p_Message = 'Mã Khu KTX không tồn tại';
+        SET p_ErrorCode = 1;
+    END IF;
+END //
+DELIMITER ;
+
+
+
+-- Hàm xoá KTX với kiểm tra khóa ngoại
+DELIMITER //
+CREATE PROCEDURE XoaKhuKTX(
+    IN p_MaKhu VARCHAR(10),
+    OUT p_Message VARCHAR(255),
+    OUT p_ErrorCode INT
+)
+BEGIN
+    DECLARE v_Count INT;
+    DECLARE v_DayCount INT;
+    -- Kiểm tra mã khu có tồn tại không
+    SELECT COUNT(*) INTO v_Count
+    FROM KhuKTX
+    WHERE MaKhuKTX = p_MaKhu;
+    IF v_Count = 0 THEN
+        SET p_Message = 'Mã khu không tồn tại';
+        SET p_ErrorCode = 1;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = p_Message;
+    END IF;
+    -- Kiểm tra xem có dãy nào đang là khóa ngoại của KTX không
+    SELECT COUNT(*) INTO v_DayCount
+    FROM Day
+    WHERE MaKhuKTX = p_MaKhu;
+    IF v_DayCount > 0 THEN
+        SET p_Message = 'Không thể xóa khu vì có dãy đang là khóa ngoại của KTX';
+        SET p_ErrorCode = 2;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = p_Message;
+    END IF;
+    -- Bắt đầu transaction
+    START TRANSACTION;
+    -- Xoá khu trong bảng KhuKTX
+    DELETE FROM KhuKTX WHERE MaKhuKTX = p_MaKhu;
+    COMMIT;
+    SET p_Message = 'Xoá khu KTX thành công';
+    SET p_ErrorCode = 0;
+END //
+DELIMITER ;
+
+
+
+
+-- Thêm Dãy
+DELIMITER //
+CREATE PROCEDURE ThemDay(
+    IN p_MaDay VARCHAR(10),
+    IN p_TenDay VARCHAR(50),
+    IN p_MaKhuKTX VARCHAR(10),
+    OUT p_Message VARCHAR(255),
+    OUT p_ErrorCode INT
+)
+BEGIN
+    DECLARE v_Count INT;
+    -- Kiểm tra mã dãy đã tồn tại chưa
+    SELECT COUNT(*) INTO v_Count
+    FROM Day
+    WHERE MaDay = p_MaDay;
+    IF v_Count > 0 THEN
+        SET p_Message = 'Mã dãy đã tồn tại';
+        SET p_ErrorCode = 1;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = p_Message;
+    ELSE
+        -- Bắt đầu transaction
+        START TRANSACTION;
+        -- Thêm dãy vào bảng Day
+        INSERT INTO Day (MaDay, TenDay, MaKhuKTX)
+        VALUES (p_MaDay, p_TenDay, p_MaKhuKTX);
+        COMMIT;
+        SET p_Message = 'Thêm dãy thành công';
+        SET p_ErrorCode = 0;
+    END IF;
+END //
+DELIMITER ;
+-- Sửa Dãy
+
+DELIMITER //
+CREATE PROCEDURE SuaDay(
+    IN p_MaDay VARCHAR(10),
+    IN p_TenDay VARCHAR(50),
+    IN p_MaKhuKTX VARCHAR(10),
+    OUT p_Message VARCHAR(255),
+    OUT p_ErrorCode INT
+)
+BEGIN
+    DECLARE v_Count INT;
+    -- Kiểm tra mã dãy có tồn tại không
+    SELECT COUNT(*) INTO v_Count
+    FROM Day
+    WHERE MaDay = p_MaDay;
+
+    IF v_Count > 0 THEN
+        -- Nếu MaDay đã tồn tại, thực hiện cập nhật TenDay và MaKhuKTX
+        START TRANSACTION;
+        UPDATE Day
+        SET TenDay = p_TenDay,
+            MaKhuKTX = p_MaKhuKTX
+        WHERE MaDay = p_MaDay;
+        COMMIT;
+        SET p_Message = 'Cập nhật dãy thành công';
+        SET p_ErrorCode = 0;
+    ELSE
+        -- Nếu MaDay không tồn tại
+        SET p_Message = 'Mã Dãy không tồn tại';
+        SET p_ErrorCode = 1;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = p_Message;
+    END IF;
+END //
+DELIMITER ;
+
+
+-- Xoá Dãy
+DELIMITER //
+CREATE PROCEDURE XoaDay(
+    IN p_MaDay VARCHAR(10),
+    OUT p_Message VARCHAR(255),
+    OUT p_ErrorCode INT
+)
+BEGIN
+    DECLARE v_Count INT;
+    DECLARE v_PhongCount INT;
+    -- Kiểm tra mã dãy có tồn tại không
+    SELECT COUNT(*) INTO v_Count
+    FROM Day
+    WHERE MaDay = p_MaDay;
+    IF v_Count = 0 THEN
+        SET p_Message = 'Mã dãy không tồn tại';
+        SET p_ErrorCode = 1;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = p_Message;
+    ELSE
+        -- Kiểm tra xem có phòng nào đang là khóa ngoại của dãy không
+        SELECT COUNT(*) INTO v_PhongCount
+        FROM Phong
+        WHERE MaDay = p_MaDay;
+        IF v_PhongCount > 0 THEN
+            SET p_Message = 'Không thể xóa dãy vì có phòng đang là khóa ngoại của dãy';
+            SET p_ErrorCode = 2;
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = p_Message;
+        ELSE
+            -- Bắt đầu transaction
+            START TRANSACTION;
+            -- Xóa dãy trong bảng Day
+            DELETE FROM Day WHERE MaDay = p_MaDay;
+            COMMIT;
+            SET p_Message = 'Xóa dãy thành công';
+            SET p_ErrorCode = 0;
+        END IF;
+    END IF;
+END //
+DELIMITER ;
+
