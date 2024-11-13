@@ -2,7 +2,7 @@
 include_once __DIR__ . '/../../config/dbadmin.php';
 include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
-session_start();
+
 $room_id = $_POST['room_id'] ?? '0';
 $month = $_POST['month'] ?? 0;
 
