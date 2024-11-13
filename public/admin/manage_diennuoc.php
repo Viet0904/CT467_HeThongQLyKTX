@@ -3,42 +3,43 @@ include_once __DIR__ . '/../../config/dbadmin.php';
 include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
 session_start();
-$room_id = $_POST['room_id'] ?? '';
+$room_id = $_POST['room_id'] ?? '0';
 $month = $_POST['month'] ?? 0;
 
-$query = "SELECT 
+$query = "SELECT SQL_CALC_FOUND_ROWS 
             dn.*
           FROM DienNuoc dn
-          JOIN Phong p ON dn.MaPhong = p.MaPhong";
+          JOIN Phong p ON dn.MaPhong = p.MaPhong
+          WHERE 1=1 ";
 
 $params = [];
-if ($room_id !== '') {
-    $query .= " WHERE dn.MaPhong = :room_id";
+if ($room_id !== '0') {
+    $query .= " AND dn.MaPhong = :room_id";
     $params[':room_id'] = $room_id;
 }
 
 if ($month != 0) {
-    $query .= $room_id !== '' ? " AND" : " WHERE";
-    $query .= " dn.Thang = :month";
+    $query .= " AND dn.Thang = :month";
     $params[':month'] = $month;
 }
 
-$stmt = $dbh->prepare($query);
-$stmt->execute($params);
-$diennuoc = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
-$totalRows = count($diennuoc);
 $currentPage = $_GET['page'] ?? 1;
 $perPage = 10;
-$totalPages = ceil($totalRows / $perPage);
 $offset = ($currentPage - 1) * $perPage;
 
-$query .= " LIMIT $offset, $perPage";
+$query .= " LIMIT :offset, :perPage";
 
 $stmt = $dbh->prepare($query);
-$stmt->execute($params);
-$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+foreach ($params as $key => &$val) {
+    $stmt->bindParam($key, $val);
+}
+$stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+$stmt->bindParam(':perPage', $perPage, PDO::PARAM_INT);
+$stmt->execute();
+$diennuoc = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$totalRows = $dbh->query("SELECT FOUND_ROWS()")->fetchColumn();
+$totalPages = ceil($totalRows / $perPage);
 
 ?>
 
@@ -65,6 +66,7 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <div class="col-md-6 col-lg-3">
                                     <label for="room_id" class="form-label">Mã Phòng</label>
                                     <select class="form-select" id="availability" name="room_id" aria-label="Select availability">
+                                        <option value="0">Tất cả</option>
                                         <?php
                                         $phongQuery = "SELECT MaPhong FROM Phong";
                                         $phongStmt = $dbh->prepare($phongQuery);
@@ -114,36 +116,52 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <div class="col-auto py-3">
                             <!-- Hiển thị table  -->
                             <?php
-                            echo '<table class="table table-bordered table-striped">';
-                            echo '<thead class="table-primary">';
-                            echo '<tr>';
-                            echo '<th class="text-center" width="3%">STT</th>';
-                            echo '<th class="text-center" width="7%">Tháng</th>';
-                            echo '<th class="text-center" width="7%">Mã phòng</th>';
-                            echo '<th class="text-center" width="10%">Loại</th>';
-                            echo '<th class="text-center" width="10%">Phí sử dụng của phòng (VNĐ)</th>';
-                            echo '<th class="text-center" width="10%">Số tiền phải đóng của sinh viên (VNĐ)</th>';
-                            echo '<th class="text-center" width="14%">Tổng số tiền phải đóng của sinh viên (VNĐ)</th>';
-                            echo '<th class="text-center" width="14%">Tổng số tiền còn lại phải đóng của phòng (VNĐ)</th>';
-                            echo '<th class="text-center" width="12%">Ngày đóng</th>';
-                            echo '<th class="text-center" width="12%">Năm học, học kỳ</th>';
-                            echo '<th class="text-center" width="8%">Hoạt Động</th>';
-                            echo '</tr>';
-                            echo '</thead>';
-                            echo '<tbody>';
+                            if ($totalRows === 0) {
+                                echo '<div class="alert alert-warning" role="alert">Không tìm thấy dữ liệu</div>';
+                            } else {
 
-                            $stt = 1;
+                                echo '<table class="table table-bordered table-striped">';
+                                echo '<thead class="table-primary">';
+                                echo '<tr>';
+                                echo '<th class="text-center" width="3%">STT</th>';
+                                echo '<th class="text-center" width="7%">Tháng</th>';
+                                echo '<th class="text-center" width="7%">Mã phòng</th>';
+                                echo '<th class="text-center" width="10%">Loại</th>';
+                                echo '<th class="text-center" width="10%">Phí sử dụng của phòng (VNĐ)</th>';
+                                echo '<th class="text-center" width="10%">Số tiền phải đóng của sinh viên (VNĐ)</th>';
+                                echo '<th class="text-center" width="14%">Tổng số tiền phải đóng của sinh viên (VNĐ)</th>';
+                                echo '<th class="text-center" width="14%">Tổng số tiền còn lại phải đóng của phòng (VNĐ)</th>';
+                                echo '<th class="text-center" width="12%">Ngày đóng</th>';
+                                echo '<th class="text-center" width="12%">Năm học, học kỳ</th>';
+                                echo '<th class="text-center" width="8%">Hoạt Động</th>';
+                                echo '</tr>';
+                                echo '</thead>';
+                                echo '<tbody>';
+                            }
+                            $stt = ($currentPage - 1) * $perPage + 1;
 
                             // In dữ liệu
                             foreach ($diennuoc as $row) {
+                                $maPhong = $row['MaPhong'];
+                                $query = "SELECT COUNT(*) as TongsoSV FROM ThuePhong WHERE MaPhong = ?";
+                                $stmt = $dbh->prepare($query);
+                                $stmt->bindValue(1, $maPhong);
+                                $stmt->execute();
+                                $tongSoSV = $stmt->fetch(PDO::FETCH_ASSOC)['TongsoSV'];
+                                if ($tongSoSV <= 0) {
+                                    $tongSoSV = 1;
+                                }
+                                $phiDienTungSV = $row['PhiDien'] / $tongSoSV;
+                                $phiNuocTungSV = $row['PhiNuoc'] / $tongSoSV;
+                                $tongPhiSV = $phiDienTungSV + $phiNuocTungSV;
                                 echo '<tr>';
                                 echo '<td class="text-center fw-bold" rowspan="2">' . $stt . '</td>';
                                 echo '<td class="text-center" rowspan="2">' . htmlspecialchars($row['Thang']) . '</td>';
                                 echo '<td class="text-center" rowspan="2">' . htmlspecialchars($row['MaPhong']) . '</td>';
                                 echo '<td>Đơn giá điện</td>';
                                 echo '<td class="text-end">' . number_format($row['PhiDien'], 0, ',', '.') . '</td>';
-                                echo '<td class="text-end">' . number_format($row['PhiDien'], 0, ',', '.') . '</td>';
-                                echo '<td class="text-end" rowspan="2">' . number_format($row['TongTien'], 0, ',', '.') . '</td>';
+                                echo '<td class="text-end">' . number_format($phiDienTungSV, 0, ',', '.') . '</td>';
+                                echo '<td class="text-end" rowspan="2">' . number_format($tongPhiSV, 0, ',', '.') . '</td>';
                                 echo '<td class="text-end" rowspan="2">' . number_format($row['TongTien'], 0, ',', '.') . '</td>';
                                 echo '<td rowspan="2">' . htmlspecialchars($row['NgayThanhToan']) . '</td>';
                                 echo '<td rowspan="2">' .
@@ -168,7 +186,7 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 echo '<tr>';
                                 echo '<td>Đơn giá nước</td>';
                                 echo '<td class="text-end">' . number_format($row['PhiNuoc'], 0, ',', '.') . '</td>';
-                                echo '<td class="text-end">' . number_format($row['PhiNuoc'], 0, ',', '.') . '</td>';
+                                echo '<td class="text-end">' . number_format($phiNuocTungSV, 0, ',', '.') . '</td>';
                                 echo '</tr>';
 
                                 $stt++;
