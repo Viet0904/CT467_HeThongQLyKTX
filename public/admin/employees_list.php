@@ -33,7 +33,7 @@ include_once __DIR__ . '/../../partials/heading.php';
                             // Số dòng trên mỗi trang
                             $rowsPerPage = 10;
                             // Tính tổng số dòng
-                            $totalRowsQuery = "SELECT COUNT(*) FROM SinhVien";
+                            $totalRowsQuery = "SELECT COUNT(*) FROM NhanVien";
                             $totalRowsResult = $dbh->query($totalRowsQuery);
                             $totalRows = $totalRowsResult->fetchColumn();
 
@@ -56,7 +56,7 @@ include_once __DIR__ . '/../../partials/heading.php';
                             FROM NhanVien
                             LIMIT $rowsPerPage OFFSET $offset";
 
-                            $result = $dbh->query($sinhvien);
+                            $result = $dbh->query($nhanvien);
 
                             if ($result->rowCount() > 0) {
                                 echo '<table class="table table-bordered table-striped table-hover mt-3">';
@@ -89,9 +89,9 @@ include_once __DIR__ . '/../../partials/heading.php';
                                             Hoạt động
                                         </button>
                                         <div id="actionDropdownMenu' . htmlspecialchars($stt) . '" class="dropdown-menu position-absolute p-0" style="display: none; min-width: 100px;">
-                                            <a class="dropdown-item py-2" href="view_student.php?msv=' . htmlspecialchars($row['MaSinhVien']) . '">Xem</a>
-                                            <a class="dropdown-item py-2" href="manage_student.php?msv=' . htmlspecialchars($row['MaSinhVien']) . '">Sửa</a>
-                                            <a class="dropdown-item py-2" href="delete_student.php?msv=' . htmlspecialchars($row['MaSinhVien']) . '">Xoá</a>
+                                            <a class="dropdown-item py-2" href="view_employees.php?mnv=' . htmlspecialchars($row['MaNhanVien']) . '">Xem</a>
+                                            <a class="dropdown-item py-2" href="manage_employees.php?mnv=' . htmlspecialchars($row['MaNhanVien']) . '">Sửa</a>
+                                            <a class="dropdown-item py-2" href="delete_employees.php?mnv=' . htmlspecialchars($row['MaNhanVien']) . '">Xoá</a>
                                         </div>
                                     </div>
                                   </td>';
