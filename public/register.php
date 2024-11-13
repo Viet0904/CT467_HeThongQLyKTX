@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     <style>
         body {
-            background: url('./assets/images/cover.png') no-repeat center center fixed;
+            background: url('./assets/images/anhktx.jpg') no-repeat center center fixed;
             background-size: cover;
             height: 100vh;
         }
@@ -66,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body>
-    <h1 class="text-center text-white px-4 py-5" id="page-title">Hệ thống quản lí ký túc xá<b></b></h1>
+    <h1 class="text-center text-white px-4 py-5" id="page-title">Hệ thống quản lí Ký túc xá<b></b></h1>
     <div class="container w-50 py-2">
         <div class="modal-dialog rounded shadow-lg p-2 m-4 bg-body rounded ">
             <div class="modal-content p-2">

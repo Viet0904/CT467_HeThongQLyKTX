@@ -1,11 +1,22 @@
 <?php
 session_start();
-$maNhanVien = $_SESSION['MaNhanVien'];
-if (isset($_GET['id'])) {
-    $contractId = $_GET['id'];
+include_once __DIR__ . '/../../config/dbadmin.php';
+
+// Lấy thông tin nhân viên từ session
+$maNhanVien = $_SESSION['MaNhanVien'] ?? null;
+
+// Kiểm tra nếu không có thông tin nhân viên, yêu cầu đăng nhập lại
+if (!$maNhanVien) {
+    header("Location: login.php");
+    exit;
+}
+
+if (isset($_GET['MaHopDong'])) {
+    $contractId = $_GET['MaHopDong'];
     $currentDate = date('Y-m-d'); // Ngày hiện tại
     $currentEmployeeId = $maNhanVien;
 
+    // Cập nhật ngày thanh toán và nhân viên thanh toán
     $stmt = $dbh->prepare("UPDATE TT_ThuePhong SET NgayThanhToan = :ngayThanhToan, MaNhanVien = :maNhanVien WHERE MaHopDong = :maHopDong");
     $stmt->execute([
         ':ngayThanhToan' => $currentDate,
@@ -13,7 +24,15 @@ if (isset($_GET['id'])) {
         ':maHopDong' => $contractId
     ]);
 
-    header("Location: room_list.php?success=1");
+    echo "<script>
+        alert('Thanh toán hợp đồng thành công!');
+        window.location.href = 'hopdong_detail.php?MaHopDong=" . $contractId . "';
+        </script>";
+    exit();
+
+} else {
+    // Nếu không có id hợp đồng, chuyển hướng về trang quản lý hợp đồng
+    header("Location: view_qlthuephong.php");
     exit;
 }
 ?>
