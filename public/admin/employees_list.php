@@ -20,7 +20,7 @@ include_once __DIR__ . '/../../partials/heading.php';
                         <!-- Phần header của List of Rooms -->
                         <div class="d-flex justify-content-between align-items-center">
                             <h5>Danh sách nhân viên</h5>
-                            <a href="./manage_student.php" class="btn text-white"
+                            <a href="./manage_employees.php" class="btn text-white"
                                 style="background-color: rgb(219, 48, 119);">
                                 <i class="fas fa-plus me-1"></i>Thêm nhân viên
                             </a>

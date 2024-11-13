@@ -23,7 +23,7 @@ session_start();
         <li class="p-0 ms-1"><a href="./ql_thuephong.php" class="py-2 ps-3"><i class="fas fa-bed"></i> Quản lý thuê phòng</a></li>
         <!-- Additional Options for Admin -->
         <?php if ($_SESSION['Role'] === 'admin'): ?>
-            <li class="p-0 ms-1"><a href="./manage_employees.php" class="py-2 ps-3"><i class="fas fa-user-shield"></i> Quản lý nhân viên</a></li>
+            <li class="p-0 ms-1"><a href="./employees_list.php" class="py-2 ps-3"><i class="fas fa-user-shield"></i> Quản lý nhân viên</a></li>
             <li class="p-0 ms-1"><a href="./manage_khu.php" class="py-2 ps-3"><i class="fas fa-map-marker-alt"></i> Quản lý khu</a></li>
             <li class="p-0 ms-1"><a href="./manage_day.php" class="py-2 ps-3"><i class="fas fa-columns"></i> Quản lý dãy</a></li>
             <li class="p-0 ms-1"><a href="./manage_class.php" class="py-2 ps-3"><i class="fas fa-graduation-cap"></i> Quản lý lớp</a></li>
