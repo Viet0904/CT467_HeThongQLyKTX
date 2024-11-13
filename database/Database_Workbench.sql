@@ -11,14 +11,6 @@ CREATE TABLE KhuKTX (
     MaKhuKTX VARCHAR(10) PRIMARY KEY,
     TenKhuKTX VARCHAR(50)
 );
-
-
-INSERT INTO KhuKTX (MaKhuKTX, TenKhuKTX)
-VALUES
-('A', 'Khu Ký Túc Xá A'),
-('B', 'Khu Ký Túc Xá B'),
-('C', 'Khu Ký Túc Xá C');
-
 -- Tạo bảng Day
 CREATE TABLE Day (
     MaDay VARCHAR(10) PRIMARY KEY,
@@ -26,6 +18,110 @@ CREATE TABLE Day (
     MaKhuKTX VARCHAR(10),
     FOREIGN KEY (MaKhuKTX) REFERENCES KhuKTX(MaKhuKTX)
 );
+-- Tạo bảng Lop
+CREATE TABLE Lop (
+    MaLop VARCHAR(10) PRIMARY KEY,
+    TenLop VARCHAR(50)
+);
+
+-- Tạo bảng Phong
+CREATE TABLE Phong (
+    MaPhong VARCHAR(10) PRIMARY KEY,
+    TenPhong VARCHAR(50),
+    DienTich INT,
+    GiaThue DECIMAL(10, 2),
+    MaDay VARCHAR(10),
+    TrangThaiSuDung VARCHAR(20),
+    SucChua INT,
+    SoChoThucTe INT,
+    DaO INT DEFAULT 0,
+    GhiChu TEXT DEFAULT NULL,
+    LoaiPhong ENUM('Nam', 'Nữ') NOT NULL,
+    FOREIGN KEY (MaDay) REFERENCES Day(MaDay)
+);
+
+-- Tạo bảng SinhVien
+CREATE TABLE SinhVien (
+    MaSinhVien VARCHAR(8) PRIMARY KEY,
+    HoTen VARCHAR(50),
+    SDT VARCHAR(10),
+    Email VARCHAR(50),
+    DiaChi VARCHAR(100),
+    GioiTinh VARCHAR(10),
+    NgaySinh DATE,
+    ChucVu VARCHAR(50) DEFAULT NULL,
+    MaLop VARCHAR(10),
+    Password VARCHAR(255),
+    FOREIGN KEY (MaLop) REFERENCES Lop(MaLop)
+);
+-- Tạo bảng NhanVien
+CREATE TABLE NhanVien (
+    MaNhanVien VARCHAR(8) PRIMARY KEY,
+    HoTen VARCHAR(50),
+    SDT VARCHAR(10),
+    GhiChu TEXT,
+    GioiTinh VARCHAR(10),
+    NgaySinh DATE,
+    Password VARCHAR(255),
+    Role ENUM('Admin', 'NhanVien') NOT NULL
+
+);
+-- Tạo bảng HocKi
+CREATE TABLE HocKi (
+    HocKi ENUM('1', '2', '3'),
+    NamHoc VARCHAR(50),
+    BatDau DATE,
+    KetThuc DATE,
+    PRIMARY KEY (HocKi, NamHoc)
+);
+-- Tạo bảng ThuePhong
+CREATE TABLE ThuePhong (
+    MaHopDong INT PRIMARY KEY AUTO_INCREMENT,
+    MaSinhVien VARCHAR(10),
+    MaPhong VARCHAR(10),
+    HocKi ENUM('1', '2', '3'),
+    NamHoc VARCHAR(50),
+    GiaThueThucTe DECIMAL(10, 2),
+    FOREIGN KEY (MaSinhVien) REFERENCES SinhVien(MaSinhVien),
+    FOREIGN KEY (MaPhong) REFERENCES Phong(MaPhong),
+    FOREIGN KEY (HocKi, NamHoc) REFERENCES HocKi(HocKi, NamHoc)
+
+);
+
+-- Tạo bảng TT_ThuePhong
+CREATE TABLE TT_ThuePhong (
+    MaHopDong INT,
+    ThangNam DATE,
+    SoTien DECIMAL(10, 2),
+    NgayThanhToan DATE,
+    MaNhanVien VARCHAR(10),
+    PRIMARY KEY (MaHopDong, ThangNam),
+    FOREIGN KEY (MaHopDong) REFERENCES ThuePhong(MaHopDong),
+    FOREIGN KEY (MaNhanVien) REFERENCES NhanVien(MaNhanVien)
+);
+
+
+-- Tạo bảng DienNuoc
+CREATE TABLE DienNuoc (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    Thang INT,
+    NamHoc VARCHAR(50),
+    PhiDien DECIMAL(10, 2),
+    PhiNuoc DECIMAL(10, 2),
+    TongTien DECIMAL(10, 2) DEFAULT (PhiDien + PhiNuoc),
+    HocKi ENUM('1', '2', '3'),
+    NgayThanhToan DATE,
+    MaPhong VARCHAR(10),
+    FOREIGN KEY (MaPhong) REFERENCES Phong(MaPhong),
+    FOREIGN KEY (HocKi, NamHoc) REFERENCES HocKi(HocKi, NamHoc)
+);
+
+INSERT INTO KhuKTX (MaKhuKTX, TenKhuKTX)
+VALUES
+('A', 'Khu Ký Túc Xá A'),
+('B', 'Khu Ký Túc Xá B'),
+('C', 'Khu Ký Túc Xá C');
+
 INSERT INTO Day (MaDay, TenDay, MaKhuKTX) VALUES 
 ('AA01', 'AA01', 'A'),
 ('AA02', 'AA02', 'A'),
@@ -74,13 +170,6 @@ INSERT INTO Day (MaDay, TenDay, MaKhuKTX) VALUES
 ('CA09', 'CA09', 'C'),
 ('CC01', 'CC01', 'C');
 
-
-
--- Tạo bảng Lop
-CREATE TABLE Lop (
-    MaLop VARCHAR(10) PRIMARY KEY,
-    TenLop VARCHAR(50)
-);
 INSERT INTO Lop (MaLop, TenLop)
 VALUES
 ('01', 'Sư phạm Toán học'),
@@ -178,28 +267,6 @@ VALUES
 ('Z6', 'Khoa học máy tính'),
 ('Z9', 'Ngôn ngữ Pháp');
 
-
-
-
--- Tạo bảng Phong
-CREATE TABLE Phong (
-    MaPhong VARCHAR(10) PRIMARY KEY,
-    TenPhong VARCHAR(50),
-    DienTich INT,
-    GiaThue DECIMAL(10, 2),
-    MaDay VARCHAR(10),
-    TrangThaiSuDung VARCHAR(20),
-    SucChua INT,
-    SoChoThucTe INT,
-    DaO INT DEFAULT 0,
-    GhiChu TEXT DEFAULT NULL,
-    LoaiPhong ENUM('Nam', 'Nữ') NOT NULL,
-    FOREIGN KEY (MaDay) REFERENCES Day(MaDay)
-);
-
-
-
-
 INSERT INTO Phong (MaPhong, TenPhong, DienTich,GiaThue, MaDay, TrangThaiSuDung, SucChua, SoChoThucTe, LoaiPhong)
 VALUES
 ('A01100', 'AA01100', 30.0, 190000.00*5, 'AA01', 'Đang sử dụng', 5, 5, 'Nam'),
@@ -225,23 +292,6 @@ VALUES
 ('A01211', 'AA01211', 30.0, 190000.00*5, 'AA01', 'Đang sử dụng', 3, 3, 'Nữ'),
 ('A01212', 'AA01212', 30.0, 190000.00*5, 'AA01', 'Đang sử dụng', 8, 8, 'Nữ'),
 ('A01213', 'AA01213', 30.0, 190000.00*5, 'AA01', 'Đang sử dụng', 8, 8, 'Nữ');
-
-
-
--- Tạo bảng SinhVien
-CREATE TABLE SinhVien (
-    MaSinhVien VARCHAR(8) PRIMARY KEY,
-    HoTen VARCHAR(50),
-    SDT VARCHAR(10),
-    Email VARCHAR(50),
-    DiaChi VARCHAR(100),
-    GioiTinh VARCHAR(10),
-    NgaySinh DATE,
-    ChucVu VARCHAR(50) DEFAULT NULL,
-    MaLop VARCHAR(10),
-    Password VARCHAR(255),
-    FOREIGN KEY (MaLop) REFERENCES Lop(MaLop)
-);
 
 -- Chèn dữ liệu mẫu vào bảng SinhVien
 INSERT INTO SinhVien (MaSinhVien, HoTen, SDT,Email, MaLop, DiaChi, GioiTinh,  NgaySinh,ChucVu, Password)
@@ -269,38 +319,10 @@ VALUES
 ('B2111927', 'Hoàng Văn S', '0123456798', 's.b2111927@student.ctu.edu.vn', 'V7', 'Kiên Giang', 'Nữ', '2003-11-28', 'Thành Viên ANXK', ''),
 ('B2111928', 'Đỗ Thị T', '0123456799', 't.b2111928@student.ctu.edu.vn', 'V7', 'Bến Tre', 'Nữ', '2003-12-29', 'Thành Viên ANXK', '');
 
-
-
--- Tạo bảng NhanVien
-CREATE TABLE NhanVien (
-    MaNhanVien VARCHAR(8) PRIMARY KEY,
-    HoTen VARCHAR(50),
-    SDT VARCHAR(10),
-    GhiChu TEXT,
-    GioiTinh VARCHAR(10),
-    NgaySinh DATE,
-    Password VARCHAR(255),
-    Role ENUM('Admin', 'NhanVien') NOT NULL
-
-);
-
-
 INSERT INTO NhanVien (MaNhanVien, HoTen, SDT, GioiTinh, NgaySinh,Role, Password)
 VALUES
 ('CB000001', 'Nguyễn Văn C', '0333555777',  'Nam', '1980-05-15', 'Admin','$2y$10$XaJgTLKSk2FwThXYAkTq9.HG5DUTxL.ixJdoHGxbzQPloBUbdIjbK'),
 ('CB000002', 'Lê Thị D', '0444666888',  'Nữ', '1985-06-20', 'NhanVien','$2y$10$XaJgTLKSk2FwThXYAkTq9.HG5DUTxL.ixJdoHGxbzQPloBUbdIjbK');
-
-
-
-
--- Tạo bảng HocKi
-CREATE TABLE HocKi (
-    HocKi ENUM('1', '2', '3'),
-    NamHoc VARCHAR(50),
-    BatDau DATE,
-    KetThuc DATE,
-    PRIMARY KEY (HocKi, NamHoc)
-);
 
 -- Chèn dữ liệu mẫu vào bảng HocKi
 INSERT INTO HocKi (HocKi, NamHoc, BatDau, KetThuc)
@@ -310,32 +332,6 @@ VALUES
 ('3', '2024', '2024-06-1', '2024-08-31'),
 ('1', '2023', '2023-09-1', '2023-12-30');
 
-
--- Tạo bảng ThuePhong
-CREATE TABLE ThuePhong (
-    MaHopDong INT PRIMARY KEY AUTO_INCREMENT,
-    MaSinhVien VARCHAR(10),
-    MaPhong VARCHAR(10),
-    HocKi ENUM('1', '2', '3'),
-    NamHoc VARCHAR(50),
-    GiaThueThucTe DECIMAL(10, 2),
-    FOREIGN KEY (MaSinhVien) REFERENCES SinhVien(MaSinhVien),
-    FOREIGN KEY (MaPhong) REFERENCES Phong(MaPhong),
-    FOREIGN KEY (HocKi, NamHoc) REFERENCES HocKi(HocKi, NamHoc)
-
-);
-
--- Tạo bảng TT_ThuePhong
-CREATE TABLE TT_ThuePhong (
-    MaHopDong INT,
-    ThangNam DATE,
-    SoTien DECIMAL(10, 2),
-    NgayThanhToan DATE,
-    MaNhanVien VARCHAR(10),
-    PRIMARY KEY (MaHopDong, ThangNam),
-    FOREIGN KEY (MaHopDong) REFERENCES ThuePhong(MaHopDong),
-    FOREIGN KEY (MaNhanVien) REFERENCES NhanVien(MaNhanVien)
-);
 -- Chèn dữ liệu mẫu vào bảng ThuePhong
 INSERT INTO ThuePhong (MaSinhVien, MaPhong,HocKi,NamHoc  , GiaThueThucTe)
 VALUES
@@ -383,24 +379,6 @@ VALUES
 (18, '2023-01-01', 950000.00, '2023-01-10', 'CB000001'),
 (19, '2023-01-01', 950000.00, '2023-01-10', 'CB000001'),
 (20, '2023-01-01', 950000.00, '2023-01-10', 'CB000001');
-
-
-
--- Tạo bảng DienNuoc
-CREATE TABLE DienNuoc (
-    ID INT PRIMARY KEY AUTO_INCREMENT,
-    Thang INT,
-    NamHoc VARCHAR(50),
-    PhiDien DECIMAL(10, 2),
-    PhiNuoc DECIMAL(10, 2),
-    TongTien DECIMAL(10, 2) DEFAULT (PhiDien + PhiNuoc),
-    HocKi ENUM('1', '2', '3'),
-    NgayThanhToan DATE,
-    MaPhong VARCHAR(10),
-    FOREIGN KEY (MaPhong) REFERENCES Phong(MaPhong),
-    FOREIGN KEY (HocKi, NamHoc) REFERENCES HocKi(HocKi, NamHoc)
-);
-
 
 -- Chèn dữ liệu mẫu vào bảng DienNuoc
 INSERT INTO DienNuoc (Thang, NamHoc, PhiDien, PhiNuoc, HocKi, MaPhong)
