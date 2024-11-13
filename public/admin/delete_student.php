@@ -17,7 +17,7 @@ if ($maSinhVien) {
 
     if ($room) {
         // Nếu sinh viên có phòng, gọi thủ tục Xóa sinh viên khỏi phòng
-        $sql = "CALL XoaSinhVienKhoiPhong(?, @p_Message); SELECT @p_Message AS message";
+        $sql = "CALL XoaSinhVienDangCoPhong(?, @p_Message); SELECT @p_Message AS message";
         if ($stmt = $dbh->prepare($sql)) {
             $stmt->bindParam(1, $maSinhVien, PDO::PARAM_STR);
             $stmt->execute();

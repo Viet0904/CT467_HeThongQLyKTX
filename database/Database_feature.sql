@@ -361,3 +361,39 @@ BEGIN
     END IF;
 END //
 DELIMITER ;
+
+-- Hàm Xoá Sinh Viên đang có phòng khỏi bảng SinhVien
+DELIMITER //
+CREATE PROCEDURE XoaSinhVienDangCoPhong(
+    IN p_MaSinhVien VARCHAR(10),
+    OUT p_Message VARCHAR(100)
+)
+
+BEGIN
+    DECLARE v_HopDongID INT;
+    DECLARE v_Count INT;
+    -- Kiểm tra sinh viên có tồn tại trong ThuePhong không
+    SELECT COUNT(*) INTO v_Count 
+    FROM ThuePhong 
+    WHERE MaSinhVien = p_MaSinhVien;
+    IF v_Count = 0 THEN
+        SET p_Message = 'Sinh viên không tồn tại trong ThuePhong';
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = p_Message;
+    END IF;
+    -- Lấy ID của hợp đồng thuê phòng
+    SELECT MaHopDong INTO v_HopDongID
+    FROM ThuePhong
+    WHERE MaSinhVien = p_MaSinhVien;
+    -- Bắt đầu transaction
+    START TRANSACTION;
+    -- Xoá các bản ghi trong TT_ThuePhong
+    DELETE FROM TT_ThuePhong WHERE MaHopDong = v_HopDongID;
+    -- Xoá bản ghi trong ThuePhong
+    DELETE FROM ThuePhong WHERE MaHopDong = v_HopDongID;
+    -- Xoá bản ghi trong SinhVien
+    DELETE FROM SinhVien WHERE MaSinhVien = p_MaSinhVien;
+    COMMIT;
+    -- Thông báo xoá thành công
+    SET p_Message = 'Xoá sinh viên khỏi phòng và hệ thống thành công';
+END //
