@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Check if username matches NhanVien pattern
     elseif (preg_match('/^CB\d{6}$/', $username)) {
         echo "<script>console.log('Vào được admin');</script>";
-        $query = "SELECT MaNhanVien, password, HoTen FROM NhanVien WHERE MaNhanVien = ?";
+        $query = "SELECT MaNhanVien, password, HoTen, Role FROM NhanVien WHERE MaNhanVien = ?";
         $stmt = $dbh->prepare($query);
         $stmt->bindValue(1, $username);
         $stmt->execute();
@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Lưu thông tin tài khoản vào session
             $_SESSION['MaNhanVien'] = $result['MaNhanVien'];
             $_SESSION['HoTen'] = $result['HoTen'];
-            $_SESSION['Role'] = 'admin';
+            $_SESSION['Role'] =  $result['Role'];
             echo "<script>alert('Đăng nhập thành công.')
                 window.location.href='./admin/dashboard.php';
                 </script>";
