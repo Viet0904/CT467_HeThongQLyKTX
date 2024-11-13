@@ -4,7 +4,7 @@ include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
 
 $message = '';
-$maSinhVien = $_GET['msv'] ?? ''; // Lấy mã sinh viên từ URL
+$maSinhVien = $_GET['msv'] ?? ''; // Lấy mã sinh viên từ URL nếu có
 
 // Lấy thông tin sinh viên nếu có mã sinh viên
 if ($maSinhVien) {
@@ -26,50 +26,49 @@ try {
     // Sau khi thêm hoặc cập nhật thông tin sinh viên
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $maSinhVien = $_POST['maSinhVien'] ?? $maSinhVien;
-    
-        // Kiểm tra mã sinh viên trùng lặp
+
+        // Lấy thông tin sinh viên từ CSDL
         $checkStmt = $dbh->prepare("SELECT * FROM SinhVien WHERE MaSinhVien = :maSinhVien");
         $checkStmt->execute([':maSinhVien' => $maSinhVien]);
         $sinhVien = $checkStmt->fetch(PDO::FETCH_ASSOC);
-    
-        // Nếu sinh viên tồn tại và yêu cầu là thêm mới, hiển thị thông báo lỗi
-        if ($sinhVien && empty($_GET['msv'])) {
-            $message = "Mã sinh viên đã tồn tại. Vui lòng sử dụng mã khác.";
+
+        // Dữ liệu cho sinh viên
+        $data = [
+            ':maSinhVien' => $maSinhVien,
+            ':ten' => $_POST['firstName'],
+            ':lienHe' => $_POST['contact'],
+            ':email' => $_POST['email'],
+            ':maLop' => $_POST['maLop'],
+            ':diaChi' => $_POST['address'],
+            ':gioiTinh' => $_POST['gioiTinh'],
+            ':ngaySinh' => $_POST['ngaySinh'],
+            ':chucVu' => $_POST['chucVu'],
+            ':password' => password_hash($_POST['password'], PASSWORD_BCRYPT),
+        ];
+
+        // Tạo câu truy vấn SQL thêm vào hoặc cập nhật sinh viên
+        if ($sinhVien) {
+            $sql = "UPDATE SinhVien SET HoTen = :ten, SDT = :lienHe, Email = :email, MaLop = :maLop, DiaChi = :diaChi, GioiTinh = :gioiTinh, NgaySinh = :ngaySinh, ChucVu = :chucVu, Password = :password WHERE MaSinhVien = :maSinhVien";
         } else {
-            // Dữ liệu cho sinh viên
-            $data = [
-                ':maSinhVien' => $maSinhVien,
-                ':ten' => $_POST['firstName'],
-                ':lienHe' => $_POST['contact'],
-                ':email' => $_POST['email'],
-                ':maLop' => $_POST['maLop'],
-                ':diaChi' => $_POST['address'],
-                ':gioiTinh' => $_POST['gioiTinh'],
-                ':ngaySinh' => $_POST['ngaySinh'],
-                ':chucVu' => $_POST['chucVu'],
-                ':password' => password_hash($_POST['password'], PASSWORD_BCRYPT),
-            ];
-    
-            // Tạo câu truy vấn SQL thêm vào hoặc cập nhật sinh viên
-            if ($sinhVien) {
-                $sql = "UPDATE SinhVien SET HoTen = :ten, SDT = :lienHe, Email = :email, MaLop = :maLop, DiaChi = :diaChi, GioiTinh = :gioiTinh, NgaySinh = :ngaySinh, ChucVu = :chucVu, Password = :password WHERE MaSinhVien = :maSinhVien";
-            } else {
-                $sql = "INSERT INTO SinhVien (MaSinhVien, HoTen, SDT, Email, MaLop, DiaChi, GioiTinh, NgaySinh, ChucVu, Password) VALUES (:maSinhVien, :ten, :lienHe, :email, :maLop, :diaChi, :gioiTinh, :ngaySinh, :chucVu, :password)";
-            }
-    
-            $stmt = $dbh->prepare($sql);
-            $stmt->execute($data);
-    
-            $message = $sinhVien ? "Cập nhật thành công!" : "Lưu thành công!";
-            
-            echo "<script>alert('$message');</script>";
-            echo "<script>window.location.href='student_list.php';</script>";
-            exit;
+            $sql = "INSERT INTO SinhVien (MaSinhVien, HoTen, SDT, Email, MaLop, DiaChi, GioiTinh, NgaySinh, ChucVu, Password) VALUES (:maSinhVien, :ten, :lienHe, :email, :maLop, :diaChi, :gioiTinh, :ngaySinh, :chucVu, :password)";
         }
+
+        $stmt = $dbh->prepare($sql);
+        $stmt->execute($data);
+
+        $message = $sinhVien ? "Cập nhật thành công!" : "Lưu thành công!";
+        
+        echo "<script>alert('$message');</script>";
+        echo "<script>window.location.href='student_list.php';</script>";
+        exit;
     }
-    
 } catch (PDOException $e) {
-    $message = "Lỗi: " . $e->getMessage();
+    $dbh->rollBack();
+    if ($e->getCode() == '45000') {
+        echo "<script>alert('{$e->getMessage()}');</script>";
+    } else {
+        $message = "Lỗi: " . $e->getMessage();
+    }
 }
 ?>
 
@@ -98,15 +97,18 @@ try {
                             <!-- School Details Section -->
                             <h5 class="mt-1"><b>Chi tiết trường học</b></h5>
                             <div class="row row-add mb-3">
-                                <div class="col-md-4">
-                                    <label for="maSinhVien" class="form-label"> Mã Sinh viên</label>
-                                    <input type="text" class="form-control" id="maSinhVien" name="maSinhVien"
-                                        value="<?php echo htmlspecialchars($sinhVien['MaSV_SinhVien'] ?? ''); ?>" <?php echo !empty($maSinhVien) ? 'readonly' : ''; ?> required>
-                                </div>
+                            <div class="col-md-4">
+                                <label for="maSinhVien" class="form-label">Mã Sinh viên</label>
+                                <input type="text" class="form-control" id="maSinhVien" name="maSinhVien"
+                                    value="<?php echo htmlspecialchars($sinhVien['MaSV_SinhVien'] ?? ''); ?>"
+                                    <?php echo !empty($maSinhVien) ? 'readonly' : ''; ?>
+                                    required pattern="^[a-zA-Z]\d{7}$" 
+                                    title="Mã sinh viên phải bắt đầu bằng một chữ cái (a-z hoặc A-Z) và theo sau là 7 chữ số.">
+                            </div>
                                 
                                 <div class="col-md-4">
                                     <labe for="maLop" class="form-label">Mã Lớp</label>
-                                    <select class="form-control" id="maLop" name="maLop" required>
+                                    <select class="form-control mt-2" id="maLop" name="maLop" required>
                                         <option value="">Chọn mã lớp</option>
                                         <?php foreach ($lopList as $lop): ?>
                                             <option value="<?= htmlspecialchars($lop['MaLop']) ?>"
@@ -128,7 +130,7 @@ try {
                                 </div>
                                 <div class="col-md-4">
                                     <label for="ngaySinh" class="form-label">Ngày sinh</label>
-                                    <input type="text" class="form-control" id="ngaySinh" name="ngaySinh"
+                                    <input type="date" class="form-control" id="ngaySinh" name="ngaySinh"
                                         value="<?php echo htmlspecialchars($sinhVien['NgaySinh'] ?? ''); ?>" required>
                                 </div>
                                 <div class="col-md-4">
@@ -153,8 +155,9 @@ try {
                                 <div class="col-md-4">
                                     <label for="contact" class="form-label">Liên hệ #</label>
                                     <input type="text" class="form-control" id="contact" name="contact"
-                                        value="<?php echo htmlspecialchars($sinhVien['SDT'] ?? ''); ?>" required>
-
+                                        value="<?php echo htmlspecialchars($sinhVien['SDT'] ?? ''); ?>" 
+                                        required maxlength="10" pattern="^\d{10}$" 
+                                        title="Số điện thoại phải gồm 10 chữ số và không chứa ký tự khác.">
                                 </div>
                                 <div class="col-md-4">
                                     <label for="email" class="form-label">Email</label>
@@ -231,6 +234,7 @@ try {
             dropdownMenu.style.display = "none"; // Đảm bảo đóng dropdown
         }
     }
+
 </script>
 
 </html>
