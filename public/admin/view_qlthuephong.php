@@ -55,4 +55,22 @@ $roomId = $_GET['MaPhong'] ?? null;
         </div>
     </div>
 </body>
+<script>
+    // Hàm mở và đóng dropdown khi bấm tên admin
+    function toggleDropdown(event) {
+        event.stopPropagation(); // Ngăn chặn sự kiện click bên ngoài
+        var dropdown = document.getElementById("dropdownMenu");
+        dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block"; // Toggle dropdown
+    }
+
+    // Đóng tất cả các dropdown nếu click bên ngoài
+    window.onclick = function(event) {
+        var dropdownMenu = document.getElementById("dropdownMenu");
+
+        // Đóng dropdown của tên admin nếu click bên ngoài
+        if (!event.target.matches('#userDropdown') && !event.target.matches('.ms-1') && !dropdownMenu.contains(event.target)) {
+            dropdownMenu.style.display = "none"; // Đảm bảo đóng dropdown
+        }
+    }
+</script>
 </html>
