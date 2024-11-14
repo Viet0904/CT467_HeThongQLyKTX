@@ -7,6 +7,33 @@ include_once __DIR__ . '/../../partials/heading.php';
 $HocKi = $_GET['HocKi'] ?? '';
 $NamHoc = $_GET['NamHoc'] ?? '';
 
+// Xử lý Form Submit
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $BatDau = $_POST['BatDau'] ?? '';
+    $KetThuc = $_POST['KetThuc'] ?? '';
+    $HocKi = $_POST['HocKi'] ?? '';
+    $NamHoc = $_POST['NamHoc'] ?? '';
+    try {
+        $stmt = $dbh->prepare("CALL SuaHocKi(:HocKi, :NamHoc, :BatDau, :KetThuc, @message, @errorCode)");
+        $stmt->execute([
+            ':HocKi' => $HocKi,
+            ':NamHoc' => $NamHoc,
+            ':BatDau' => $BatDau,
+            ':KetThuc' => $KetThuc,
+        ]);
+
+        $result = $dbh->query("SELECT @message AS message, @errorCode AS errorCode")->fetch(PDO::FETCH_ASSOC);
+        $message = $result['message'];
+        $errorCode = $result['errorCode'];
+
+        if ($errorCode != 0) {
+            throw new Exception($message);
+        }
+    } catch (Exception $e) {
+        $message = $e->getMessage();
+    }
+    echo '<script>alert("' . $message . '")</script>';
+}
 
 
 ?>
@@ -22,7 +49,7 @@ $NamHoc = $_GET['NamHoc'] ?? '';
                     </div>
 
                     <div class="modal-user mt-3">
-                        <form action="edit_day.php" method="POST">
+                        <form action="edit_hocki.php" method="POST">
 
                             <div class="row row-add mb-3">
                                 <div class="col-md-3">
@@ -33,7 +60,7 @@ $NamHoc = $_GET['NamHoc'] ?? '';
 
                                     <label for="NamHoc" class="form-label">Năm Học</label>
 
-                                    <input type="text" class="form-control" id="NamHoc" name="NamHoc" required value="<?php echo $NamHoc; ?>" readonly>
+                                    <input type="text" class="form-control" id="NamHoc" name="NamHoc" readonly required value="<?php echo $NamHoc; ?>" readonly>
                                 </div>
                                 <div class="col-md-3">
                                     <label for="BatDau" class="form-label">Bắt Đầu</label>
