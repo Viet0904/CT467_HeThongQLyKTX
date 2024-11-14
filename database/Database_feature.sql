@@ -12,6 +12,7 @@ BEGIN
     RETURN SoChoConLai;
 END //
 DELIMITER ;
+
 -- Trigger tự động tăng số luong DaO
 DELIMITER //
 CREATE TRIGGER after_insert_ThuePhong
@@ -368,7 +369,6 @@ CREATE PROCEDURE XoaSinhVienDangCoPhong(
     IN p_MaSinhVien VARCHAR(10),
     OUT p_Message VARCHAR(100)
 )
-
 BEGIN
     DECLARE v_HopDongID INT;
     DECLARE v_Count INT;
@@ -397,7 +397,7 @@ BEGIN
     -- Thông báo xoá thành công
     SET p_Message = 'Xoá sinh viên khỏi phòng và hệ thống thành công';
 END //
-
+DELIMITER ;
 -- Hàm Thêm Khu KTX
 DELIMITER //
 CREATE PROCEDURE ThemKhuKTX(
