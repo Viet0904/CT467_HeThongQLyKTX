@@ -50,7 +50,7 @@ if (isset($_POST['MaDay']) && isset($_POST['TenDay']) && isset($_POST['MaKhuKTX'
             <div class="col px-0">
                 <div class="my-2" style="margin-left: 260px;">
                     <div class="modal-header-1">
-                        <h5 class="modal-title mt-2">Thêm khu KTX</h5>
+                        <h5 class="modal-title mt-2">Thêm Dãy KTX</h5>
                     </div>
 
                     <div class="modal-user mt-3">

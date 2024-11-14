@@ -47,7 +47,7 @@ $areas = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <div class="container-fluid py-3 px-2" style="padding: 20px;">
                         <!-- Phần header của List of Rooms -->
                         <div class="d-flex justify-content-between align-items-center">
-                            <h5>Danh sách Khu KTX</h5>
+                            <h5>Danh sách Dãy KTX</h5>
 
                         </div>
                         <?php

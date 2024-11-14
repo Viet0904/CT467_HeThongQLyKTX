@@ -268,9 +268,8 @@ if (
                                             Hoạt động
                                         </button>
                                         <div id="actionDropdownMenu' . htmlspecialchars($stt) . '" class="dropdown-menu position-absolute p-0" style="display: none; min-width: 100px;">
-                                            <a class="dropdown-item py-2" href="view_student.php?msv=' . htmlspecialchars($row['MaSinhVien']) . '">Xem</a>
-                                            <a class="dropdown-item py-2" href="manage_student.php?msv=' . htmlspecialchars($row['MaSinhVien']) . '">Sửa</a>
-                                            <a class="dropdown-item py-2" href="delete_student.php?msv=' . htmlspecialchars($row['MaSinhVien']) . '">Xoá</a>
+                                            <a class="dropdown-item py-2" href="view_thuephong.php?msv=' . htmlspecialchars($row['MaSinhVien']) . '">Xem</a>
+                                            <a class="dropdown-item py-2" href="manage_sv_thuephong.php?msv=' . htmlspecialchars($row['MaSinhVien']) . '">Sửa</a>
                                         </div>
                                     </div>
                                 </td>';
