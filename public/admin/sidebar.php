@@ -24,6 +24,7 @@ session_start();
             <li class="p-0 ms-1"><a href="./manage_khu.php" class="py-2 ps-3"><i class="fas fa-map-marker-alt"></i> Quản lý khu</a></li>
             <li class="p-0 ms-1"><a href="./manage_day.php" class="py-2 ps-3"><i class="fas fa-columns"></i> Quản lý dãy</a></li>
             <li class="p-0 ms-1"><a href="./manage_class.php" class="py-2 ps-3"><i class="fas fa-graduation-cap"></i> Quản lý lớp</a></li>
+            <li class="p-0 ms-1"><a href="./view_hocki.php" class="py-2 ps-3"><i class="fas fa-calendar"></i> Quản lý học kì</a></li>
 
         <?php endif; ?>
 

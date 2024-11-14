@@ -26,7 +26,7 @@ if (isset($maHocKi)) {
     } catch (Exception $e) {
         $message = $e->getMessage();
     }
-    echo '<script>alert("' . $message . '"); window.location.href="manage_hocki.php";</script>';
+    echo '<script>alert("' . $message . '"); window.location.href="view_hocki.php";</script>';
 }
 
 

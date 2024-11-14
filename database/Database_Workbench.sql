@@ -108,7 +108,7 @@ CREATE TABLE DienNuoc (
     NamHoc VARCHAR(50),
     PhiDien DECIMAL(10, 2),
     PhiNuoc DECIMAL(10, 2),
-    TongTien DECIMAL(10, 2) DEFAULT (PhiDien + PhiNuoc),
+    TongTien DECIMAL(10, 2) DEFAULT NULL,
     HocKi ENUM('1', '2', '3'),
     NgayThanhToan DATE,
     MaPhong VARCHAR(10),
