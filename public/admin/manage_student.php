@@ -83,7 +83,9 @@ try {
                 <!-- Nội dung chính -->
                 <div class="my-2" style="margin-left: 260px;">
                     <div class="modal-header-1">
-                        <h5 class="modal-title mt-2">Đăng ký sinh viên mới</h5>
+                    <h5 class="modal-title mt-2">
+                    <?php echo isset($maSinhVien) && $maSinhVien ? "Cập nhật thông tin sinh viên" : "Đăng ký sinh viên mới"; ?>
+                    </h5>
                     </div>
 
                     <!-- Hiển thị thông báo -->
@@ -91,11 +93,11 @@ try {
                         <div class="alert alert-info mt-3"><?php echo $message; ?></div>
                     <?php endif; ?>
 
-                    <div class="modal-user">
+                    <div class="modal-user mt-3">
                         <form action="manage_student.php" method="POST">
 
                             <!-- School Details Section -->
-                            <h5 class="mt-1"><b>Chi tiết trường học</b></h5>
+                            <h5 class="mt-1"><b>Thông tin sinh viên</b></h5>
                             <div class="row row-add mb-3">
                                 <div class="col-md-4">
                                     <label for="maSinhVien" class="form-label">Mã Sinh viên</label>
@@ -118,6 +120,13 @@ try {
                                             <?php endforeach; ?>
                                         </select>
                                 </div>
+                                <div class="col-md-4">
+
+                                    <label for="chucVu" class="form-label">Chức vụ</label>
+                                    <input type="text" class="form-control" id="chucVu" name="chucVu"
+                                        value="<?php echo htmlspecialchars($sinhVien['ChucVu'] ?? ''); ?>" required>
+                                </div>
+
                             </div>
 
                             <!-- Personal Information Section -->
@@ -134,15 +143,6 @@ try {
                                         value="<?php echo htmlspecialchars($sinhVien['NgaySinh'] ?? ''); ?>" required>
                                 </div>
                                 <div class="col-md-4">
-
-                                    <label for="chucVu" class="form-label">Chức vụ</label>
-                                    <input type="text" class="form-control" id="chucVu" name="chucVu"
-                                        value="<?php echo htmlspecialchars($sinhVien['ChucVu'] ?? ''); ?>" required>
-                                </div>
-                            </div>
-
-                            <div class="row row-add mb-3">
-                                <div class="col-md-4">
                                     <label for="gioiTinh" class="form-label">Giới tính</label>
                                     <select class="form-select" id="gioiTinh" name="gioiTinh">
                                         <option value="Nam" <?php echo (isset($sinhVien['GioiTinh']) && $sinhVien['GioiTinh'] === 'Nam') ? 'selected' : ''; ?>>Nam</option>
@@ -152,6 +152,10 @@ try {
 
 
                                 </div>
+                            </div>
+
+                            <div class="row row-add mb-3">
+                                
                                 <div class="col-md-4">
                                     <label for="contact" class="form-label">Liên hệ #</label>
                                     <input type="text" class="form-control" id="contact" name="contact"
@@ -165,10 +169,7 @@ try {
                                         value="<?php echo htmlspecialchars($sinhVien['Email'] ?? ''); ?>" required>
 
                                 </div>
-                            </div>
-
-                            <div class="row row-add mb-3">
-                                <div class="col-md-12">
+                                <div class="col-md-4">
                                     <label for="address" class="form-label">Địa chỉ</label>
                                     <input type="text" class="form-control" id="address" name="address"
                                         value="<?php echo htmlspecialchars($sinhVien['DiaChi'] ?? ''); ?>" required>
@@ -180,15 +181,14 @@ try {
                                 <label for="password" class="form-label">Password</label>
                                 <input type="text" class="form-control" id="password" name="password"
                                     value="<?php echo htmlspecialchars($sinhVien['Password'] ?? ''); ?>" required>
-
                             </div>
-
-
                             <!-- Submit Button -->
                             <div class="text-end mt-2">
+                            <a href="<?php echo $maSinhVien ? "view_student.php?msv=" . htmlspecialchars($maSinhVien) : "student_list.php"; ?>" class="btn btn-secondary">Trở về</a>
                                 <button type="submit" class="btn btn-primary"
                                     style="background-color: #db3077;">Lưu</button>
                             </div>
+                            
                         </form>
                     </div>
                 </div>

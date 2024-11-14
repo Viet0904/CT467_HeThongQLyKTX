@@ -29,7 +29,7 @@ include_once __DIR__ . '/../../partials/heading.php';
                         <h5 class="modal-title mt-2">Chi tiết sinh viên</h5>
                     </div>
 
-                    <div class="modal-user">
+                    <div class="modal-user mt-3">
                         <form action="" method="POST">
                             <!-- School Details Section -->
                             <div class="row row-add">
@@ -73,6 +73,20 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 </div>
                             </div>
 
+                            <!-- Submit Button -->
+                            <div class="row-add d-flex justify-content-center align-items-center mt-2">
+                                <div class="mx-2">
+                                    <a href="manage_sv_thuephong.php?msv=<?php echo htmlspecialchars($msv); ?>" class="btn" style="background-color: #db3077;">
+                                        <p style="color: white" class="mb-0">Sửa</p>
+                                    </a>
+                                </div>
+                                <div class="mx-2">
+                                    <a href="delete_student.php?msv=<?php echo htmlspecialchars($msv); ?>" class="btn btn-danger">Xoá</a>
+                                </div>
+                                <div class="mx-2">
+                                    <a href="dangkyphong_sv.php" class="btn btn-secondary">Trở về</a>
+                                </div>
+                            </div>
                         </form>
                     </div>
 

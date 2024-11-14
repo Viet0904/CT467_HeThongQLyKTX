@@ -68,7 +68,7 @@ $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <div class="row mt-4">
                                 <div class="col-12">
                                     <button type="submit" class="btn btn-primary" aria-label="Search rooms">
-                                        <i class="bi bi-search me-2"></i>Search
+                                        <i class="bi bi-search me-2"></i>Tìm kiếm
                                     </button>
                                 </div>
                             </div>

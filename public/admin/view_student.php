@@ -34,7 +34,7 @@ include_once __DIR__ . '/../../partials/heading.php';
                             <!-- School Details Section -->
                             <div class="row row-add">
                                 <div class="col-md-4">
-                                    <h5 class="mt-1"><b>Thông tin cộng đồng</b></h5>
+                                    <h5 class="mt-1"><b>Thông tin sinh viên</b></h5>
                                 </div>
                             </div>
                             <div class="row row-add">
@@ -90,7 +90,20 @@ include_once __DIR__ . '/../../partials/heading.php';
                                     <p class="mb-2 mt-1 mx-3"><?php echo $student['DiaChi']; ?></p>
                                 </div>
                             </div>
-
+                            <!-- Submit Button -->
+                            <div class="row-add d-flex justify-content-center align-items-center mt-2">
+                                <div class="mx-2">
+                                    <a href="manage_student.php?msv=<?php echo htmlspecialchars($msv); ?>" class="btn" style="background-color: #db3077;">
+                                        <p style="color: white" class="mb-0">Sửa</p>
+                                    </a>
+                                </div>
+                                <div class="mx-2">
+                                    <a href="delete_student.php?msv=<?php echo htmlspecialchars($msv); ?>" class="btn btn-danger">Xoá</a>
+                                </div>
+                                <div class="mx-2">
+                                    <a href="student_list.php" class="btn btn-secondary">Trở về</a>
+                                </div>
+                            </div>
                         </form>
                     </div>
 
