@@ -764,3 +764,99 @@ BEGIN
     END IF;
 END //
 DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE UpdateNhanVien (
+    IN p_OldMaNhanVien VARCHAR(50),
+    IN p_HoTen VARCHAR(255),
+    IN p_Role VARCHAR(50),
+    IN p_SDT VARCHAR(15),
+    IN p_GhiChu TEXT,
+    IN p_NgaySinh DATE,
+    IN p_GioiTinh VARCHAR(10)
+)
+BEGIN
+    UPDATE NhanVien 
+    SET HoTen = p_HoTen, 
+        Role = p_Role, 
+        SDT = p_SDT, 
+        GhiChu = p_GhiChu, 
+        NgaySinh = p_NgaySinh, 
+        GioiTinh = p_GioiTinh
+    WHERE MaNhanVien = p_OldMaNhanVien;
+END //
+
+DELIMITER ;
+
+
+
+
+DELIMITER //
+
+CREATE PROCEDURE InsertPhong (
+    IN p_MaPhong VARCHAR(50),
+    IN p_MaDay VARCHAR(50),
+    IN p_TenPhong VARCHAR(255),
+    IN p_LoaiPhong VARCHAR(50),
+    IN p_DienTich DECIMAL(10, 2),
+    IN p_SucChua INT,
+    IN p_SoChoThucTe INT,
+    IN p_DaO INT,
+    IN p_GiaThue DECIMAL(10, 2),
+    IN p_TrangThaiSuDung VARCHAR(50)
+)
+BEGIN
+    INSERT INTO Phong (MaPhong, MaDay, TenPhong, LoaiPhong, DienTich, SucChua, SoChoThucTe, DaO, GiaThue, TrangThaiSuDung) 
+    VALUES (p_MaPhong, p_MaDay, p_TenPhong, p_LoaiPhong, p_DienTich, p_SucChua, p_SoChoThucTe, p_DaO, p_GiaThue, p_TrangThaiSuDung);
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE UpdatePhong (
+    IN p_MaPhong VARCHAR(50),
+    IN p_OldMaPhong VARCHAR(50),
+    IN p_MaDay VARCHAR(50),
+    IN p_TenPhong VARCHAR(255),
+    IN p_LoaiPhong VARCHAR(50),
+    IN p_DienTich DECIMAL(10, 2),
+    IN p_SucChua INT,
+    IN p_SoChoThucTe INT,
+    IN p_DaO INT,
+    IN p_GiaThue DECIMAL(10, 2),
+    IN p_TrangThaiSuDung VARCHAR(50)
+)
+BEGIN
+    UPDATE Phong 
+    SET MaPhong = p_MaPhong, 
+        MaDay = p_MaDay, 
+        TenPhong = p_TenPhong, 
+        LoaiPhong = p_LoaiPhong, 
+        DienTich = p_DienTich, 
+        SucChua = p_SucChua, 
+        SoChoThucTe = p_SoChoThucTe, 
+        DaO = p_DaO, 
+        GiaThue = p_GiaThue, 
+        TrangThaiSuDung = p_TrangThaiSuDung 
+    WHERE MaPhong = p_OldMaPhong;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE UpdateTT_ThuePhong(
+    IN p_MaHopDong VARCHAR(20),
+    IN p_NgayThanhToan DATE,
+    IN p_MaNhanVien VARCHAR(20)
+)
+BEGIN
+    UPDATE TT_ThuePhong 
+    SET NgayThanhToan = p_NgayThanhToan, 
+        MaNhanVien = p_MaNhanVien
+    WHERE MaHopDong = p_MaHopDong;
+END //
+
+DELIMITER ;

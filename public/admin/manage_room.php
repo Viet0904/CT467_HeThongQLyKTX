@@ -115,6 +115,7 @@ if ($roomId) {
 
                             <!-- Submit Button -->
                             <div class="text-end">
+                                <a href="view_room.php?id=<?php echo htmlspecialchars($roomId);?>" class="btn btn-secondary">Trở về</a>
                                 <button type="submit" class="btn btn-primary" style="background-color: #db3077;">Lưu</button>
                             </div>
                         </form>
