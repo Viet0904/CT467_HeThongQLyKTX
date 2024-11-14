@@ -770,3 +770,34 @@ BEGIN
     END IF;
 END //
 DELIMITER ;
+
+-- Hàm lấy thông tin lớp
+DELIMITER //
+CREATE PROCEDURE layThongTinLop(IN maLopInput VARCHAR(50))
+BEGIN
+    SELECT * FROM Lop WHERE MaLop = maLopInput;
+END //
+DELIMITER ;
+
+-- Hàm lấy danh sách tất cả lớp
+DELIMITER //
+
+CREATE PROCEDURE layDanhSachLop()
+BEGIN
+    SELECT * FROM Lop;
+END //
+
+DELIMITER ;
+
+-- Hàm cập nhật thông tin lớp
+DELIMITER //
+
+CREATE PROCEDURE capNhatLop(IN maLopInput VARCHAR(50), IN tenLopInput VARCHAR(100))
+BEGIN
+    UPDATE Lop 
+    SET TenLop = tenLopInput 
+    WHERE MaLop = maLopInput;
+END //
+
+DELIMITER ;
+

@@ -21,10 +21,10 @@ session_start();
         <!-- Additional Options for Admin -->
         <?php if ($_SESSION['Role'] === 'Admin'): ?>
             <li class="p-0 ms-1"><a href="./employees_list.php" class="py-2 ps-3"><i class="fas fa-user-shield"></i> Quản lý nhân viên</a></li>
-            <li class="p-0 ms-1"><a href="./manage_khu.php" class="py-2 ps-3"><i class="fas fa-map-marker-alt"></i> Quản lý khu</a></li>
-            <li class="p-0 ms-1"><a href="./manage_day.php" class="py-2 ps-3"><i class="fas fa-columns"></i> Quản lý dãy</a></li>
+            <li class="p-0 ms-1"><a href="./manage_khu.php" class="py-2 ps-3"><i class="fas fa-map-marker-alt me-3"></i> Quản lý khu</a></li>
+            <li class="p-0 ms-1"><a href="./manage_day.php" class="py-2 ps-3"><i class="fas fa-columns me-3"></i> Quản lý dãy</a></li>
             <li class="p-0 ms-1"><a href="./manage_class.php" class="py-2 ps-3"><i class="fas fa-graduation-cap"></i> Quản lý lớp</a></li>
-            <li class="p-0 ms-1"><a href="./view_hocki.php" class="py-2 ps-3"><i class="fas fa-calendar"></i> Quản lý học kì</a></li>
+            <li class="p-0 ms-1"><a href="./view_hocki.php" class="py-2 ps-3"><i class="fas fa-calendar me-3"></i> Quản lý học kì</a></li>
 
         <?php endif; ?>
 
