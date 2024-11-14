@@ -1,4 +1,19 @@
 use htqlktx;
+-- Tạo bảng DienNuoc
+CREATE TABLE DienNuoc (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    Thang INT,
+    NamHoc VARCHAR(50),
+    PhiDien DECIMAL(10, 2),
+    PhiNuoc DECIMAL(10, 2),
+    TongTien DECIMAL(10, 2) DEFAULT (PhiDien + PhiNuoc),
+    HocKi ENUM('1', '2', '3'),
+    NgayThanhToan DATE,
+    MaPhong VARCHAR(10),
+    FOREIGN KEY (MaPhong) REFERENCES Phong(MaPhong),
+    FOREIGN KEY (HocKi, NamHoc) REFERENCES HocKi(HocKi, NamHoc)
+);
+
 -- Tính số chổ còn lại
 DELIMITER //
 CREATE FUNCTION SoChoConLai(MaPhongInput VARCHAR(20)) 
@@ -24,6 +39,7 @@ BEGIN
     WHERE MaPhong = NEW.MaPhong;
 END //
 DELIMITER ;
+
 -- Trigger khi xoá 1 sv
 DELIMITER //
 CREATE TRIGGER trg_after_delete_sinhvien
@@ -36,7 +52,7 @@ BEGIN
 END//
 DELIMITER ;
 
---  Trigger tự động cập nhật TongTien
+-- Trigger tự động cập nhật TongTien
 -- Tạo trigger để cập nhật TongTien khi có thay đổi trong bảng DienNuoc
 DELIMITER //
 CREATE TRIGGER update_tongtien_update
@@ -46,7 +62,6 @@ BEGIN
     SET NEW.TongTien = NEW.PhiDien + NEW.PhiNuoc;
 END//
 DELIMITER ;
-
 
 -- Trigger xử lý khi thêm diennuoc
 DELIMITER //
@@ -66,6 +81,7 @@ BEGIN
     END IF;
 END//
 DELIMITER ;
+
 -- Trigger to prevent negative values for PhiDien and PhiNuoc on update
 DELIMITER //
 CREATE TRIGGER prevent_negative_values_update
@@ -80,10 +96,7 @@ BEGIN
 END//
 DELIMITER ;
 
-
-
-
---  PROCEDURE GetDienNuoc
+-- PROCEDURE GetDienNuoc
 DELIMITER //
 CREATE PROCEDURE GetDienNuoc(
     IN maPhong VARCHAR(50),
@@ -150,7 +163,6 @@ BEGIN
 END //
 DELIMITER ;
 
-
 -- Hàm Đăng ký 
 DELIMITER //
 CREATE PROCEDURE DangKyPhong(
@@ -214,8 +226,6 @@ BEGIN
 END //
 DELIMITER ;
 
-
-
 -- Hàm Đăng ký 
 DELIMITER //
 CREATE PROCEDURE ChuyenPhong(
@@ -264,7 +274,6 @@ BEGIN
     END IF;
     -- Kiểm tra còn chỗ không
     IF v_SoChoConLai <= 0 THEN
-
         SET p_Message = 'Phòng đã đầy';
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = p_Message;
@@ -289,6 +298,7 @@ BEGIN
     SET p_Message = 'Đăng ký phòng thành công';
 END //
 DELIMITER ;
+
 -- Hàm Xoá Sinh Viên khỏi phòng
 DELIMITER //
 CREATE PROCEDURE XoaSinhVienKhoiPhong(
@@ -322,10 +332,6 @@ BEGIN
     SET p_Message = 'Xoá sinh viên khỏi phòng thành công';
 END //
 DELIMITER ;
-
-
-
-
 
 DELIMITER //
 CREATE PROCEDURE XoaPhongVaDuLieuLienQuan(
@@ -398,6 +404,7 @@ BEGIN
     SET p_Message = 'Xoá sinh viên khỏi phòng và hệ thống thành công';
 END //
 DELIMITER ;
+
 -- Hàm Thêm Khu KTX
 DELIMITER //
 CREATE PROCEDURE ThemKhuKTX(
@@ -408,13 +415,6 @@ CREATE PROCEDURE ThemKhuKTX(
 )
 BEGIN
     DECLARE v_Count INT;
-    -- Kiểm tra mã khu đã tồn tại chưa
-    SELECT COUNT(*) INTO v_Count
-    FROM KhuKTX
-    WHERE MaKhuKTX = p_MaKhu;
-    IF v_Count > 0 THEN
-        SET p_Message = 'Mã khu đã tồn tại';
-        SET p_ErrorCode = 1;
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = p_Message;
     END IF;
     -- Bắt đầu transaction
@@ -699,6 +699,58 @@ BEGIN
             COMMIT;
             SET p_Message = 'Cập nhật học kỳ thành công';
             SET p_ErrorCode = 0;
+        END IF;
+    END IF;
+END //
+DELIMITER ;
+
+-- Hàm Xoá HocKi với kiểm tra ràng buộc DienNuoc
+DELIMITER //
+CREATE PROCEDURE XoaHocKi(
+    IN p_HocKi ENUM('1', '2', '3'),
+    IN p_NamHoc VARCHAR(50),
+    OUT p_Message VARCHAR(255),
+    OUT p_ErrorCode INT
+)
+BEGIN
+    DECLARE v_Count INT;
+    DECLARE v_ThuePhongCount INT;
+    DECLARE v_DienNuocCount INT;
+    -- Kiểm tra mã học kỳ và năm học có tồn tại không
+    SELECT COUNT(*) INTO v_Count
+    FROM HocKi
+    WHERE HocKi = p_HocKi AND NamHoc = p_NamHoc;
+    IF v_Count = 0 THEN
+        SET p_Message = 'Học kỳ và năm học không tồn tại';
+        SET p_ErrorCode = 1;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = p_Message;
+    ELSE
+        -- Kiểm tra xem có phòng nào đang thuê trong học kỳ không
+        SELECT COUNT(*) INTO v_ThuePhongCount
+        FROM ThuePhong
+        WHERE HocKi = p_HocKi AND NamHoc = p_NamHoc;
+        IF v_ThuePhongCount > 0 THEN
+            SET p_Message = 'Không thể xóa học kỳ vì có phòng đang thuê trong học kỳ';
+            SET p_ErrorCode = 2;
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = p_Message;
+        ELSE
+            -- Kiểm tra xem có DienNuoc nào đang ràng buộc HocKi không
+            SELECT COUNT(*) INTO v_DienNuocCount
+            FROM DienNuoc
+            WHERE HocKi = p_HocKi AND NamHoc = p_NamHoc;
+            IF v_DienNuocCount > 0 THEN
+                SET p_Message = 'Không thể xóa học kỳ vì có dữ liệu điện nước ràng buộc';
+                SET p_ErrorCode = 3;
+                SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = p_Message;
+            ELSE
+                -- Bắt đầu transaction
+                START TRANSACTION;
+                -- Xóa học kỳ trong bảng HocKi
+                DELETE FROM HocKi WHERE HocKi = p_HocKi AND NamHoc = p_NamHoc;
+                COMMIT;
+                SET p_Message = 'Xóa học kỳ thành công';
+                SET p_ErrorCode = 0;
+            END IF;
         END IF;
     END IF;
 END //
