@@ -611,3 +611,95 @@ BEGIN
 END //
 DELIMITER ;
 
+-- Hàm Thêm HocKi
+DELIMITER //
+CREATE PROCEDURE ThemHocKi(
+    IN p_HocKi ENUM('1', '2', '3'),
+    IN p_NamHoc VARCHAR(50),
+    IN p_BatDau DATE,
+    IN p_KetThuc DATE,
+    OUT p_Message VARCHAR(255),
+    OUT p_ErrorCode INT
+)
+BEGIN
+    DECLARE v_Count INT;
+    DECLARE v_DateOverlap INT;
+    -- Kiểm tra mã học kỳ và năm học đã tồn tại chưa
+    SELECT COUNT(*) INTO v_Count
+    FROM HocKi
+    WHERE HocKi = p_HocKi AND NamHoc = p_NamHoc;
+    IF v_Count > 0 THEN
+        SET p_Message = 'Học kỳ và năm học đã tồn tại';
+        SET p_ErrorCode = 1;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = p_Message;
+    ELSE
+        SELECT COUNT(*) INTO v_DateOverlap
+        FROM HocKi
+        WHERE NamHoc = p_NamHoc
+          AND ((p_BatDau BETWEEN BatDau AND KetThuc) OR (p_KetThuc BETWEEN BatDau AND KetThuc)
+          OR (BatDau BETWEEN p_BatDau AND p_KetThuc) OR (KetThuc BETWEEN p_BatDau AND p_KetThuc));
+        IF v_DateOverlap > 0 THEN
+            SET p_Message = 'Ngày bắt đầu và kết thúc bị trùng với kỳ khác trong cùng năm học';
+            SET p_ErrorCode = 2;
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = p_Message;
+        ELSE
+            -- Bắt đầu transaction
+            START TRANSACTION;
+            -- Thêm học kỳ vào bảng HocKi
+            INSERT INTO HocKi (HocKi, NamHoc, BatDau, KetThuc)
+            VALUES (p_HocKi, p_NamHoc, p_BatDau, p_KetThuc);
+            COMMIT;
+            SET p_Message = 'Thêm học kỳ thành công';
+            SET p_ErrorCode = 0;
+        END IF;
+    END IF;
+END //
+DELIMITER ;
+drop PROCEDURE ThemHocKi;
+-- Hàm Sửa HocKi
+DELIMITER //
+CREATE PROCEDURE SuaHocKi(
+    IN p_HocKi ENUM('1', '2', '3'),
+    IN p_NamHoc VARCHAR(50),
+    IN p_BatDau DATE,
+    IN p_KetThuc DATE,
+    OUT p_Message VARCHAR(255),
+    OUT p_ErrorCode INT
+)
+BEGIN
+    DECLARE v_Count INT;
+    DECLARE v_DateOverlap INT;
+    -- Kiểm tra mã học kỳ và năm học có tồn tại không
+    SELECT COUNT(*) INTO v_Count
+    FROM HocKi
+    WHERE HocKi = p_HocKi AND NamHoc = p_NamHoc;
+    IF v_Count = 0 THEN
+        SET p_Message = 'Học kỳ và năm học không tồn tại';
+        SET p_ErrorCode = 1;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = p_Message;
+    ELSE
+        -- Kiểm tra trùng ngày bắt đầu và kết thúc với các kỳ khác trong cùng năm học
+        SELECT COUNT(*) INTO v_DateOverlap
+        FROM HocKi
+        WHERE NamHoc = p_NamHoc
+          AND HocKi != p_HocKi
+          AND ((p_BatDau BETWEEN BatDau AND KetThuc) OR (p_KetThuc BETWEEN BatDau AND KetThuc)
+          OR (BatDau BETWEEN p_BatDau AND p_KetThuc) OR (KetThuc BETWEEN p_BatDau AND p_KetThuc));
+        IF v_DateOverlap > 0 THEN
+            SET p_Message = 'Ngày bắt đầu và kết thúc bị trùng với kỳ khác trong cùng năm học';
+            SET p_ErrorCode = 2;
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = p_Message;
+        ELSE
+            -- Bắt đầu transaction
+            START TRANSACTION;
+            -- Cập nhật ngày bắt đầu và kết thúc của học kỳ
+            UPDATE HocKi
+            SET BatDau = p_BatDau, KetThuc = p_KetThuc
+            WHERE HocKi = p_HocKi AND NamHoc = p_NamHoc;
+            COMMIT;
+            SET p_Message = 'Cập nhật học kỳ thành công';
+            SET p_ErrorCode = 0;
+        END IF;
+    END IF;
+END //
+DELIMITER ;
