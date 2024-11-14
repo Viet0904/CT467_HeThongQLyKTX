@@ -7,6 +7,23 @@ include_once __DIR__ . '/../../partials/heading.php';
 $HocKi = $_GET['HocKi'] ?? '';
 $NamHoc = $_GET['NamHoc'] ?? '';
 
+// Xử lý Form Submit
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $BatDau = $_POST['BatDau'] ?? '';
+    $KetThuc = $_POST['KetThuc'] ?? '';
+
+
+    $stmt = $conn->prepare("CALL SuaHocKi(?, ?, ?, ?, @p_Message, @p_ErrorCode)");
+    $stmt->bind_param("ssss", $HocKi, $NamHoc, $BatDau, $KetThuc);
+    $stmt->execute();
+
+    $result = $conn->query("SELECT @p_Message AS message, @p_ErrorCode AS errorCode");
+    $row = $result->fetch_assoc();
+    $message = $row['message'];
+    $errorCode = $row['errorCode'];
+
+    echo "<script>alert('$message');</script>";
+}
 
 
 ?>
@@ -22,7 +39,7 @@ $NamHoc = $_GET['NamHoc'] ?? '';
                     </div>
 
                     <div class="modal-user mt-3">
-                        <form action="edit_day.php" method="POST">
+                        <form action="edit_hocki.php" method="POST">
 
                             <div class="row row-add mb-3">
                                 <div class="col-md-3">
@@ -33,7 +50,7 @@ $NamHoc = $_GET['NamHoc'] ?? '';
 
                                     <label for="NamHoc" class="form-label">Năm Học</label>
 
-                                    <input type="text" class="form-control" id="NamHoc" name="NamHoc" required value="<?php echo $NamHoc; ?>" readonly>
+                                    <input type="text" class="form-control" id="NamHoc" name="NamHoc" readonly required value="<?php echo $NamHoc; ?>" readonly>
                                 </div>
                                 <div class="col-md-3">
                                     <label for="BatDau" class="form-label">Bắt Đầu</label>

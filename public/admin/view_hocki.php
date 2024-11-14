@@ -39,7 +39,7 @@ $terms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         <td><?php echo htmlspecialchars($term['BatDau']); ?></td>
                                         <td><?php echo htmlspecialchars($term['KetThuc']); ?></td>
                                         <td>
-                                            <a href="manage_hocki.php?HocKi=<?php echo htmlspecialchars($term['HocKi']); ?>" class="btn btn-primary btn-sm">Sửa</a>
+                                            <a href="edit_hocki.php?HocKi=<?php echo htmlspecialchars($term['HocKi']); ?>&NamHoc=<?php echo htmlspecialchars($term['NamHoc']); ?>" class="btn btn-primary btn-sm">Sửa</a>
                                             <a href="delete_hocki.php?HocKi=<?php echo htmlspecialchars($term['HocKi']); ?>&NamHoc=<?php echo htmlspecialchars($term['NamHoc']); ?>" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xoá học kỳ này?');">Xóa</a>
                                         </td>
                                     </tr>
