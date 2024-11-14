@@ -13,6 +13,43 @@ BEGIN
     RETURN SoChoConLai;
 END //
 DELIMITER ;
+-- Tính Tổng Số SV trong Phòng
+DELIMITER //
+CREATE FUNCTION TongSoSinhVienTrongPhong(MaPhongInput VARCHAR(10))
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    DECLARE TongSoSV VARCHAR(10);
+    SELECT COUNT(*) INTO TongSoSV
+    FROM ThuePhong 
+    WHERE MaPhong = MaPhongInput;
+    -- Nếu không có sinh viên nào thì trả về 1
+    IF (TongSoSV <= 0) THEN
+        SET TongSoSV = 1;
+    END IF;
+    RETURN TongSoSV;
+END //
+DELIMITER ;
+
+-- Tính Phí Diện Nước từng sinh viên
+DELIMITER //
+CREATE FUNCTION TongPhiMoiSinhVien(MaPhong VARCHAR(10), PhiDien DECIMAL(10, 2), PhiNuoc DECIMAL(10, 2))
+RETURNS DECIMAL(10, 2)
+DETERMINISTIC
+BEGIN
+    DECLARE TongSoSV VARCHAR(10);
+    DECLARE TongPhiSV DECIMAL(10, 2);
+    SELECT COUNT(*) INTO TongSoSV
+    FROM ThuePhong
+    WHERE MaPhong = MaPhong;
+    IF TongSoSV <= 0 THEN
+        SET TongSoSV = 1;
+    END IF;
+    SET TongPhiSV = (PhiDien / TongSoSV) + (PhiNuoc / TongSoSV);
+    RETURN TongPhiSV;
+END//
+DELIMITER ;
+
 
 -- Trigger tự động tăng số luong DaO
 DELIMITER //
