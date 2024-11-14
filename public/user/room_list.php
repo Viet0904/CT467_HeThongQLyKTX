@@ -10,8 +10,9 @@ require_once __DIR__ . '/../../config/dbadmin.php';
             <div class="col-auto" style="width: 250px; overflow:auto;">
                 <?php include_once __DIR__ . '/sidebar.php'; ?>
             </div>
+            
             <div class="col-auto py-3">
-
+            <div class="dashboard-header">Chào mừng Sinh viên đến với hệ thống quản lý Ký túc xá!</div>
                 <?php
                 // Số dòng trên mỗi trang
                 $rowsPerPage = 10;
@@ -93,7 +94,7 @@ require_once __DIR__ . '/../../config/dbadmin.php';
                     if ($currentPage > 1) {
                         echo '<li class="page-item"><a class="page-link" href="?page=1">Trang đầu</a></li>';
                         $prevPage = $currentPage - 1;
-                        echo '<li class="page-item"><a class="page-link" href="?page=' . htmlspecialchars($prevPage) . '">Previous</a></li>';
+                        echo '<li class="page-item"><a class="page-link" href="?page=' . htmlspecialchars($prevPage) . '">Trước</a></li>';
                     }
 
                     for ($i = 1; $i <= $totalPages; $i++) {
@@ -106,7 +107,7 @@ require_once __DIR__ . '/../../config/dbadmin.php';
 
                     if ($currentPage < $totalPages) {
                         $nextPage = $currentPage + 1;
-                        echo '<li class="page-item"><a class="page-link" href="?page=' . htmlspecialchars($nextPage) . '">Next</a></li>';
+                        echo '<li class="page-item"><a class="page-link" href="?page=' . htmlspecialchars($nextPage) . '">Sau</a></li>';
                         echo '<li class="page-item"><a class="page-link" href="?page=' . htmlspecialchars($totalPages) . '">Trang cuối</a></li>';
                     }
                     echo '</ul>';
