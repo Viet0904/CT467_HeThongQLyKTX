@@ -3,6 +3,33 @@ include_once __DIR__ . '/../../config/dbadmin.php';
 include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
 
+// Thêm lớp mới
+$message = '';
+
+// Xử lý thêm lớp
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $maLop = $_POST['maLop'];
+    $tenLop = $_POST['tenLop'];
+
+    // Kiểm tra mã lớp đã tồn tại chưa
+    $stmt = $dbh->prepare('SELECT COUNT(*) FROM Lop WHERE MaLop = :maLop');
+    $stmt->execute([':maLop' => $maLop]);
+    $count = $stmt->fetchColumn();
+
+    if ($count > 0) {
+        $message = 'Mã lớp đã tồn tại';
+    } else {
+        // Thêm lớp
+        $sql = "INSERT INTO Lop(MaLop, TenLop) VALUES (:maLop, :tenLop)";
+        $stmt = $dbh->prepare($sql);
+        $stmt->execute([':maLop' => $maLop, ':tenLop' => $tenLop]);
+
+        // Hiển thị thông báo
+        $message = "Thêm lớp thành công!";
+        echo "<script>alert('$message');</script>";
+        echo "<script>window.location.href='manage_class.php';</script>";
+    }
+}
 ?>
 
 <body>
@@ -22,17 +49,15 @@ include_once __DIR__ . '/../../partials/heading.php';
                     <?php endif; ?>
 
                     <div class="modal-user">
-                        <form action="manage_class.php?maLop=<?php echo $maLop; ?>" method="POST">
+                        <form action="new_class.php" method="POST">
                             <div class="row row-add mb-3">
                                 <div class="col-md-4">
                                     <label for="maLop" class="form-label">Mã lớp</label>
-                                    <input type="text" class="form-control mt-2" id="maLop" name="maLop"
-                                         required >
+                                    <input type="text" class="form-control mt-2" id="maLop" name="maLop" required>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="tenLop" class="form-label">Tên Lớp</label>
-                                    <input type="text" class="form-control mt-2" id="tenLop" name="tenLop"
-                                         required>
+                                    <input type="text" class="form-control mt-2" id="tenLop" name="tenLop" required>
                                 </div>
                             </div>
 
@@ -47,6 +72,7 @@ include_once __DIR__ . '/../../partials/heading.php';
         </div>
     </div>
 </body>
+
 
 
 <!-- Bootstrap JS và Popper.js -->
