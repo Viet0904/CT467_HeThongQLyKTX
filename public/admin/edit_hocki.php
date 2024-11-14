@@ -11,18 +11,28 @@ $NamHoc = $_GET['NamHoc'] ?? '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $BatDau = $_POST['BatDau'] ?? '';
     $KetThuc = $_POST['KetThuc'] ?? '';
+    $HocKi = $_POST['HocKi'] ?? '';
+    $NamHoc = $_POST['NamHoc'] ?? '';
+    try {
+        $stmt = $dbh->prepare("CALL SuaHocKi(:HocKi, :NamHoc, :BatDau, :KetThuc, @message, @errorCode)");
+        $stmt->execute([
+            ':HocKi' => $HocKi,
+            ':NamHoc' => $NamHoc,
+            ':BatDau' => $BatDau,
+            ':KetThuc' => $KetThuc,
+        ]);
 
+        $result = $dbh->query("SELECT @message AS message, @errorCode AS errorCode")->fetch(PDO::FETCH_ASSOC);
+        $message = $result['message'];
+        $errorCode = $result['errorCode'];
 
-    $stmt = $conn->prepare("CALL SuaHocKi(?, ?, ?, ?, @p_Message, @p_ErrorCode)");
-    $stmt->bind_param("ssss", $HocKi, $NamHoc, $BatDau, $KetThuc);
-    $stmt->execute();
-
-    $result = $conn->query("SELECT @p_Message AS message, @p_ErrorCode AS errorCode");
-    $row = $result->fetch_assoc();
-    $message = $row['message'];
-    $errorCode = $row['errorCode'];
-
-    echo "<script>alert('$message');</script>";
+        if ($errorCode != 0) {
+            throw new Exception($message);
+        }
+    } catch (Exception $e) {
+        $message = $e->getMessage();
+    }
+    echo '<script>alert("' . $message . '")</script>';
 }
 
 

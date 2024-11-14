@@ -410,16 +410,24 @@ CREATE PROCEDURE ThemKhuKTX(
 )
 BEGIN
     DECLARE v_Count INT;
+    -- Kiểm tra mã khu đã tồn tại chưa
+    SELECT COUNT(*) INTO v_Count
+    FROM KhuKTX
+    WHERE MaKhuKTX = p_MaKhu;
+    IF v_Count > 0 THEN
+        SET p_Message = 'Mã khu đã tồn tại';
+        SET p_ErrorCode = 1;
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = p_Message;
+    ELSE
+        -- Bắt đầu transaction
+        START TRANSACTION;
+        -- Thêm khu vào bảng KhuKTX
+        INSERT INTO KhuKTX (MaKhuKTX, TenKhuKTX)
+        VALUES (p_MaKhu, p_TenKhu);
+        COMMIT;
+        SET p_Message = 'Thêm khu KTX thành công';
+        SET p_ErrorCode = 0;
     END IF;
-    -- Bắt đầu transaction
-    START TRANSACTION;
-    -- Thêm khu vào bảng KhuKTX
-    INSERT INTO KhuKTX (MaKhuKTX, TenKhuKTX)
-    VALUES (p_MaKhu, p_TenKhu);
-    COMMIT;
-    SET p_Message = 'Thêm khu KTX thành công';
-    SET p_ErrorCode = 0;
 END //
 DELIMITER ;
 -- Hàm Sửa Khu KTX
