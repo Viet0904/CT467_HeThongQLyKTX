@@ -866,3 +866,19 @@ BEGIN
 END //
 
 DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE DeleteLopIfNoStudents(IN maLopParam VARCHAR(50))
+BEGIN
+    -- Kiểm tra số sinh viên trong lớp
+    DECLARE studentCount INT;
+    SELECT COUNT(*) INTO studentCount FROM SinhVien WHERE MaLop = maLopParam;
+
+    -- Nếu không có sinh viên, xóa lớp
+    IF studentCount = 0 THEN
+        DELETE FROM Lop WHERE MaLop = maLopParam;
+    END IF;
+END //
+
+DELIMITER ;

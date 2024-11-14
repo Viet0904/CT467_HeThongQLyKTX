@@ -39,24 +39,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($tenLop)) {
         $message = "Vui lòng chọn tên lớp.";
     } else {
-        try {
-            // Cập nhật thông tin lớp vào cơ sở dữ liệu
-            $updateStmt = $dbh->prepare("UPDATE Lop SET TenLop = :tenLop WHERE MaLop = :maLop");
-            $updateStmt->bindParam(':maLop', $maLop, PDO::PARAM_STR);
-            $updateStmt->bindParam(':tenLop', $tenLop, PDO::PARAM_STR);
-
-            // Kiểm tra nếu update thành công
-            if ($updateStmt->execute()) {
-                // Sau khi cập nhật thành công, chuyển hướng về trang quản lý lớp
-                header("Location: manage_class.php");
-                exit;  // Dừng thực thi tiếp để tránh các lỗi không mong muốn
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Lấy giá trị từ form
+            $maLop = $_POST['maLop'];  // Mã lớp sẽ không thay đổi
+            $tenLop = $_POST['tenLop'];
+        
+            if (empty($tenLop)) {
+                $message = "Vui lòng chọn tên lớp.";
             } else {
-                $errorInfo = $updateStmt->errorInfo();
-                $message = "Lỗi khi cập nhật thông tin lớp. Chi tiết lỗi: " . implode(", ", $errorInfo);
+                try {
+                    // Thực thi stored procedure để cập nhật thông tin lớp
+                    $stmt = $dbh->prepare("CALL UpdateClassInfo(:maLop, :tenLop, @resultMessage)");
+                
+                    // Liên kết tham số vào câu lệnh
+                    $stmt->bindParam(':maLop', $maLop, PDO::PARAM_STR);
+                    $stmt->bindParam(':tenLop', $tenLop, PDO::PARAM_STR);
+                
+                    // Thực thi câu lệnh
+                    $stmt->execute();
+                
+                    // Lấy thông báo kết quả từ OUT parameter
+                    $resultMessageStmt = $dbh->query("SELECT @resultMessage AS message");
+                    $result = $resultMessageStmt->fetch(PDO::FETCH_ASSOC);
+                
+                    // Đặt thông báo cho người dùng
+                    $message = $result['message'];
+                
+                    // Nếu cập nhật thành công, chuyển hướng về trang quản lý lớp
+                    if ($message == 'Cập nhật thông tin lớp thành công.') {
+                        header("Location: manage_class.php");
+                        exit;
+                    }
+                } catch (PDOException $e) {
+                    // Xử lý lỗi nếu có
+                    $message = "Lỗi khi thực thi câu lệnh SQL: " . $e->getMessage();
+                }
             }
-        } catch (PDOException $e) {
-            $message = "Lỗi khi thực thi câu lệnh SQL: " . $e->getMessage();
-        }
+        }        
+        
     }
 }
 ?>
@@ -77,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="alert alert-info mt-3"><?php echo $message; ?></div>
                     <?php endif; ?>
 
-                    <div class="modal-user">
+                    <div class="modal-user mt-3">
                         <form action="manage_class.php?maLop=<?php echo $maLop; ?>" method="POST">
                             <div class="row row-add mb-3">
                                 <!-- Mã lớp: không cho phép sửa -->
