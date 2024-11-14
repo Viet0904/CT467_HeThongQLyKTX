@@ -13,14 +13,6 @@ BEGIN
     RETURN SoChoConLai;
 END //
 DELIMITER ;
--- Function lấy tất cả các khu KTX
-DELIMITER //
-CREATE FUNCTION GetAllKhuKTX()
-RETURNS TABLE
-BEGIN
-    RETURN SELECT * FROM KhuKTX;
-END //
-DELIMITER ;
 
 -- Trigger tự động tăng số luong DaO
 DELIMITER //
