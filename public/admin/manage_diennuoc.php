@@ -143,16 +143,23 @@ $totalPages = ceil($totalRows / $perPage);
                             // In dữ liệu
                             foreach ($diennuoc as $row) {
                                 $maPhong = $row['MaPhong'];
-                                $query = "SELECT COUNT(*) as TongsoSV FROM ThuePhong WHERE MaPhong = ?";
+                                
+                                $query = "SELECT TongSoSinhVienTrongPhong(?) as TongsoSV";
                                 $stmt = $dbh->prepare($query);
-                                $stmt->bindValue(1, $maPhong);
+                                $stmt->bindValue(1, $maPhong, PDO::PARAM_STR);
                                 $stmt->execute();
                                 $tongSoSV = $stmt->fetch(PDO::FETCH_ASSOC)['TongsoSV'];
-                                if ($tongSoSV <= 0) {
-                                    $tongSoSV = 1;
-                                }
-                                $phiDienTungSV = $row['PhiDien'] / $tongSoSV;
+
+                                $query = "SELECT TongPhiMoiSinhVien(?, ?, ?) as TongPhiSV";
+                                $stmt = $dbh->prepare($query);
+                                $stmt->bindValue(1, $maPhong, PDO::PARAM_STR);
+                                $stmt->bindValue(2, $row['PhiDien'], PDO::PARAM_INT);
+                                $stmt->bindValue(3, $row['PhiNuoc'], PDO::PARAM_INT);
+                                $stmt->execute();
+                                $tongPhiSV = $stmt->fetch(PDO::FETCH_ASSOC)['TongPhiSV'];
+
                                 $phiNuocTungSV = $row['PhiNuoc'] / $tongSoSV;
+                                $phiDienTungSV = $row['PhiDien'] / $tongSoSV;
                                 $tongPhiSV = $phiDienTungSV + $phiNuocTungSV;
                                 echo '<tr>';
                                 echo '<td class="text-center fw-bold" rowspan="2">' . $stt . '</td>';
