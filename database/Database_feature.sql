@@ -62,6 +62,15 @@ BEGIN
     SET NEW.TongTien = NEW.PhiDien + NEW.PhiNuoc;
 END//
 DELIMITER ;
+-- Trigger tự động tính TongTien khi insert vào bảng DienNuoc
+DELIMITER //
+CREATE TRIGGER update_tongtien_insert
+BEFORE INSERT ON DienNuoc
+FOR EACH ROW
+BEGIN
+    SET NEW.TongTien = NEW.PhiDien + NEW.PhiNuoc;
+END//
+DELIMITER ;
 
 -- Trigger xử lý khi thêm diennuoc
 DELIMITER //

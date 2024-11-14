@@ -20,33 +20,33 @@ require_once __DIR__ . '/../../config/dbadmin.php';
                     <div style="margin-top: 30px; margin-left: 40px;">
                         <div class="row">
                             <div class="card">
-                            <a href="room_list.php" style="text-decoration: none; color: black">
-                                <i class="fas fa-door-open"></i>
-                                <div class="card-title">Tổng số phòng</div>
-                                <div class="card-number">
-                                    <?php
-                                    $sqlPhong = "SELECT MaPhong FROM Phong";
-                                    $resultPhong = $dbh->prepare($sqlPhong);
-                                    $resultPhong->execute();
-                                    $totalPhong = $resultPhong->rowCount();
-                                    echo htmlspecialchars($totalPhong); // Hiển thị tổng số phòng
-                                    ?>
-                                </div>
+                                <a href="room_list.php" style="text-decoration: none; color: black">
+                                    <i class="fas fa-door-open"></i>
+                                    <div class="card-title">Tổng số phòng</div>
+                                    <div class="card-number">
+                                        <?php
+                                        $sqlPhong = "SELECT MaPhong FROM Phong";
+                                        $resultPhong = $dbh->prepare($sqlPhong);
+                                        $resultPhong->execute();
+                                        $totalPhong = $resultPhong->rowCount();
+                                        echo htmlspecialchars($totalPhong); // Hiển thị tổng số phòng
+                                        ?>
+                                    </div>
                                 </a>
                             </div>
                             <div class="card">
                                 <a href="student_list.php" style="text-decoration: none; color: black">
-                                <i class="fas fa-users"></i>
-                                <div class="card-title">Tổng sinh viên</div>
-                                <div class="card-number">
-                                    <?php
-                                    $sqlSinhVien = "SELECT MaSinhVien FROM SinhVien";
-                                    $resultSinhVien = $dbh->prepare($sqlSinhVien);
-                                    $resultSinhVien->execute();
-                                    $totalSinhVien = $resultSinhVien->rowCount();
-                                    echo htmlspecialchars($totalSinhVien); // Hiển thị tổng số sinh vien
-                                    ?>
-                                </div>
+                                    <i class="fas fa-users"></i>
+                                    <div class="card-title">Tổng sinh viên</div>
+                                    <div class="card-number">
+                                        <?php
+                                        $sqlSinhVien = "SELECT MaSinhVien FROM SinhVien";
+                                        $resultSinhVien = $dbh->prepare($sqlSinhVien);
+                                        $resultSinhVien->execute();
+                                        $totalSinhVien = $resultSinhVien->rowCount();
+                                        echo htmlspecialchars($totalSinhVien); // Hiển thị tổng số sinh vien
+                                        ?>
+                                    </div>
                                 </a>
                             </div>
                         </div>
@@ -57,35 +57,35 @@ require_once __DIR__ . '/../../config/dbadmin.php';
                     <div style="margin-top: 30px; margin-left: 40px;">
                         <div class="row">
                             <div class="card">
-                            <a href="report_price.php" style="text-decoration: none; color: black">
-                                <i class="fas fa-coins"></i>
-                                <div class="card-title">Tổng doanh thu</div>
-                                <div class="card-number">
-                                    <?php
-                                    // Truy vấn tổng tiền từ bảng DienNuoc
-                                    $sqlDoanhThu = "SELECT SUM(TongTien) AS TongDoanhThu FROM DienNuoc";
-                                    $resultDoanhThu = $dbh->prepare($sqlDoanhThu);
-                                    $resultDoanhThu->execute();
-                                    $tongDoanhThu = $resultDoanhThu->fetch(PDO::FETCH_ASSOC)['TongDoanhThu'];
-                                    // Hiển thị tổng doanh thu đã format theo kiểu tiền tệ
-                                    echo htmlspecialchars(number_format($tongDoanhThu, 2)) . " VND";
-                                    ?>
-                                </div>
+                                <a href="report_price.php" style="text-decoration: none; color: black">
+                                    <i class="fas fa-coins"></i>
+                                    <div class="card-title">Tổng doanh thu</div>
+                                    <div class="card-number">
+                                        <?php
+                                        // Truy vấn tổng tiền từ bảng DienNuoc
+                                        $sqlDoanhThu = "SELECT SUM(TongTien) AS TongDoanhThu FROM DienNuoc";
+                                        $resultDoanhThu = $dbh->prepare($sqlDoanhThu);
+                                        $resultDoanhThu->execute();
+                                        $tongDoanhThu = $resultDoanhThu->fetch(PDO::FETCH_ASSOC)['TongDoanhThu'];
+                                        // Hiển thị tổng doanh thu đã format theo kiểu tiền tệ
+                                        echo htmlspecialchars(number_format($tongDoanhThu, 2)) . " VND";
+                                        ?>
+                                    </div>
                                 </a>
                             </div>
                             <div class="card">
                                 <a href="employees_list.php" style="text-decoration: none; color: black">
-                                <i class="fas fa-cogs"></i>
-                                <div class="card-title">Tổng nhân viên</div>
-                                <div class="card-number">
-                                    <?php
-                                    $sqlNhanVien = "SELECT MaNhanVien FROM NhanVien";
-                                    $resultNhanVien = $dbh->prepare($sqlNhanVien);
-                                    $resultNhanVien->execute();
-                                    $totalNhanVien = $resultNhanVien->rowCount();
-                                    echo htmlspecialchars($totalNhanVien); // Hiển thị tổng số sinh vien
-                                    ?>
-                                </div>
+                                    <i class="fas fa-cogs"></i>
+                                    <div class="card-title">Tổng nhân viên</div>
+                                    <div class="card-number">
+                                        <?php
+                                        $sqlNhanVien = "SELECT MaNhanVien FROM NhanVien";
+                                        $resultNhanVien = $dbh->prepare($sqlNhanVien);
+                                        $resultNhanVien->execute();
+                                        $totalNhanVien = $resultNhanVien->rowCount();
+                                        echo htmlspecialchars($totalNhanVien); // Hiển thị tổng số sinh vien
+                                        ?>
+                                    </div>
                                 </a>
                             </div>
                         </div>
@@ -109,7 +109,7 @@ require_once __DIR__ . '/../../config/dbadmin.php';
         }
 
         // Đóng dropdown nếu click bên ngoài
-        window.onclick = function (event) {
+        window.onclick = function(event) {
             if (!event.target.matches('#userDropdown') && !event.target.matches('.ms-1')) {
                 var dropdown = document.getElementById("dropdownMenu");
                 if (dropdown.style.display === "block") {
