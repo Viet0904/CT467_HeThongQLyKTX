@@ -20,27 +20,26 @@ if ($maNhanVien) {
         'NgaySinh' => '',
         'GhiChu' => '',
         'GioiTinh' => '',
-        'ChucVu' => ''
+        'ChucVu' => '',
+        'Password' => '',
+        'Role' => ''
     ];
 }
 
-try {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Lấy dữ liệu từ form
-        $maNhanVien = $_POST['MaNhanVien'] ?? $maNhanVien;
 
-        // Kiểm tra mã nhân viên trùng lặp chỉ khi đăng ký mới
-        if (empty($maNhanVien)) {
-            $checkStmt = $dbh->prepare("SELECT * FROM NhanVien WHERE MaNhanVien = :maNhanVien");
-            $checkStmt->execute([':maNhanVien' => $_POST['MaNhanVien']]);
-            $existingEmployee = $checkStmt->fetch(PDO::FETCH_ASSOC);
+// Xử lý form
 
-            if ($existingEmployee) {
-                $message = "Mã Nhân viên đã tồn tại. Vui lòng sử dụng mã khác.";
-                echo "<script>alert('$message');</script>";
-            }
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if ($_POST['check'] == '0') {
+
+
+        $maNhanVien = $_POST['maNhanVien'] ?? '';
+        if ($_POST['Role'] == 'Nhân Viên') {
+            $_POST['Role'] = 'NhanVien';
         }
-
+        if ($_POST['Role'] == 'Quản trị viên') {
+            $_POST['Role'] = 'Admin';
+        }
         // Dữ liệu cho Nhân viên
         $data = [
             ':maNhanVien' => $_POST['MaNhanVien'],
@@ -52,33 +51,62 @@ try {
             ':chucVu' => $_POST['Role'],
             ':password' => password_hash($_POST['password'], PASSWORD_BCRYPT),
         ];
+        try {
+            $stmt = $dbh->prepare("CALL ThemNhanVien(:maNhanVien, :ten, :SDT, :ghiChu, :gioiTinh, :ngaySinh, :password, :chucVu, @p_Message, @p_ErrorCode)");
+            $stmt->execute($data);
 
-        // Thực hiện gọi thủ tục lưu trữ (Procedure) cho Insert hoặc Update
-        if ($maNhanVien) {
-            // Gọi thủ tục cập nhật
-            $stmt = $dbh->prepare("CALL UpdateNhanVien(:maNhanVien, :ten, :SDT, :ngaySinh, :ghiChu, :gioiTinh, :chucVu)");
-        } else {
-            // Gọi thủ tục chèn mới
-            $stmt = $dbh->prepare("CALL InsertNhanVien(:maNhanVien, :ten, :SDT, :ngaySinh, :ghiChu, :gioiTinh, :chucVu)");
+            // Lấy kết quả từ biến OUT
+            $result = $dbh->query("SELECT @p_Message AS message, @p_ErrorCode AS errorCode")->fetch(PDO::FETCH_ASSOC);
+            $message = $result['message'];
+            $errorCode = $result['errorCode'];
+            if ($errorCode != 0) {
+                throw new Exception($message);
+
+            }
+        } catch (Exception $e) {
+            $message = $e->getMessage();
         }
-
-        // Thực thi câu lệnh và kiểm tra kết quả
-        $result = $stmt->execute($data);
-
-        if ($result) {
-            $message = $maNhanVien ? "Cập nhật thành công!" : "Đăng ký thành công!";
-            echo "<script>alert('$message'); window.location.href = 'view_employees.php?mnv=" . ($_POST['MaNhanVien'] ?? $maNhanVien) . "';</script>";
-            exit; // Đảm bảo rằng không có đoạn mã nào được thực thi sau đó
-        } else {
-            $message = "Lỗi khi lưu dữ liệu. Vui lòng thử lại.";
-            echo "<script>alert('$message');</script>";
+        echo '<script>alert("' . $message . '");window.location.href="employees_list.php";</script>';
+    } else {
+        $maNhanVien = $_POST['maNhanVien'] ?? '';
+        if ($_POST['Role'] == 'Nhân Viên') {
+            $_POST['Role'] = 'NhanVien';
         }
-        
+        if ($_POST['Role'] == 'Quản trị viên') {
+            $_POST['Role'] = 'Admin';
+        }
+        // Dữ liệu cho Nhân viên
+        $data = [
+            ':oldMaNhanVien' => $maNhanVien,
+            ':maNhanVien' => $_POST['MaNhanVien'],
+            ':ten' => $_POST['HoTen'],
+            ':SDT' => $_POST['SDT'],
+            ':ngaySinh' => $_POST['NgaySinh'],
+            ':ghiChu' => $_POST['GhiChu'],
+            ':gioiTinh' => $_POST['GioiTinh'],
+            ':chucVu' => $_POST['Role'],
+            ':password' => password_hash($_POST['password'], PASSWORD_BCRYPT),
+        ];
+
+        try {
+            $stmt = $dbh->prepare("CALL UpdateNhanVien(:oldMaNhanVien, :maNhanVien, :ten, :SDT, :ghiChu, :gioiTinh, :ngaySinh, :password, :chucVu, @p_Message, @p_ErrorCode)");
+            $stmt->execute($data);
+
+            // Lấy kết quả từ biến OUT
+            $result = $dbh->query("SELECT @p_Message AS message, @p_ErrorCode AS errorCode")->fetch(PDO::FETCH_ASSOC);
+            $message = $result['message'];
+            $errorCode = $result['errorCode'];
+            if ($errorCode != 0) {
+                throw new Exception($message);
+            }
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+        }
+        echo '<script>alert("' . $message . '");window.location.href="employees_list.php";</script>';
     }
-} catch (PDOException $e) {
-    $message = "Lỗi: " . $e->getMessage();
-    echo "<script>alert('$message');</script>";
+
 }
+
 ?>
 
 <body>
@@ -93,7 +121,10 @@ try {
                     </div>
 
                     <div class="modal-user mt-3">
-                        <form action="./action/manage_employees_action.php?mnv=<?php echo htmlspecialchars($maNhanVien); ?>" method="POST">
+
+                        <form action="manage_employees.php?mnv=<?php echo htmlspecialchars($maNhanVien); ?>" method="POST">
+                            <!-- Send employee ID as a hidden field if updating -->
+
                             <input type="hidden" name="maNhanVien" value="<?php echo htmlspecialchars($NhanVien['MaNhanVien'] ?? $_POST['MaNhanVien'] ?? ''); ?>">
 
                             <div class="row row-add">
@@ -102,24 +133,31 @@ try {
                                 </div>
 
                                 <div class="row row-add">
-                                    <div class="col-md-4">
-                                        <label for="schoolID"> <b>Mã nhân viên</b></label>
-                                        <input type="text" class="form-control mb-2 mt-1 mx-3" name="MaNhanVien" value="<?php echo htmlspecialchars($NhanVien['MaNhanVien'] ?? $_POST['MaNhanVien'] ?? ''); ?>" required <?php echo $maNhanVien ? 'readonly' : ''; ?>>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="chucVu"><b>Chức vụ</b></label>
-                                        <input type="text" class="form-control mt-1 mb-2 mx-3" name="Role" 
-                                            value="<?php echo htmlspecialchars(isset($NhanVien['Role']) && $NhanVien['Role'] == 'Admin' ? 'Quản trị viên' : (isset($NhanVien['Role']) ? 'Nhân viên văn phòng' : '')); ?>" 
-                                            required>
-                                    </div>
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
+                                        <label for="schoolID"> <b>Mã nhân viên</b></label>
+                                        <input type="text" class="form-control mb-2 mt-1 mx-3" name="MaNhanVien" value="<?php echo htmlspecialchars($NhanVien['MaNhanVien'] ?? $_POST['MaNhanVien'] ?? ''); ?>" required <?php echo $maNhanVien ? 'readonly' : ''; ?> pattern="CB\d{6}" title="Mã nhân viên phải bắt đầu bằng 'CB' và theo sau là 6 chữ số.">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="chucVu"><b>Chức vụ</b></label>
+                                        <input type="text" class="form-control mt-1 mb-2 mx-3" name="Role"
+                                            value="<?php echo htmlspecialchars($NhanVien['Role'] == 'Admin' ? 'Quản trị viên' : 'Nhân Viên'); ?>"
+                                            required readonly>
+                                    </div>
+                                    <div class="col-md-3">
                                         <label for="chucVu"><b>Ghi Chú</b></label>
-                                        <input type="text" class="form-control mt-1 mb-2 mx-3" name="GhiChu" 
+                                        <input type="text" class="form-control mt-1 mb-2 mx-3" name="GhiChu"
                                             value="<?php echo htmlspecialchars($NhanVien['GhiChu'] ?? ''); ?>">
                                     </div>
+                                    <div class="col-md-3">
+                                        <label for="password"><b>Passowrd</b></label>
+                                        <input type="text" class="form-control mt-1 mb-2 mx-3" name="password"
+                                            value="<?php echo htmlspecialchars($NhanVien['Password'] ?? ''); ?>">
+                                    </div>
+
 
                                 </div>
+
 
                                 <h5 class="mt-3"><b>Thông tin cá nhân</b></h5>
                                 <div class="row row-add">
@@ -132,18 +170,29 @@ try {
                                         <input type="date" class="form-control mb-2 mt-1 mx-3" name="NgaySinh" value="<?php echo htmlspecialchars($NhanVien['NgaySinh'] ?? ''); ?>" required>
                                     </div>
                                     <div class="col-md-3">
-                                        <label for="gender"><b>Giới tính</b></label>
-                                        <input type="text" class="form-control mb-2 mt-1 mx-3" name="GioiTinh" value="<?php echo htmlspecialchars($NhanVien['GioiTinh'] ?? ''); ?>" required>
+ 
+                                        <?php if (!empty($NhanVien['GioiTinh'])): ?>
+                                            <input type="text" class="form-control mb-2 mt-1 mx-3" name="GioiTinh" value="<?php echo htmlspecialchars($NhanVien['GioiTinh']); ?>" required>
+                                        <?php else: ?>
+                                            <select class="form-control mb-2 mt-1 mx-3" name="GioiTinh" required>
+                                                <option value="">Chọn giới tính</option>
+                                                <option value="Nam">Nam</option>
+                                                <option value="Nữ">Nữ</option>
+                                            </select>
+                                        <?php endif; ?>
                                     </div>
                                     <div class="col-md-3">
                                         <label for="contact"><b>Liên hệ #</b></label>
-                                        <input type="text" class="form-control mb-2 mt-1 mx-3" name="SDT" value="<?php echo htmlspecialchars($NhanVien['SDT'] ?? ''); ?>" required>
+                                        <input type="text" class="form-control mb-2 mt-1 mx-3" name="SDT" value="<?php echo htmlspecialchars($NhanVien['SDT'] ?? ''); ?>" required pattern="\d{10}" title="Số điện thoại phải là 10 chữ số.">
                                     </div>
                                 </div>
 
+                                <!-- Submit Button -->
                                 <div class="row-add d-flex justify-content-center align-items-center mt-2">
                                     <div class="mx-2">
                                         <button type="submit" class="btn" style="background-color: #db3077; color: white;">
+                                            <input type="hidden" name="check" value="<?php $maNhanVien ? "1" : "0"; ?>">
+
                                             <?php echo $maNhanVien ? "Cập nhật" : "Đăng ký"; ?>
                                         </button>
                                     </div>
@@ -153,11 +202,10 @@ try {
                                         </div>
                                     <?php endif; ?>
                                     <div class="mx-2">
-                                        <a href="view_employees.php?mnv=<?php echo htmlspecialchars($maNhanVien);?>" class="btn btn-secondary">Trở về</a>
+
+                                        <a href="view_employees.php?mnv=<?php echo htmlspecialchars($maNhanVien); ?>" class="btn btn-secondary">Trở về</a>
                                     </div>
                                 </div>
-
-                            </div>
 
                         </form>
                     </div>
@@ -165,6 +213,9 @@ try {
             </div>
         </div>
     </div>
+
+</body>
+
 
 <!-- Bootstrap JS và Popper.js -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
@@ -203,3 +254,4 @@ try {
     }
 </script>
 </body>
+
