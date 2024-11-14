@@ -1,18 +1,4 @@
 use htqlktx;
--- Tạo bảng DienNuoc
-CREATE TABLE DienNuoc (
-    ID INT PRIMARY KEY AUTO_INCREMENT,
-    Thang INT,
-    NamHoc VARCHAR(50),
-    PhiDien DECIMAL(10, 2),
-    PhiNuoc DECIMAL(10, 2),
-    TongTien DECIMAL(10, 2) DEFAULT (PhiDien + PhiNuoc),
-    HocKi ENUM('1', '2', '3'),
-    NgayThanhToan DATE,
-    MaPhong VARCHAR(10),
-    FOREIGN KEY (MaPhong) REFERENCES Phong(MaPhong),
-    FOREIGN KEY (HocKi, NamHoc) REFERENCES HocKi(HocKi, NamHoc)
-);
 
 -- Tính số chổ còn lại
 DELIMITER //
@@ -424,16 +410,24 @@ CREATE PROCEDURE ThemKhuKTX(
 )
 BEGIN
     DECLARE v_Count INT;
+    -- Kiểm tra mã khu đã tồn tại chưa
+    SELECT COUNT(*) INTO v_Count
+    FROM KhuKTX
+    WHERE MaKhuKTX = p_MaKhu;
+    IF v_Count > 0 THEN
+        SET p_Message = 'Mã khu đã tồn tại';
+        SET p_ErrorCode = 1;
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = p_Message;
+    ELSE
+        -- Bắt đầu transaction
+        START TRANSACTION;
+        -- Thêm khu vào bảng KhuKTX
+        INSERT INTO KhuKTX (MaKhuKTX, TenKhuKTX)
+        VALUES (p_MaKhu, p_TenKhu);
+        COMMIT;
+        SET p_Message = 'Thêm khu KTX thành công';
+        SET p_ErrorCode = 0;
     END IF;
-    -- Bắt đầu transaction
-    START TRANSACTION;
-    -- Thêm khu vào bảng KhuKTX
-    INSERT INTO KhuKTX (MaKhuKTX, TenKhuKTX)
-    VALUES (p_MaKhu, p_TenKhu);
-    COMMIT;
-    SET p_Message = 'Thêm khu KTX thành công';
-    SET p_ErrorCode = 0;
 END //
 DELIMITER ;
 -- Hàm Sửa Khu KTX
@@ -678,6 +672,7 @@ CREATE PROCEDURE SuaHocKi(
 BEGIN
     DECLARE v_Count INT;
     DECLARE v_DateOverlap INT;
+    DECLARE v_DienNuocCount INT;
     -- Kiểm tra mã học kỳ và năm học có tồn tại không
     SELECT COUNT(*) INTO v_Count
     FROM HocKi
@@ -699,15 +694,26 @@ BEGIN
             SET p_ErrorCode = 2;
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = p_Message;
         ELSE
-            -- Bắt đầu transaction
-            START TRANSACTION;
-            -- Cập nhật ngày bắt đầu và kết thúc của học kỳ
-            UPDATE HocKi
-            SET BatDau = p_BatDau, KetThuc = p_KetThuc
-            WHERE HocKi = p_HocKi AND NamHoc = p_NamHoc;
-            COMMIT;
-            SET p_Message = 'Cập nhật học kỳ thành công';
-            SET p_ErrorCode = 0;
+            -- Kiểm tra xem có DienNuoc nào có tháng nằm trong khoảng ngày bắt đầu và kết thúc không
+            SELECT COUNT(*) INTO v_DienNuocCount
+            FROM DienNuoc
+            WHERE HocKi = p_HocKi AND NamHoc = p_NamHoc
+              AND (DATE(CONCAT(NamHoc, '-', Thang, '-01')) NOT BETWEEN p_BatDau AND p_KetThuc);
+            IF v_DienNuocCount > 0 THEN
+                SET p_Message = 'Có dữ liệu điện nước không nằm trong khoảng ngày bắt đầu và kết thúc';
+                SET p_ErrorCode = 3;
+                SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = p_Message;
+            ELSE
+                -- Bắt đầu transaction
+                START TRANSACTION;
+                -- Cập nhật ngày bắt đầu và kết thúc của học kỳ
+                UPDATE HocKi
+                SET BatDau = p_BatDau, KetThuc = p_KetThuc
+                WHERE HocKi = p_HocKi AND NamHoc = p_NamHoc;
+                COMMIT;
+                SET p_Message = 'Cập nhật học kỳ thành công';
+                SET p_ErrorCode = 0;
+            END IF;
         END IF;
     END IF;
 END //
