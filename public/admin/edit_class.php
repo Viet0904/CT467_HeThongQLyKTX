@@ -10,29 +10,27 @@ if (empty($maLop)) {
     exit;
 }
 
-// Lấy thông tin lớp hiện tại từ cơ sở dữ liệu
-$query = $dbh->prepare("SELECT * FROM Lop WHERE MaLop = :maLop");
-$query->bindParam(':maLop', $maLop, PDO::PARAM_STR);
+// Lấy thông tin lớp hiện tại từ cơ sở dữ liệu thông qua thủ tục lưu trữ
+$query = $dbh->prepare("CALL layThongTinLop(:maLopInput)");
+$query->bindParam(':maLopInput', $maLop, PDO::PARAM_STR);
 $query->execute();
 $currentLop = $query->fetch(PDO::FETCH_ASSOC);
+$query->closeCursor(); // Đóng con trỏ để chuẩn bị cho truy vấn tiếp theo
 
 if (!$currentLop) {
     echo "Không tìm thấy lớp với mã lớp này!";
     exit;
 }
 
-// Lấy danh sách tất cả các lớp
-$lopList = $dbh->query("SELECT * FROM Lop")->fetchAll(PDO::FETCH_ASSOC);
+// Lấy danh sách tất cả các lớp thông qua thủ tục lưu trữ
+$query = $dbh->query("CALL layDanhSachLop()");
+$lopList = $query->fetchAll(PDO::FETCH_ASSOC);
+$query->closeCursor(); // Đóng con trỏ
 
 // Xử lý khi form được gửi đi
 $message = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Debug: Kiểm tra dữ liệu nhận được từ form
-    var_dump($_POST);  // Kiểm tra các giá trị đã gửi
-    die();  // Dừng mã tại đây để kiểm tra
-
     // Lấy giá trị từ form
-    $maLop = $_POST['maLop'];  // Mã lớp sẽ không thay đổi
     $tenLop = $_POST['tenLop'];
 
     // Kiểm tra giá trị nhận được từ form
@@ -40,16 +38,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $message = "Vui lòng chọn tên lớp.";
     } else {
         try {
-            // Cập nhật thông tin lớp vào cơ sở dữ liệu
-            $updateStmt = $dbh->prepare("UPDATE Lop SET TenLop = :tenLop WHERE MaLop = :maLop");
-            $updateStmt->bindParam(':maLop', $maLop, PDO::PARAM_STR);
-            $updateStmt->bindParam(':tenLop', $tenLop, PDO::PARAM_STR);
+            // Cập nhật thông tin lớp vào cơ sở dữ liệu thông qua thủ tục lưu trữ
+            $updateStmt = $dbh->prepare("CALL capNhatLop(:maLopInput, :tenLopInput)");
+            $updateStmt->bindParam(':maLopInput', $maLop, PDO::PARAM_STR);
+            $updateStmt->bindParam(':tenLopInput', $tenLop, PDO::PARAM_STR);
 
             // Kiểm tra nếu update thành công
             if ($updateStmt->execute()) {
-                // Sau khi cập nhật thành công, chuyển hướng về trang quản lý lớp
-                header("Location: manage_class.php");
-                exit;  // Dừng thực thi tiếp để tránh các lỗi không mong muốn
+                $message = "Cập nhật thông tin lớp thành công!";
+                echo "<script type='text/javascript'>alert('$message');</script>";
+                echo "<script type='text/javascript'>window.location.href = 'manage_class.php';</script>";
+                exit;
             } else {
                 $errorInfo = $updateStmt->errorInfo();
                 $message = "Lỗi khi cập nhật thông tin lớp. Chi tiết lỗi: " . implode(", ", $errorInfo);
@@ -78,12 +77,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php endif; ?>
 
                     <div class="modal-user">
-                        <form action="manage_class.php?maLop=<?php echo $maLop; ?>" method="POST">
+                        <form action="?maLop=<?php echo htmlspecialchars($maLop); ?>" method="POST">
                             <div class="row row-add mb-3">
                                 <!-- Mã lớp: không cho phép sửa -->
                                 <div class="col-md-4">
                                     <label for="maLop" class="form-label">Mã lớp</label>
-                                    <input type="text" class="form-control mt-2" id="maLop" name="maLop" value="<?php echo $currentLop['MaLop']; ?>" readonly>
+                                    <input type="text" class="form-control mt-2" id="maLop" name="maLop" value="<?php echo htmlspecialchars($currentLop['MaLop']); ?>" readonly>
                                 </div>
 
                                 <!-- Tên lớp: cho phép chọn và sửa -->
@@ -91,9 +90,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <label for="tenLop" class="form-label">Tên Lớp</label>
                                     <select class="form-select mt-2" id="tenLop" name="tenLop" required>
                                         <?php foreach ($lopList as $lop): ?>
-                                            <option value="<?php echo $lop['TenLop']; ?>"
+                                            <option value="<?php echo htmlspecialchars($lop['TenLop']); ?>"
                                                 <?php echo ($lop['TenLop'] == $currentLop['TenLop']) ? 'selected' : ''; ?>>
-                                                <?php echo $lop['TenLop']; ?>
+                                                <?php echo htmlspecialchars($lop['TenLop']); ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
