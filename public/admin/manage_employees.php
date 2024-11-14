@@ -4,9 +4,9 @@ include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
 
 $message = '';
-$maNhanVien = $_GET['mnv'] ?? ''; // Lấy mã Nhan viên từ URL
+$maNhanVien = $_GET['mnv'] ?? ''; // Lấy mã Nhân viên từ URL
 
-// Lấy thông tin Nhan viên nếu có mã Nhan viên
+// Lấy thông tin Nhân viên nếu có mã Nhân viên
 if ($maNhanVien) {
     $stmt = $dbh->prepare("SELECT * FROM NhanVien WHERE MaNhanVien = :maNhanVien");
     $stmt->execute([':maNhanVien' => $maNhanVien]);
@@ -26,10 +26,12 @@ if ($maNhanVien) {
     ];
 }
 
+
 // Xử lý form
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($_POST['check'] == '0') {
+
 
         $maNhanVien = $_POST['maNhanVien'] ?? '';
         if ($_POST['Role'] == 'Nhân Viên') {
@@ -59,6 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errorCode = $result['errorCode'];
             if ($errorCode != 0) {
                 throw new Exception($message);
+
             }
         } catch (Exception $e) {
             $message = $e->getMessage();
@@ -84,6 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':chucVu' => $_POST['Role'],
             ':password' => password_hash($_POST['password'], PASSWORD_BCRYPT),
         ];
+
         try {
             $stmt = $dbh->prepare("CALL UpdateNhanVien(:oldMaNhanVien, :maNhanVien, :ten, :SDT, :ghiChu, :gioiTinh, :ngaySinh, :password, :chucVu, @p_Message, @p_ErrorCode)");
             $stmt->execute($data);
@@ -100,6 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         echo '<script>alert("' . $message . '");window.location.href="employees_list.php";</script>';
     }
+
 }
 
 ?>
@@ -115,14 +120,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <h5 class="modal-title mt-2"><?php echo $maNhanVien ? "Cập nhật nhân viên" : "Đăng ký nhân viên mới"; ?></h5>
                     </div>
 
-                    <!-- Hiển thị thông báo -->
-                    <?php if (!empty($message)): ?>
-                        <div class="alert alert-info mt-3"><?php echo $message; ?></div>
-                    <?php endif; ?>
-
                     <div class="modal-user mt-3">
+
                         <form action="manage_employees.php?mnv=<?php echo htmlspecialchars($maNhanVien); ?>" method="POST">
                             <!-- Send employee ID as a hidden field if updating -->
+
                             <input type="hidden" name="maNhanVien" value="<?php echo htmlspecialchars($NhanVien['MaNhanVien'] ?? $_POST['MaNhanVien'] ?? ''); ?>">
 
                             <div class="row row-add">
@@ -131,6 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </div>
 
                                 <div class="row row-add">
+
                                     <div class="col-md-3">
                                         <label for="schoolID"> <b>Mã nhân viên</b></label>
                                         <input type="text" class="form-control mb-2 mt-1 mx-3" name="MaNhanVien" value="<?php echo htmlspecialchars($NhanVien['MaNhanVien'] ?? $_POST['MaNhanVien'] ?? ''); ?>" required <?php echo $maNhanVien ? 'readonly' : ''; ?> pattern="CB\d{6}" title="Mã nhân viên phải bắt đầu bằng 'CB' và theo sau là 6 chữ số.">
@@ -155,7 +158,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                                 </div>
 
-                                <!-- Personal Information Section -->
+
                                 <h5 class="mt-3"><b>Thông tin cá nhân</b></h5>
                                 <div class="row row-add">
                                     <div class="col-md-3">
@@ -167,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         <input type="date" class="form-control mb-2 mt-1 mx-3" name="NgaySinh" value="<?php echo htmlspecialchars($NhanVien['NgaySinh'] ?? ''); ?>" required>
                                     </div>
                                     <div class="col-md-3">
-                                        <label for="gender"><b>Giới tính</b></label>
+ 
                                         <?php if (!empty($NhanVien['GioiTinh'])): ?>
                                             <input type="text" class="form-control mb-2 mt-1 mx-3" name="GioiTinh" value="<?php echo htmlspecialchars($NhanVien['GioiTinh']); ?>" required>
                                         <?php else: ?>
@@ -189,6 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <div class="mx-2">
                                         <button type="submit" class="btn" style="background-color: #db3077; color: white;">
                                             <input type="hidden" name="check" value="<?php $maNhanVien ? "1" : "0"; ?>">
+
                                             <?php echo $maNhanVien ? "Cập nhật" : "Đăng ký"; ?>
                                         </button>
                                     </div>
@@ -198,13 +202,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         </div>
                                     <?php endif; ?>
                                     <div class="mx-2">
+
                                         <a href="view_employees.php?mnv=<?php echo htmlspecialchars($maNhanVien); ?>" class="btn btn-secondary">Trở về</a>
                                     </div>
                                 </div>
+
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 </body>
+
+
+<!-- Bootstrap JS và Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz4fnFO9gybBogGzPztE1M5rZG/8Xlqh8fATrSWJZDmmW4Ll48dWkOVbCH"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+    integrity="sha384-shoIXUoVOFk60M7DuE4bfOY1pNIqcd9tPCSZrhTDQTXkNv8El+fEfXksqNhUNuUc"
+    crossorigin="anonymous"></script>
+
+<script>
+    // Hàm mở và đóng dropdown khi bấm tên admin
+    function toggleDropdown(event) {
+        event.stopPropagation(); // Ngăn chặn sự kiện click bên ngoài
+        var dropdown = document.getElementById("dropdownMenu");
+        dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block"; // Toggle dropdown
+    }
+
+    // Hàm mở và đóng dropdown khi bấm vào nút Action
+    function toggleActionDropdown(id) {
+        var dropdown = document.getElementById(id);
+        if (dropdown.style.display === "none" || dropdown.style.display === "") {
+            dropdown.style.display = "block"; // Hiển thị dropdown
+        } else {
+            dropdown.style.display = "none"; // Ẩn dropdown
+        }
+    }
+
+    // Đóng tất cả các dropdown nếu click bên ngoài
+    window.onclick = function(event) {
+        var dropdownMenu = document.getElementById("dropdownMenu");
+
+        // Đóng dropdown của tên admin nếu click bên ngoài
+        if (!event.target.matches('#userDropdown') && !event.target.matches('.ms-1') && !dropdownMenu.contains(event.target)) {
+            dropdownMenu.style.display = "none"; // Đảm bảo đóng dropdown
+        }
+    }
+</script>
+</body>
+
