@@ -13,6 +13,14 @@ BEGIN
     RETURN SoChoConLai;
 END //
 DELIMITER ;
+-- Function lấy tất cả các khu KTX
+DELIMITER //
+CREATE FUNCTION GetAllKhuKTX()
+RETURNS TABLE
+BEGIN
+    RETURN SELECT * FROM KhuKTX;
+END //
+DELIMITER ;
 
 -- Trigger tự động tăng số luong DaO
 DELIMITER //
@@ -108,6 +116,7 @@ BEGIN
 END //
 DELIMITER ; 
 -- Viết 1 PROCEDURE chứa Transction để thanh toán điện nước
+
 DELIMITER //
 CREATE PROCEDURE ThanhToanDienNuoc (
     IN p_MaPhong VARCHAR(10),
@@ -762,8 +771,9 @@ END //
 DELIMITER ;
 
 
-DELIMITER //
 
+-- Nhân Viên
+DELIMITER //
 CREATE PROCEDURE UpdateNhanVien (
     IN p_OldMaNhanVien VARCHAR(50),
     IN p_HoTen VARCHAR(255),
@@ -783,105 +793,4 @@ BEGIN
         GioiTinh = p_GioiTinh
     WHERE MaNhanVien = p_OldMaNhanVien;
 END //
-
-DELIMITER ;
-
-
-
-
-DELIMITER //
-
-CREATE PROCEDURE InsertPhong (
-    IN p_MaPhong VARCHAR(50),
-    IN p_MaDay VARCHAR(50),
-    IN p_TenPhong VARCHAR(255),
-    IN p_LoaiPhong VARCHAR(50),
-    IN p_DienTich DECIMAL(10, 2),
-    IN p_SucChua INT,
-    IN p_SoChoThucTe INT,
-    IN p_DaO INT,
-    IN p_GiaThue DECIMAL(10, 2),
-    IN p_TrangThaiSuDung VARCHAR(50)
-)
-BEGIN
-    INSERT INTO Phong (MaPhong, MaDay, TenPhong, LoaiPhong, DienTich, SucChua, SoChoThucTe, DaO, GiaThue, TrangThaiSuDung) 
-    VALUES (p_MaPhong, p_MaDay, p_TenPhong, p_LoaiPhong, p_DienTich, p_SucChua, p_SoChoThucTe, p_DaO, p_GiaThue, p_TrangThaiSuDung);
--- Hàm lấy thông tin lớp
-DELIMITER //
-CREATE PROCEDURE layThongTinLop(IN maLopInput VARCHAR(50))
-BEGIN
-    SELECT * FROM Lop WHERE MaLop = maLopInput;
-END //
-DELIMITER ;
-
--- Hàm lấy danh sách tất cả lớp
-DELIMITER //
-
-CREATE PROCEDURE layDanhSachLop()
-BEGIN
-    SELECT * FROM Lop;
-
-END //
-
-DELIMITER ;
-
-
-DELIMITER //
-
-CREATE PROCEDURE UpdatePhong (
-    IN p_MaPhong VARCHAR(50),
-    IN p_OldMaPhong VARCHAR(50),
-    IN p_MaDay VARCHAR(50),
-    IN p_TenPhong VARCHAR(255),
-    IN p_LoaiPhong VARCHAR(50),
-    IN p_DienTich DECIMAL(10, 2),
-    IN p_SucChua INT,
-    IN p_SoChoThucTe INT,
-    IN p_DaO INT,
-    IN p_GiaThue DECIMAL(10, 2),
-    IN p_TrangThaiSuDung VARCHAR(50)
-)
-BEGIN
-    UPDATE Phong 
-    SET MaPhong = p_MaPhong, 
-        MaDay = p_MaDay, 
-        TenPhong = p_TenPhong, 
-        LoaiPhong = p_LoaiPhong, 
-        DienTich = p_DienTich, 
-        SucChua = p_SucChua, 
-        SoChoThucTe = p_SoChoThucTe, 
-        DaO = p_DaO, 
-        GiaThue = p_GiaThue, 
-        TrangThaiSuDung = p_TrangThaiSuDung 
-    WHERE MaPhong = p_OldMaPhong;
-
--- Hàm cập nhật thông tin lớp
-DELIMITER //
-
-CREATE PROCEDURE capNhatLop(IN maLopInput VARCHAR(50), IN tenLopInput VARCHAR(100))
-BEGIN
-    UPDATE Lop 
-    SET TenLop = tenLopInput 
-    WHERE MaLop = maLopInput;
-
-END //
-
-DELIMITER ;
-
-
-DELIMITER //
-
-CREATE PROCEDURE UpdateTT_ThuePhong(
-    IN p_MaHopDong VARCHAR(20),
-    IN p_NgayThanhToan DATE,
-    IN p_MaNhanVien VARCHAR(20)
-)
-BEGIN
-    UPDATE TT_ThuePhong 
-    SET NgayThanhToan = p_NgayThanhToan, 
-        MaNhanVien = p_MaNhanVien
-    WHERE MaHopDong = p_MaHopDong;
-END //
-
-DELIMITER ;
-
+DELIMITER ; 

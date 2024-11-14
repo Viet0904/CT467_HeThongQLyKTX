@@ -3,8 +3,9 @@ include_once __DIR__ . '/../../config/dbadmin.php';
 include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
 
-// Lấy dữ liệu từ bảng Khu
-$query = "SELECT * FROM KhuKTX";
+
+// Gọi function GetAllKhuKTX từ SQL
+$query = "SELECT * FROM GetAllKhuKTX()";
 $stmt = $dbh->prepare($query);
 $stmt->execute();
 $areas = $stmt->fetchAll(PDO::FETCH_ASSOC);
