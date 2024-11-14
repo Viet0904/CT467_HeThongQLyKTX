@@ -10,7 +10,6 @@ include_once __DIR__ . '/../../partials/heading.php';
             <?php
             include_once __DIR__ . '/sidebar.php';
             ?>
-
             <div class="col px-0">
                 <!-- Nội dung chính -->
                 <div class=" mt-4"
@@ -24,8 +23,57 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 style="background-color: rgb(219, 48, 119);">
                                 <i class="fas fa-plus me-1"></i>Thêm sinh viên
                             </a>
-
                         </div>
+                        <form id="searchForm" method="POST" action="">
+                            <div class="row g-3">
+                                <div class="col-md-6 col-lg-3">
+                                    <label for="MSSV" class="form-label">MSSV</label>
+                                    <select class="form-select" id="MSSV" name="MSSV" aria-label="Select MSSV" onchange="toggleSelect('MSSV', 'maLop')">
+                                        <option value="0">Tất cả</option>
+                                        <?php
+                                        $sinhvienQuery = "SELECT MaSinhVien FROM SinhVien";
+                                        $sinhvienResult = $dbh->query($sinhvienQuery);
+                                        while ($row = $sinhvienResult->fetch(PDO::FETCH_ASSOC)) {
+                                            echo '<option value="' . htmlspecialchars($row['MaSinhVien']) . '">' . htmlspecialchars($row['MaSinhVien']) . '</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6 col-lg-3">
+                                    <label for="maLop" class="form-label">Mã Lớp</label>
+                                    <select class="form-select" id="maLop" name="maLop" aria-label="Select class" onchange="toggleSelect('maLop', 'MSSV')">
+                                        <option value="0">Tất cả</option>
+                                        <?php
+                                        $classQuery = "SELECT DISTINCT MaLop FROM SinhVien";
+                                        $classResult = $dbh->query($classQuery);
+                                        while ($row = $classResult->fetch(PDO::FETCH_ASSOC)) {
+                                            echo '<option value="' . htmlspecialchars($row['MaLop']) . '">' . htmlspecialchars($row['MaLop']) . '</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary" aria-label="Search students">
+                                        <i class="bi bi-search me-2"></i>Tìm kiếm
+                                    </button>
+                                </div>
+                            </div>
+                            <script>
+                                function toggleSelect(selectedId, otherId) {
+                                    var selected = document.getElementById(selectedId);
+                                    var other = document.getElementById(otherId);
+                                    if (selected.value !== '0') {
+                                        other.disabled = true;
+                                    } else {
+                                        other.disabled = false;
+                                    }
+                                }
+                            </script>
+                        </form>
+
 
                         <div class="col-auto py-3 ">
 
@@ -115,7 +163,7 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 if ($currentPage > 1) {
                                     echo '<li class="page-item"><a class="page-link" href="?page=1">Trang đầu</a></li>';
                                     $prevPage = $currentPage - 1;
-                                    echo '<li class="page-item"><a class="page-link" href="?page=' . htmlspecialchars($prevPage) . '">Previous</a></li>';
+                                    echo '<li class="page-item"><a class="page-link" href="?page=' . htmlspecialchars($prevPage) . '">Trước</a></li>';
                                 }
 
                                 for ($i = 1; $i <= $totalPages; $i++) {
@@ -128,7 +176,7 @@ include_once __DIR__ . '/../../partials/heading.php';
 
                                 if ($currentPage < $totalPages) {
                                     $nextPage = $currentPage + 1;
-                                    echo '<li class="page-item"><a class="page-link" href="?page=' . htmlspecialchars($nextPage) . '">Next</a></li>';
+                                    echo '<li class="page-item"><a class="page-link" href="?page=' . htmlspecialchars($nextPage) . '">Sau</a></li>';
                                     echo '<li class="page-item"><a class="page-link" href="?page=' . htmlspecialchars($totalPages) . '">Trang cuối</a></li>';
                                 }
                                 echo '</ul>';
@@ -156,7 +204,7 @@ include_once __DIR__ . '/../../partials/heading.php';
     integrity="sha384-shoIXUoVOFk60M7DuE4bfOY1pNIqcd9tPCSZrhTDQTXkNv8El+fEfXksqNhUNuUc"
     crossorigin="anonymous"></script>
 
-<script>
+    <script>
     // Hàm mở và đóng dropdown khi bấm tên admin
     function toggleDropdown(event) {
         event.stopPropagation(); // Ngăn chặn sự kiện click bên ngoài
@@ -175,7 +223,7 @@ include_once __DIR__ . '/../../partials/heading.php';
     }
 
     // Đóng tất cả các dropdown nếu click bên ngoài
-    window.onclick = function (event) {
+    window.onclick = function(event) {
         var dropdownMenu = document.getElementById("dropdownMenu");
 
         // Đóng dropdown của tên admin nếu click bên ngoài
@@ -183,7 +231,6 @@ include_once __DIR__ . '/../../partials/heading.php';
             dropdownMenu.style.display = "none"; // Đảm bảo đóng dropdown
         }
     }
-
 </script>
 
 </html>

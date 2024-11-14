@@ -58,7 +58,7 @@ $totalPages = ceil($totalRows / $perPage);
                     <div class="container-fluid py-3 px-2" style="padding: 20px;">
                         <!-- Phần header của List of Rooms -->
                         <div class="d-flex justify-content-between align-items-center">
-                            <h5>Danh sách phòng</h5>
+                            <h5>Danh sách hóa đơn điện nước</h5>
                         </div>
 
                         <form id="searchForm" method="post" action="manage_diennuoc.php">
@@ -107,7 +107,7 @@ $totalPages = ceil($totalRows / $perPage);
                             <div class="row mt-4">
                                 <div class="col-12">
                                     <button type="submit" name="search" class="btn btn-primary" aria-label="Search rooms">
-                                        <i class="bi bi-search me-2"></i>Search
+                                        <i class="bi bi-search me-2"></i>Tìm kiếm
                                     </button>
                                 </div>
                             </div>
