@@ -2,6 +2,62 @@
 include_once __DIR__ . '/../../config/dbadmin.php';
 include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
+// Xử lý form
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $mssv = $_POST['MSSV'] ?? '0';
+    $maLop = $_POST['maLop'] ?? '0';
+
+    $query = "SELECT SinhVien.*, Lop.TenLop, ThuePhong.MaPhong 
+              FROM SinhVien 
+              JOIN Lop ON SinhVien.MaLop = Lop.MaLop 
+              LEFT JOIN ThuePhong ON SinhVien.MaSinhVien = ThuePhong.MaSinhVien";
+
+    $conditions = [];
+    $params = [];
+
+    if ($mssv !== '0') {
+        $conditions[] = "SinhVien.MaSinhVien = :mssv";
+        $params[':mssv'] = $mssv;
+    }
+
+    if ($maLop !== '0') {
+        $conditions[] = "SinhVien.MaLop = :maLop";
+        $params[':maLop'] = $maLop;
+    }
+
+    if (!empty($conditions)) {
+        $query .= " WHERE " . implode(' AND ', $conditions);
+    }
+
+    $totalRowsQuery = "SELECT COUNT(*) FROM ($query) AS total";
+    $stmt = $dbh->prepare($totalRowsQuery);
+    $stmt->execute($params);
+    $totalRows = $stmt->fetchColumn();
+
+    $rowsPerPage = 10;
+    $totalPages = ceil($totalRows / $rowsPerPage);
+    $currentPage = isset($_GET['page']) ? max(1, min($totalPages, (int)$_GET['page'])) : 1;
+    $offset = ($currentPage - 1) * $rowsPerPage;
+
+    $query .= " LIMIT $rowsPerPage OFFSET $offset";
+    $stmt = $dbh->prepare($query);
+    $stmt->execute($params);
+    $result = $stmt;
+} else {
+    $rowsPerPage = 10;
+    $totalRowsQuery = "SELECT COUNT(*) FROM SinhVien";
+    $totalRows = $dbh->query($totalRowsQuery)->fetchColumn();
+    $totalPages = ceil($totalRows / $rowsPerPage);
+    $currentPage = isset($_GET['page']) ? max(1, min($totalPages, (int)$_GET['page'])) : 1;
+    $offset = ($currentPage - 1) * $rowsPerPage;
+    $query = "SELECT SinhVien.*, Lop.TenLop, ThuePhong.MaPhong 
+              FROM SinhVien 
+              JOIN Lop ON SinhVien.MaLop = Lop.MaLop 
+              LEFT JOIN ThuePhong ON SinhVien.MaSinhVien = ThuePhong.MaSinhVien 
+              LIMIT $rowsPerPage OFFSET $offset";
+    $result = $dbh->query($query);
+}
+?>
 ?>
 
 <body>
@@ -23,7 +79,7 @@ include_once __DIR__ . '/../../partials/heading.php';
                         </div>
 
                         <!-- Form tìm kiếm -->
-                        <form id="searchForm" method="POST" action="">
+                        <form id="searchForm" method="POST" action="./student_list.php">
                             <div class="row g-3">
                                 <div class="col-md-6 col-lg-3">
                                     <label for="MSSV" class="form-label">MSSV</label>
@@ -72,19 +128,7 @@ include_once __DIR__ . '/../../partials/heading.php';
 
                         <div class="col-auto py-3">
                             <?php
-                            $rowsPerPage = 10;
-                            $totalRowsQuery = "SELECT COUNT(*) FROM SinhVien";
-                            $totalRows = $dbh->query($totalRowsQuery)->fetchColumn();
-                            $totalPages = ceil($totalRows / $rowsPerPage);
-                            $currentPage = isset($_GET['page']) ? max(1, min($totalPages, (int)$_GET['page'])) : 1;
-                            $offset = ($currentPage - 1) * $rowsPerPage;
 
-                            $sinhvien = "SELECT SinhVien.*, Lop.TenLop, ThuePhong.MaPhong 
-                                         FROM SinhVien 
-                                         JOIN Lop ON SinhVien.MaLop = Lop.MaLop 
-                                         LEFT JOIN ThuePhong ON SinhVien.MaSinhVien = ThuePhong.MaSinhVien 
-                                         LIMIT $rowsPerPage OFFSET $offset";
-                            $result = $dbh->query($sinhvien);
 
                             if ($result->rowCount() > 0) {
                                 echo '<table class="table table-bordered table-striped table-hover table-responsive mt-3">';
@@ -128,13 +172,13 @@ include_once __DIR__ . '/../../partials/heading.php';
                                             <li class="page-item"><a class="page-link" href="?page=1">Trang đầu</a></li>
                                             <li class="page-item"><a class="page-link" href="?page=<?= $currentPage - 1 ?>">Trước</a></li>
                                         <?php endif; ?>
-                                        
+
                                         <?php for ($i = 1; $i <= $totalPages; $i++): ?>
                                             <li class="page-item <?= $i === $currentPage ? 'active' : '' ?>">
                                                 <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
                                             </li>
                                         <?php endfor; ?>
-                                        
+
                                         <?php if ($currentPage < $totalPages): ?>
                                             <li class="page-item"><a class="page-link" href="?page=<?= $currentPage + 1 ?>">Sau</a></li>
                                             <li class="page-item"><a class="page-link" href="?page=<?= $totalPages ?>">Trang cuối</a></li>
@@ -183,4 +227,5 @@ include_once __DIR__ . '/../../partials/heading.php';
         }
     }
 </script>
+
 </html>
