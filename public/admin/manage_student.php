@@ -25,7 +25,7 @@ try {
     // Các truy vấn khác
     // Sau khi thêm hoặc cập nhật thông tin sinh viên
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $maSinhVien = $_POST['maSinhVien'] ?? $maSinhVien;
+        $maSinhVien = strtoupper($_POST['maSinhVien'] ?? $maSinhVien);
 
         // Lấy thông tin sinh viên từ CSDL
         $checkStmt = $dbh->prepare("SELECT * FROM SinhVien WHERE MaSinhVien = :maSinhVien");
@@ -57,7 +57,7 @@ try {
         $stmt->execute($data);
 
         $message = $sinhVien ? "Cập nhật thành công!" : "Lưu thành công!";
-        
+
         echo "<script>alert('$message');</script>";
         echo "<script>window.location.href='student_list.php';</script>";
         exit;
@@ -97,26 +97,26 @@ try {
                             <!-- School Details Section -->
                             <h5 class="mt-1"><b>Chi tiết trường học</b></h5>
                             <div class="row row-add mb-3">
-                            <div class="col-md-4">
-                                <label for="maSinhVien" class="form-label">Mã Sinh viên</label>
-                                <input type="text" class="form-control" id="maSinhVien" name="maSinhVien"
-                                    value="<?php echo htmlspecialchars($sinhVien['MaSV_SinhVien'] ?? ''); ?>"
-                                    <?php echo !empty($maSinhVien) ? 'readonly' : ''; ?>
-                                    required pattern="^[a-zA-Z]\d{7}$" 
-                                    title="Mã sinh viên phải bắt đầu bằng một chữ cái (a-z hoặc A-Z) và theo sau là 7 chữ số.">
-                            </div>
-                                
+                                <div class="col-md-4">
+                                    <label for="maSinhVien" class="form-label">Mã Sinh viên</label>
+                                    <input type="text" class="form-control" id="maSinhVien" name="maSinhVien"
+                                        value="<?php echo htmlspecialchars($sinhVien['MaSV_SinhVien'] ?? ''); ?>"
+                                        <?php echo !empty($maSinhVien) ? 'readonly' : ''; ?>
+                                        required pattern="^[a-zA-Z]\d{7}$"
+                                        title="Mã sinh viên phải bắt đầu bằng một chữ cái (a-z hoặc A-Z) và theo sau là 7 chữ số.">
+                                </div>
+
                                 <div class="col-md-4">
                                     <labe for="maLop" class="form-label">Mã Lớp</label>
-                                    <select class="form-control mt-2" id="maLop" name="maLop" required>
-                                        <option value="">Chọn mã lớp</option>
-                                        <?php foreach ($lopList as $lop): ?>
-                                            <option value="<?= htmlspecialchars($lop['MaLop']) ?>"
-                                                <?php echo (isset($sinhVien['MaLop']) && $sinhVien['MaLop'] === $lop['MaLop']) ? 'selected' : ''; ?>>
-                                                <?php echo htmlspecialchars($lop['MaLop']) ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
+                                        <select class="form-control mt-2" id="maLop" name="maLop" required>
+                                            <option value="">Chọn mã lớp</option>
+                                            <?php foreach ($lopList as $lop): ?>
+                                                <option value="<?= htmlspecialchars($lop['MaLop']) ?>"
+                                                    <?php echo (isset($sinhVien['MaLop']) && $sinhVien['MaLop'] === $lop['MaLop']) ? 'selected' : ''; ?>>
+                                                    <?php echo htmlspecialchars($lop['MaLop']) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
                                 </div>
                             </div>
 
@@ -147,7 +147,7 @@ try {
                                     <select class="form-select" id="gioiTinh" name="gioiTinh">
                                         <option value="Nam" <?php echo (isset($sinhVien['GioiTinh']) && $sinhVien['GioiTinh'] === 'Nam') ? 'selected' : ''; ?>>Nam</option>
                                         <option value="Nữ" <?php echo (isset($sinhVien['GioiTinh']) && $sinhVien['GioiTinh'] === 'Nữ') ? 'selected' : ''; ?>>Nữ</option>
-                                        <option value="Khác" <?php echo (isset($sinhVien['GioiTinh']) && $sinhVien['GioiTinh'] === 'Khác') ? 'selected' : ''; ?>>Khác</option>
+
                                     </select>
 
 
@@ -155,8 +155,8 @@ try {
                                 <div class="col-md-4">
                                     <label for="contact" class="form-label">Liên hệ #</label>
                                     <input type="text" class="form-control" id="contact" name="contact"
-                                        value="<?php echo htmlspecialchars($sinhVien['SDT'] ?? ''); ?>" 
-                                        required maxlength="10" pattern="^\d{10}$" 
+                                        value="<?php echo htmlspecialchars($sinhVien['SDT'] ?? ''); ?>"
+                                        required maxlength="10" pattern="^\d{10}$"
                                         title="Số điện thoại phải gồm 10 chữ số và không chứa ký tự khác.">
                                 </div>
                                 <div class="col-md-4">
@@ -226,7 +226,7 @@ try {
     }
 
     // Đóng tất cả các dropdown nếu click bên ngoài
-    window.onclick = function (event) {
+    window.onclick = function(event) {
         var dropdownMenu = document.getElementById("dropdownMenu");
 
         // Đóng dropdown của tên admin nếu click bên ngoài
@@ -234,7 +234,6 @@ try {
             dropdownMenu.style.display = "none"; // Đảm bảo đóng dropdown
         }
     }
-
 </script>
 
 </html>
