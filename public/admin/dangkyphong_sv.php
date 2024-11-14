@@ -164,7 +164,7 @@ if (
                             <div class="row g-3">
                                 <div class="col-md-6 col-lg-3">
                                     <label for="MSSV" class="form-label">MSSV</label>
-                                    <select class="form-select" id="MSSV" name="MSSV" aria-label="Select MSSV" onchange="toggleSelect('MSSV', 'maLop')">
+                                    <select class="form-select" id="MSSV" name="MSSV" aria-label="Select MSSV">
                                         <option value="0">Tất cả</option>
                                         <?php
                                         $sinhvienQuery = "SELECT MaSinhVien FROM SinhVien";
@@ -177,14 +177,14 @@ if (
                                 </div>
 
                                 <div class="col-md-6 col-lg-3">
-                                    <label for="maLop" class="form-label">Mã Lớp</label>
-                                    <select class="form-select" id="maLop" name="maLop" aria-label="Select class" onchange="toggleSelect('maLop', 'MSSV')">
+                                    <label for="maPhong" class="form-label">Mã Phòng</label>
+                                    <select class="form-select" id="maPhong" name="maPhong" aria-label="Select Room">
                                         <option value="0">Tất cả</option>
                                         <?php
-                                        $classQuery = "SELECT DISTINCT MaLop FROM SinhVien";
-                                        $classResult = $dbh->query($classQuery);
-                                        while ($row = $classResult->fetch(PDO::FETCH_ASSOC)) {
-                                            echo '<option value="' . htmlspecialchars($row['MaLop']) . '">' . htmlspecialchars($row['MaLop']) . '</option>';
+                                        $phongQuery = "SELECT MaPhong FROM Phong";
+                                        $phongResult = $dbh->query($phongQuery);
+                                        while ($row = $phongResult->fetch(PDO::FETCH_ASSOC)) {
+                                            echo '<option value="' . htmlspecialchars($row['MaPhong']) . '">' . htmlspecialchars($row['MaPhong']) . '</option>';
                                         }
                                         ?>
                                     </select>
@@ -192,7 +192,7 @@ if (
                             </div>
                             <div class="row mt-4">
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-primary" aria-label="Search students">
+                                    <button type="submit" class="btn btn-primary">
                                         <i class="bi bi-search me-2"></i>Tìm kiếm
                                     </button>
                                 </div>
@@ -201,46 +201,44 @@ if (
 
                         <div class="col-auto py-3 ">
                             <?php
-                            // Capture search inputs
                             $selectedMSSV = isset($_POST['MSSV']) ? $_POST['MSSV'] : '0';
-                            $selectedMaLop = isset($_POST['maLop']) ? $_POST['maLop'] : '0';
-
+                            $selectedMaPhong = isset($_POST['maPhong']) ? $_POST['maPhong'] : '0';
+                            
                             // Base query
                             $sinhvien = "SELECT SinhVien.*, Lop.TenLop, ThuePhong.MaPhong 
                                         FROM SinhVien 
                                         JOIN Lop ON SinhVien.MaLop = Lop.MaLop 
                                         LEFT JOIN ThuePhong ON SinhVien.MaSinhVien = ThuePhong.MaSinhVien";
-
+                            
                             // Add search conditions
                             $conditions = [];
                             if ($selectedMSSV !== '0') {
                                 $conditions[] = "SinhVien.MaSinhVien = :selectedMSSV";
                             }
-                            if ($selectedMaLop !== '0') {
-                                $conditions[] = "SinhVien.MaLop = :selectedMaLop";
+                            if ($selectedMaPhong !== '0') {
+                                $conditions[] = "ThuePhong.MaPhong = :selectedMaPhong";
                             }
-
+                            
                             // Append conditions to the query
                             if (!empty($conditions)) {
                                 $sinhvien .= " WHERE " . implode(" AND ", $conditions);
                             }
-
+                            
                             // Add pagination
                             $sinhvien .= " LIMIT :rowsPerPage OFFSET :offset";
-
+                            
                             // Prepare and bind parameters
                             $stmt = $dbh->prepare($sinhvien);
                             if ($selectedMSSV !== '0') {
                                 $stmt->bindParam(':selectedMSSV', $selectedMSSV, PDO::PARAM_STR);
                             }
-                            if ($selectedMaLop !== '0') {
-                                $stmt->bindParam(':selectedMaLop', $selectedMaLop, PDO::PARAM_STR);
+                            if ($selectedMaPhong !== '0') {
+                                $stmt->bindParam(':selectedMaPhong', $selectedMaPhong, PDO::PARAM_STR);
                             }
                             $stmt->bindParam(':rowsPerPage', $rowsPerPage, PDO::PARAM_INT);
                             $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
-
+                            
                             $stmt->execute();
-
                             // Display results
                             if ($stmt->rowCount() > 0) {
                                 echo '<table class="table table-bordered table-striped table-hover mt-3">';
@@ -250,13 +248,12 @@ if (
                                 echo '<th>Tên</th>';
                                 echo '<th>MSSV</th>';
                                 echo '<th>Giới tính</th>';
-                                echo '<th>Mã lớp</th>';
-                                echo '<th>Tên lớp</th>';
+                                echo '<th>Mã Phòng</th>';
                                 echo '<th>Hoạt động</th>';
                                 echo '</tr>';
                                 echo '</thead>';
                                 echo '<tbody>';
-
+                            
                                 $stt = $offset + 1;
                                 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                     echo '<tr>';
@@ -264,8 +261,7 @@ if (
                                     echo '<td>' . htmlspecialchars($row["HoTen"]) . '</td>';
                                     echo '<td>' . htmlspecialchars($row["MaSinhVien"]) . '</td>';
                                     echo '<td>' . htmlspecialchars($row["GioiTinh"]) . '</td>';
-                                    echo '<td>' . htmlspecialchars($row["MaLop"]) . '</td>';
-                                    echo '<td>' . htmlspecialchars($row["TenLop"]) . '</td>';
+                                    echo '<td>' . htmlspecialchars($row["MaPhong"]) . '</td>';
                                     echo '<td>
                                     <div class="dropdown position-relative">
                                         <button class="btn btn-outline-secondary dropdown-toggle" type="button" onclick="toggleActionDropdown(\'actionDropdownMenu' . htmlspecialchars($stt) . '\')">
@@ -280,24 +276,20 @@ if (
                                 </td>';
                                     echo '</tr>';
                                 }
-
+                            
                                 echo '</tbody>';
                                 echo '</table>';
                             } else {
                                 echo "Không có kết quả nào";
                             }
-                            ?>
-                        </div>
 
-                            <!-- Pagination -->
-                            <?php
                             if ($totalPages > 1) {
                                 echo '<nav aria-label="..." class="d-flex">';
                                 echo '<ul class="pagination mx-auto">';
                                 if ($currentPage > 1) {
                                     echo '<li class="page-item"><a class="page-link" href="?page=1">Trang đầu</a></li>';
                                     $prevPage = $currentPage - 1;
-                                    echo '<li class="page-item"><a class="page-link" href="?page=' . htmlspecialchars($prevPage) . '">Previous</a></li>';
+                                    echo '<li class="page-item"><a class="page-link" href="?page=' . htmlspecialchars($prevPage) . '">Trước</a></li>';
                                 }
 
                                 for ($i = 1; $i <= $totalPages; $i++) {
@@ -310,7 +302,7 @@ if (
 
                                 if ($currentPage < $totalPages) {
                                     $nextPage = $currentPage + 1;
-                                    echo '<li class="page-item"><a class="page-link" href="?page=' . htmlspecialchars($nextPage) . '">Next</a></li>';
+                                    echo '<li class="page-item"><a class="page-link" href="?page=' . htmlspecialchars($nextPage) . '">Sau</a></li>';
                                     echo '<li class="page-item"><a class="page-link" href="?page=' . htmlspecialchars($totalPages) . '">Trang cuối</a></li>';
                                 }
                                 echo '</ul>';
