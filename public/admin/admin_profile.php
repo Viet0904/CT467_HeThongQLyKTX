@@ -54,7 +54,7 @@ include_once __DIR__ . '/../../config/dbadmin.php';
                         <h5 class="modal-title mt-2">Hồ sơ quản trị viên</h5>
                     </div>
 
-                    <div class="modal-user">
+                    <div class="modal-user mt-3">
                         <form action="" method="POST">
                             <h5 class="mt-1"><b>Hồ sơ</b></h5>
 
@@ -102,6 +102,7 @@ include_once __DIR__ . '/../../config/dbadmin.php';
                             </div>
 
                             <div class="text-end mt-3">
+                                <a href="dashboard.php" class="btn btn-secondary">Trở về</a>
                                 <button type="submit" class="btn btn-primary" style="background-color: #db3077;">Cập
                                     nhật</button>
                             </div>
