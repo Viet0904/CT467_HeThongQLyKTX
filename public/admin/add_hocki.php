@@ -34,7 +34,7 @@ if (isset($_POST['HocKi']) && isset($_POST['NamHoc']) && isset($_POST['BatDau'])
     } catch (Exception $e) {
         $message = $e->getMessage();
     }
-    echo '<script>alert("' . $message . '");window.location.href="manage_semester.php";</script>';
+    echo '<script>alert("' . $message . '");window.location.href="view_hocki.php";</script>';
 }
 
 
