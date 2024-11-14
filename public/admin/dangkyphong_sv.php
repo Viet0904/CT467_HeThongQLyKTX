@@ -164,7 +164,7 @@ if (
                             <div class="row g-3">
                                 <div class="col-md-6 col-lg-3">
                                     <label for="MSSV" class="form-label">MSSV</label>
-                                    <select class="form-select" id="MSSV" name="MSSV" aria-label="Select MSSV">
+                                    <select class="form-select" id="MSSV" name="MSSV" aria-label="Select MSSV" onchange="toggleSelect('MSSV', 'maPhong')">
                                         <option value="0">Tất cả</option>
                                         <?php
                                         $sinhvienQuery = "SELECT MaSinhVien FROM SinhVien";
@@ -178,8 +178,8 @@ if (
 
                                 <div class="col-md-6 col-lg-3">
                                     <label for="maPhong" class="form-label">Mã Phòng</label>
-                                    <select class="form-select" id="maPhong" name="maPhong" aria-label="Select Room">
-                                        <option value="0">Tất cả</option>
+                                    <select class="form-select" id="maPhong" name="maPhong" aria-label="Select Room" onchange="toggleSelect('maPhong', 'MSSV')">
+                                        <option value=" 0">Tất cả</option>
                                         <?php
                                         $phongQuery = "SELECT MaPhong FROM Phong";
                                         $phongResult = $dbh->query($phongQuery);
@@ -198,18 +198,24 @@ if (
                                 </div>
                             </div>
                         </form>
-
+                        <script>
+                            function toggleSelect(selectedId, otherId) {
+                                var selected = document.getElementById(selectedId);
+                                var other = document.getElementById(otherId);
+                                other.disabled = selected.value !== '0';
+                            }
+                        </script>
                         <div class="col-auto py-3 ">
                             <?php
                             $selectedMSSV = isset($_POST['MSSV']) ? $_POST['MSSV'] : '0';
                             $selectedMaPhong = isset($_POST['maPhong']) ? $_POST['maPhong'] : '0';
-                            
+
                             // Base query
                             $sinhvien = "SELECT SinhVien.*, Lop.TenLop, ThuePhong.MaPhong 
                                         FROM SinhVien 
                                         JOIN Lop ON SinhVien.MaLop = Lop.MaLop 
                                         LEFT JOIN ThuePhong ON SinhVien.MaSinhVien = ThuePhong.MaSinhVien";
-                            
+
                             // Add search conditions
                             $conditions = [];
                             if ($selectedMSSV !== '0') {
@@ -218,15 +224,15 @@ if (
                             if ($selectedMaPhong !== '0') {
                                 $conditions[] = "ThuePhong.MaPhong = :selectedMaPhong";
                             }
-                            
+
                             // Append conditions to the query
                             if (!empty($conditions)) {
                                 $sinhvien .= " WHERE " . implode(" AND ", $conditions);
                             }
-                            
+
                             // Add pagination
                             $sinhvien .= " LIMIT :rowsPerPage OFFSET :offset";
-                            
+
                             // Prepare and bind parameters
                             $stmt = $dbh->prepare($sinhvien);
                             if ($selectedMSSV !== '0') {
@@ -237,7 +243,7 @@ if (
                             }
                             $stmt->bindParam(':rowsPerPage', $rowsPerPage, PDO::PARAM_INT);
                             $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
-                            
+
                             $stmt->execute();
                             // Display results
                             if ($stmt->rowCount() > 0) {
@@ -253,7 +259,7 @@ if (
                                 echo '</tr>';
                                 echo '</thead>';
                                 echo '<tbody>';
-                            
+
                                 $stt = $offset + 1;
                                 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                     echo '<tr>';
@@ -276,7 +282,7 @@ if (
                                 </td>';
                                     echo '</tr>';
                                 }
-                            
+
                                 echo '</tbody>';
                                 echo '</table>';
                             } else {
