@@ -17,8 +17,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     try {
         // Kết nối cơ sở dữ liệu và thực hiện truy vấn cập nhật
-        $stmt = $dbh->prepare("UPDATE DienNuoc SET PhiDien = ?, PhiNuoc = ? WHERE MaPhong = ? AND Thang = ? AND NamHoc = ? AND HocKi = ? AND TongTien = ? ");
-        $stmt->execute([$_POST['phiDien'], $_POST['phiNuoc'], $maPhong, $thang, $namhoc, $hocki, $_POST['phiDien'] + $_POST['phiNuoc']]);
+        $tongTien = $_POST['phiDien'] + $_POST['phiNuoc'];
+        $stmt = $dbh->prepare("UPDATE DienNuoc SET PhiDien = ?, PhiNuoc = ?, TongTien = ? WHERE MaPhong = ? AND Thang = ? AND NamHoc = ? AND HocKi = ?");
+        $stmt->execute([$_POST['phiDien'], $_POST['phiNuoc'], $tongTien, $maPhong, $thang, $namhoc, $hocki]);
         $successMessage = "Dữ liệu đã được cập nhật thành công.";
     } catch (PDOException $e) {
         if ($e->getCode() == '45000') {

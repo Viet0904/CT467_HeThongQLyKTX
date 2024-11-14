@@ -38,16 +38,7 @@ BEGIN
 END//
 DELIMITER ;
 
--- Trigger tự động cập nhật TongTien
--- Tạo trigger để cập nhật TongTien khi có thay đổi trong bảng DienNuoc
-DELIMITER //
-CREATE TRIGGER update_tongtien_update
-BEFORE UPDATE ON DienNuoc
-FOR EACH ROW
-BEGIN
-    SET NEW.TongTien = NEW.PhiDien + NEW.PhiNuoc;
-END//
-DELIMITER ;
+
 -- Trigger tự động tính TongTien khi insert vào bảng DienNuoc
 DELIMITER //
 CREATE TRIGGER update_tongtien_insert
@@ -116,7 +107,6 @@ BEGIN
     DELETE FROM DienNuoc WHERE ID = p_ID;
 END //
 DELIMITER ; 
-
 -- Viết 1 PROCEDURE chứa Transction để thanh toán điện nước
 DELIMITER //
 CREATE PROCEDURE ThanhToanDienNuoc (
@@ -139,7 +129,7 @@ BEGIN
     START TRANSACTION;
     -- Cập nhật ngày thanh toán và kiểm tra nếu thành công
     UPDATE DienNuoc
-    SET NgayThanhToan = NOW(), TongTien = IF(ROW_COUNT() > 0, 0, TongTien)
+    SET NgayThanhToan = NOW(), TongTien = 0
     WHERE MaPhong = p_MaPhong
       AND Thang = p_Thang
       AND NamHoc = p_NamHoc
