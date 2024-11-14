@@ -53,10 +53,10 @@ $hocKiList = $dbh->query("SELECT HocKi, NamHoc FROM HocKi")->fetchAll(PDO::FETCH
             <div class="col px-0">
                 <div class="my-2" style="margin-left: 260px;">
                     <div class="modal-header-1">
-                        <h5 class="modal-title mt-2">Đăng ký phòng</h5>
+                        <h5 class="modal-title mt-2">Cập nhật phòng thuê của sinh viên</h5>
                     </div>
 
-                    <div class="modal-user">
+                    <div class="modal-user mt-3">
                         <form action="manage_sv_thuephong.php?msv=<?php echo htmlspecialchars($maSinhVien); ?>" method="POST">
                             <input type="hidden" name="maSinhVien" value="<?php echo htmlspecialchars($maSinhVien); ?>">
                             <div class="row row-add mb-3">
@@ -98,6 +98,7 @@ $hocKiList = $dbh->query("SELECT HocKi, NamHoc FROM HocKi")->fetchAll(PDO::FETCH
 
 
                                 <div class="text-end mt-2">
+                                    <a href="<?php echo $maSinhVien ? "view_thuephong.php?msv=" . htmlspecialchars($maSinhVien) : "dangkyphong_sv.php"; ?>" class="btn btn-secondary">Trở về</a>
                                     <button type="submit" class="btn btn-primary" style="background-color: #db3077;">Lưu</button>
                                 </div>
                         </form>

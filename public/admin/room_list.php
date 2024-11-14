@@ -154,7 +154,7 @@ $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                         <form id="searchForm" method="GET" action="">
                             <div class="row g-3">
-                                <div class="col-md-6 col-lg-2">
+                                <div class="col-md-4 col-lg-2">
                                     <label for="availability" class="form-label">Phòng</label>
                                     <select class="form-select" id="availability" name="availability" aria-label="Select availability">
                                         <option value="">Tất cả</option>
@@ -162,7 +162,7 @@ $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         <!-- <option value="occupied">Occupied</option> -->
                                     </select>
                                 </div>
-                                <div class="col-md-6 col-lg-2">
+                                <div class="col-md-4 col-lg-2">
                                     <label for="gender" class="form-label">Giới Tính</label>
                                     <select class="form-select" id="gender" name="gender" aria-label="Select gender">
                                         <option value="">Tất cả</option>
@@ -171,7 +171,7 @@ $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
-                                <div class="col-md-6 col-lg-2">
+                                <div class="col-md-4 col-lg-2">
                                     <label for="area" class="form-label">Khu</label>
                                     <select class="form-select" id="area" name="area" aria-label="Select area">
                                         <option value="">Tất cả</option>
@@ -180,7 +180,7 @@ $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
-                                <div class="col-md-6 col-lg-2">
+                                <div class="col-md-4 col-lg-2">
                                     <label for="block" class="form-label">Dãy</label>
                                     <select class="form-select" id="block" name="block" aria-label="Select block">
                                         <option value="">Tất cả </option>
@@ -193,7 +193,7 @@ $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <div class="row mt-4">
                                 <div class="col-12">
                                     <button type="submit" class="btn btn-primary" aria-label="Search rooms">
-                                        <i class="bi bi-search me-2"></i>Search
+                                        <i class="bi bi-search me-2"></i>Tìm kiếm
                                     </button>
                                 </div>
                             </div>

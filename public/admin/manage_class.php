@@ -2,6 +2,7 @@
 include_once __DIR__ . '/../../config/dbadmin.php';
 include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
+
 ?>
 
 <body>
@@ -13,7 +14,7 @@ include_once __DIR__ . '/../../partials/heading.php';
 
             <div class="col px-0">
                 <!-- Nội dung chính -->
-                <div class=" mt-4"
+                <div class="mt-4"
                     style="max-width: 1075px; margin-left: 273px; border: 1px solid #ddd; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
                     <div style="padding: 2px; background-color: rgb(219, 48, 119); border-radius: 6px;"></div>
                     <div class="container-fluid py-3" style="padding: 20px;">
@@ -24,8 +25,30 @@ include_once __DIR__ . '/../../partials/heading.php';
                                 style="background-color: rgb(219, 48, 119);">
                                 <i class="fas fa-plus me-1"></i>Thêm lớp
                             </a>
-
                         </div>
+
+                        <!-- Form tìm kiếm -->
+                        <form action="" method="GET" class="mt-2 mb-0">
+                            <div class="row">
+                                <div class="col-auto">
+                                    <select name="maLop" class="form-select">
+                                        <option value="">Tất cả</option>
+                                        <?php
+                                        // Lấy danh sách mã lớp từ cơ sở dữ liệu
+                                        $query = "SELECT MaLop FROM Lop";
+                                        $stmt = $dbh->query($query);
+                                        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                            $selected = isset($_GET['maLop']) && $_GET['maLop'] === $row['MaLop'] ? 'selected' : '';
+                                            echo '<option value="' . htmlspecialchars($row['MaLop']) . '" ' . $selected . '>' . htmlspecialchars($row['MaLop']) . '</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-auto">
+                                    <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                                </div>
+                            </div>
+                        </form>
 
                         <div class="col-auto py-3 ">
 
@@ -33,8 +56,21 @@ include_once __DIR__ . '/../../partials/heading.php';
                             // Số dòng trên mỗi trang
                             $rowsPerPage = 10;
                             // Tính tổng số dòng
-                            $totalRowsQuery = "SELECT COUNT(*) FROM SinhVien";
-                            $totalRowsResult = $dbh->query($totalRowsQuery);
+                            $totalRowsQuery = "SELECT COUNT(*) FROM Lop";
+                            
+                            // Nếu có tìm kiếm theo mã lớp, cần điều chỉnh câu truy vấn
+                            if (isset($_GET['maLop']) && $_GET['maLop'] != '') {
+                                $totalRowsQuery .= " WHERE MaLop = :maLop";
+                            }
+
+                            $totalRowsResult = $dbh->prepare($totalRowsQuery);
+
+                            // Nếu có mã lớp, bind tham số
+                            if (isset($_GET['maLop']) && $_GET['maLop'] != '') {
+                                $totalRowsResult->bindParam(':maLop', $_GET['maLop'], PDO::PARAM_STR);
+                            }
+
+                            $totalRowsResult->execute();
                             $totalRows = $totalRowsResult->fetchColumn();
 
                             // Tính tổng số trang
@@ -51,14 +87,23 @@ include_once __DIR__ . '/../../partials/heading.php';
                             // Tính chỉ số bắt đầu của dòng trên trang hiện tại
                             $offset = ($currentPage - 1) * $rowsPerPage;
 
-                            // Truy vấn SQL với LIMIT và OFFSET
-                            $lop = "SELECT Lop.* 
-                            FROM Lop 
-                            LIMIT $rowsPerPage OFFSET $offset";
+                            // Truy vấn SQL với LIMIT và OFFSET, nếu có tìm kiếm theo mã lớp thì thêm điều kiện WHERE
+                            $lopQuery = "SELECT Lop.* FROM Lop";
+                            if (isset($_GET['maLop']) && $_GET['maLop'] != '') {
+                                $lopQuery .= " WHERE MaLop = :maLop";
+                            }
+                            $lopQuery .= " LIMIT $rowsPerPage OFFSET $offset";
 
-                            $result = $dbh->query($lop);
+                            $lopStmt = $dbh->prepare($lopQuery);
 
-                            if ($result->rowCount() > 0) {
+                            // Nếu có mã lớp, bind tham số
+                            if (isset($_GET['maLop']) && $_GET['maLop'] != '') {
+                                $lopStmt->bindParam(':maLop', $_GET['maLop'], PDO::PARAM_STR);
+                            }
+
+                            $lopStmt->execute();
+
+                            if ($lopStmt->rowCount() > 0) {
                                 echo '<table class="table table-bordered table-striped table-hover mt-3">';
                                 echo '<thead class="table-primary">';
                                 echo '<tr>';
@@ -72,13 +117,13 @@ include_once __DIR__ . '/../../partials/heading.php';
 
                                 // Xuất dữ liệu của từng hàng
                                 $stt = $offset + 1;
-                                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                                while ($row = $lopStmt->fetch(PDO::FETCH_ASSOC)) {
                                     echo '<tr>';
                                     echo '<td>' . $stt++ . '</td>';
                                     echo '<td>' . htmlspecialchars($row["MaLop"]) . '</td>';
                                     echo '<td>' . htmlspecialchars($row["TenLop"]) . '</td>';
                                     echo '<td>
-                                    <div class="dropdown position-relative">
+                                    <div class="dropdown position-relative text-end">
                                         <button class="btn btn-outline-secondary dropdown-toggle" type="button" onclick="toggleActionDropdown(\'actionDropdownMenu' . htmlspecialchars($stt) . '\')">
                                             Hoạt động
                                         </button>
@@ -138,6 +183,7 @@ include_once __DIR__ . '/../../partials/heading.php';
     </div>
 
 </body>
+
 
 <!-- Bootstrap JS và Popper.js -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
