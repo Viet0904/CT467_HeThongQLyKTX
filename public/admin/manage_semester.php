@@ -87,9 +87,9 @@ $semesters = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                             Hoạt động
                                         </button>
                                         <div id="actionDropdownMenu' . htmlspecialchars($stt) . '" class="dropdown-menu position-absolute p-0" style="display: none; min-width: 100px;">
-                                            <a class="dropdown-item py-2" href="add_day.php">Thêm</a>
-                                            <a class="dropdown-item py-2" href="edit_day.php?MaDay=' . htmlspecialchars($semester['HocKi']) . '&TenDay=' . htmlspecialchars($semester['HocKi']) . '">Sửa</a>
-                                            <a class="dropdown-item py-2" href="delete_day.php?MaDay=' . htmlspecialchars($semester['HocKi']) . '">Xoá</a>
+                                            <a class="dropdown-item py-2" href="edit_hocki.php?HocKi=' . htmlspecialchars($semester['HocKi']) . '&NamHoc=' . htmlspecialchars($semester['NamHoc']) . '">Sửa</a>
+                                            <a class="dropdown-item py-2" href="delete_hocki.php?HocKi=' . htmlspecialchars($semester['HocKi']) . '&NamHoc=' . htmlspecialchars($semester['NamHoc']) . '">Xoa</a>
+                                        
                                         </div>
                                     </div>
                                   </td>';

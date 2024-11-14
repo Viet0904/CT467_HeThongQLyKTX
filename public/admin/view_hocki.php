@@ -47,7 +47,7 @@ $terms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             </tbody>
                         </table>
                         <div class="mt-3">
-                            <a href="manage_hocki.php" action = "add" class="btn btn-success">Thêm học kỳ mới</a>
+                            <a href="add_hocki.php" action="add" class="btn btn-success">Thêm học kỳ mới</a>
                         </div>
                     </div>
                 </div>
@@ -82,7 +82,7 @@ $terms = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // Đóng tất cả các dropdown nếu click bên ngoài
-    window.onclick = function (event) {
+    window.onclick = function(event) {
         var dropdownMenu = document.getElementById("dropdownMenu");
 
         // Đóng dropdown của tên admin nếu click bên ngoài
@@ -91,4 +91,5 @@ $terms = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
     }
 </script>
+
 </html>
