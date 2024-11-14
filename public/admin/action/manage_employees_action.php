@@ -16,19 +16,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Cập nhật thông tin nhân viên
     try {
-        $stmt = $dbh->prepare("UPDATE NhanVien 
-                               SET HoTen = :HoTen, Role = :Role, SDT = :SDT, 
-                                   GhiChu = :GhiChu, NgaySinh = :NgaySinh, GioiTinh = :GioiTinh 
-                               WHERE MaNhanVien = :OldMaNhanVien");
+        $stmt = $dbh->prepare("CALL UpdateNhanVien(:OldMaNhanVien, :HoTen, :Role, :SDT, :GhiChu, :NgaySinh, :GioiTinh)");
         $stmt->execute([
-            ':OldMaNhanVien' => $oldMaNhanVien,  
-            ':HoTen' => $hoTen,
-            ':Role' => $chucVu,
-            ':SDT' => $sdt,
-            ':GhiChu' => $ghiChu,    
-            ':NgaySinh' => $ngaySinh, 
-            ':GioiTinh' => $gioiTinh,
-        ]);
+        ':OldMaNhanVien' => $oldMaNhanVien,
+        ':HoTen' => $hoTen,
+        ':Role' => $chucVu,
+        ':SDT' => $sdt,
+        ':GhiChu' => $ghiChu,
+        ':NgaySinh' => $ngaySinh,
+        ':GioiTinh' => $gioiTinh,
+    ]);
 
         echo "<script>alert('Cập nhật nhân viên thành công.'); window.location.href = './../employees_list.php';</script>";
         exit();

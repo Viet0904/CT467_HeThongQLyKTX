@@ -1,5 +1,4 @@
 <?php
-session_start();
 include_once __DIR__ . '/../../config/dbadmin.php';
 include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
@@ -33,13 +32,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $ngayThanhToan = $_POST['NgayThanhToan'] ?? null;
     $nhanVien = $maNhanVien;
 
-    $updateStmt = $dbh->prepare("UPDATE TT_ThuePhong 
-                                SET NgayThanhToan = :NgayThanhToan, MaNhanVien = :MaNhanVien
-                                WHERE MaHopDong = :MaHopDong");
+    // Chuẩn bị lệnh gọi stored procedure
+    $updateStmt = $dbh->prepare("CALL UpdateTT_ThuePhong(:MaHopDong, :NgayThanhToan, :MaNhanVien)");
     $updateStmt->execute([
+        ':MaHopDong' => $contractId,
         ':NgayThanhToan' => $ngayThanhToan,
-        ':MaNhanVien' => $nhanVien,
-        ':MaHopDong' => $contractId
+        ':MaNhanVien' => $nhanVien
     ]);
 
     header("Location: manage_payment.php?MaHopDong=" . $contractId . "&success=1");

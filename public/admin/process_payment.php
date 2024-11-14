@@ -17,11 +17,11 @@ if (isset($_GET['MaHopDong'])) {
     $currentEmployeeId = $maNhanVien;
 
     // Cập nhật ngày thanh toán và nhân viên thanh toán
-    $stmt = $dbh->prepare("UPDATE TT_ThuePhong SET NgayThanhToan = :ngayThanhToan, MaNhanVien = :maNhanVien WHERE MaHopDong = :maHopDong");
+    $stmt = $dbh->prepare("CALL UpdateTT_ThuePhong(:maHopDong, :ngayThanhToan, :maNhanVien)");
     $stmt->execute([
+        ':maHopDong' => $contractId,
         ':ngayThanhToan' => $currentDate,
-        ':maNhanVien' => $currentEmployeeId,
-        ':maHopDong' => $contractId
+        ':maNhanVien' => $currentEmployeeId
     ]);
 
     echo "<script>

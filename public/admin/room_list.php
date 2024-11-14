@@ -305,7 +305,7 @@ $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 if ($currentPage > 1) {
                                     echo '<li class="page-item"><a class="page-link" href="?page=1">Trang đầu</a></li>';
                                     $prevPage = $currentPage - 1;
-                                    echo '<li class="page-item"><a class="page-link" href="?page=' . htmlspecialchars($prevPage) . '">Previous</a></li>';
+                                    echo '<li class="page-item"><a class="page-link" href="?page=' . htmlspecialchars($prevPage) . '">Trước</a></li>';
                                 }
 
                                 for ($i = 1; $i <= $totalPages; $i++) {
@@ -318,7 +318,7 @@ $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                 if ($currentPage < $totalPages) {
                                     $nextPage = $currentPage + 1;
-                                    echo '<li class="page-item"><a class="page-link" href="?page=' . htmlspecialchars($nextPage) . '">Next</a></li>';
+                                    echo '<li class="page-item"><a class="page-link" href="?page=' . htmlspecialchars($nextPage) . '">Sau</a></li>';
                                     echo '<li class="page-item"><a class="page-link" href="?page=' . htmlspecialchars($totalPages) . '">Trang cuối</a></li>';
                                 }
                                 echo '</ul>';
