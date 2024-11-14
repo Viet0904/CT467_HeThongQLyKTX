@@ -38,16 +38,7 @@ BEGIN
 END//
 DELIMITER ;
 
--- Trigger tự động cập nhật TongTien
--- Tạo trigger để cập nhật TongTien khi có thay đổi trong bảng DienNuoc
-DELIMITER //
-CREATE TRIGGER update_tongtien_update
-BEFORE UPDATE ON DienNuoc
-FOR EACH ROW
-BEGIN
-    SET NEW.TongTien = NEW.PhiDien + NEW.PhiNuoc;
-END//
-DELIMITER ;
+
 -- Trigger tự động tính TongTien khi insert vào bảng DienNuoc
 DELIMITER //
 CREATE TRIGGER update_tongtien_insert
@@ -116,7 +107,6 @@ BEGIN
     DELETE FROM DienNuoc WHERE ID = p_ID;
 END //
 DELIMITER ; 
-
 -- Viết 1 PROCEDURE chứa Transction để thanh toán điện nước
 DELIMITER //
 CREATE PROCEDURE ThanhToanDienNuoc (
@@ -139,7 +129,7 @@ BEGIN
     START TRANSACTION;
     -- Cập nhật ngày thanh toán và kiểm tra nếu thành công
     UPDATE DienNuoc
-    SET NgayThanhToan = NOW(), TongTien = IF(ROW_COUNT() > 0, 0, TongTien)
+    SET NgayThanhToan = NOW(), TongTien = 0
     WHERE MaPhong = p_MaPhong
       AND Thang = p_Thang
       AND NamHoc = p_NamHoc
@@ -771,6 +761,7 @@ BEGIN
 END //
 DELIMITER ;
 
+
 DELIMITER //
 
 CREATE PROCEDURE UpdateNhanVien (
@@ -815,9 +806,25 @@ CREATE PROCEDURE InsertPhong (
 BEGIN
     INSERT INTO Phong (MaPhong, MaDay, TenPhong, LoaiPhong, DienTich, SucChua, SoChoThucTe, DaO, GiaThue, TrangThaiSuDung) 
     VALUES (p_MaPhong, p_MaDay, p_TenPhong, p_LoaiPhong, p_DienTich, p_SucChua, p_SoChoThucTe, p_DaO, p_GiaThue, p_TrangThaiSuDung);
+-- Hàm lấy thông tin lớp
+DELIMITER //
+CREATE PROCEDURE layThongTinLop(IN maLopInput VARCHAR(50))
+BEGIN
+    SELECT * FROM Lop WHERE MaLop = maLopInput;
+END //
+DELIMITER ;
+
+-- Hàm lấy danh sách tất cả lớp
+DELIMITER //
+
+CREATE PROCEDURE layDanhSachLop()
+BEGIN
+    SELECT * FROM Lop;
+
 END //
 
 DELIMITER ;
+
 
 DELIMITER //
 
@@ -847,9 +854,20 @@ BEGIN
         GiaThue = p_GiaThue, 
         TrangThaiSuDung = p_TrangThaiSuDung 
     WHERE MaPhong = p_OldMaPhong;
+
+-- Hàm cập nhật thông tin lớp
+DELIMITER //
+
+CREATE PROCEDURE capNhatLop(IN maLopInput VARCHAR(50), IN tenLopInput VARCHAR(100))
+BEGIN
+    UPDATE Lop 
+    SET TenLop = tenLopInput 
+    WHERE MaLop = maLopInput;
+
 END //
 
 DELIMITER ;
+
 
 DELIMITER //
 
@@ -867,18 +885,3 @@ END //
 
 DELIMITER ;
 
-DELIMITER //
-
-CREATE PROCEDURE DeleteLopIfNoStudents(IN maLopParam VARCHAR(50))
-BEGIN
-    -- Kiểm tra số sinh viên trong lớp
-    DECLARE studentCount INT;
-    SELECT COUNT(*) INTO studentCount FROM SinhVien WHERE MaLop = maLopParam;
-
-    -- Nếu không có sinh viên, xóa lớp
-    IF studentCount = 0 THEN
-        DELETE FROM Lop WHERE MaLop = maLopParam;
-    END IF;
-END //
-
-DELIMITER ;
