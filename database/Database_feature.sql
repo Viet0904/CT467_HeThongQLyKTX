@@ -823,3 +823,75 @@ BEGIN
     WHERE MaNhanVien = p_OldMaNhanVien;
 END //
 DELIMITER ; 
+
+
+-- Thêm Nhân Viên với kiểm tra tồn tại
+DELIMITER //
+CREATE PROCEDURE ThemNhanVien (
+    IN p_MaNhanVien VARCHAR(8),
+    IN p_HoTen VARCHAR(50),
+    IN p_SDT VARCHAR(10),
+    IN p_GhiChu TEXT,
+    IN p_GioiTinh VARCHAR(10),
+    IN p_NgaySinh DATE,
+    IN p_Password VARCHAR(255),
+    IN p_Role ENUM('Admin', 'NhanVien'),
+    OUT p_Message VARCHAR(255),
+    OUT p_ErrorCode INT
+)
+BEGIN
+    DECLARE v_Count INT;
+    -- Kiểm tra mã nhân viên đã tồn tại chưa
+    SELECT COUNT(*) INTO v_Count
+    FROM NhanVien
+    WHERE MaNhanVien = p_MaNhanVien;
+    IF v_Count > 0 THEN
+        SET p_Message = 'Mã nhân viên đã tồn tại';
+        SET p_ErrorCode = 1;
+    ELSE
+        -- Bắt đầu transaction
+        START TRANSACTION;
+        -- Thêm nhân viên vào bảng NhanVien
+        INSERT INTO NhanVien (MaNhanVien, HoTen, SDT, GhiChu, GioiTinh, NgaySinh, Password, Role)
+        VALUES (p_MaNhanVien, p_HoTen, p_SDT, p_GhiChu, p_GioiTinh, p_NgaySinh, p_Password, p_Role);
+        COMMIT;
+        SET p_Message = 'Thêm nhân viên thành công';
+        SET p_ErrorCode = 0;
+    END IF;
+END //
+DELIMITER ;
+
+-- Update NhanVien
+DELIMITER //
+CREATE PROCEDURE UpdateNhanVien (
+    IN p_OldMaNhanVien VARCHAR(8),
+    IN p_MaNhanVien VARCHAR(8),
+    IN p_HoTen VARCHAR(50),
+    IN p_SDT VARCHAR(10),
+    IN p_GhiChu TEXT,
+    IN p_GioiTinh VARCHAR(10),
+    IN p_NgaySinh DATE,
+    IN p_Password VARCHAR(255),
+    IN p_Role ENUM('Admin', 'NhanVien'),
+    OUT p_Message VARCHAR(255),
+    OUT p_ErrorCode INT
+)
+BEGIN
+    -- Bắt đầu transaction
+    START TRANSACTION;
+    -- Cập nhật nhân viên trong bảng NhanVien
+    UPDATE NhanVien
+    SET MaNhanVien = p_MaNhanVien,
+        HoTen = p_HoTen,
+        SDT = p_SDT,
+        GhiChu = p_GhiChu,
+        GioiTinh = p_GioiTinh,
+        NgaySinh = p_NgaySinh,
+        Password = p_Password,
+        Role = p_Role
+    WHERE MaNhanVien = p_OldMaNhanVien;
+    COMMIT;
+    SET p_Message = 'Cập nhật nhân viên thành công';
+    SET p_ErrorCode = 0;
+END //
+DELIMITER ;
