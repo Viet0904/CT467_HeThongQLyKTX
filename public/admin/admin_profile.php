@@ -2,55 +2,50 @@
 include_once __DIR__ . '/../../partials/header.php';
 include_once __DIR__ . '/../../partials/heading.php';
 include_once __DIR__ . '/../../config/dbadmin.php';
-
-// Kiểm tra mã nhân viên đã lưu trong session
-if (!isset($_SESSION)) {
-    session_start();
-}
-
-if (isset($_SESSION['MaNhanVien'])) {
-    $maNhanVien = $_SESSION['MaNhanVien'];
-
-    // Truy vấn thông tin nhân viên từ DB
-    $query = "SELECT MaNhanVien, HoTen, SDT, GioiTinh, NgaySinh, Password FROM NhanVien WHERE MaNhanVien = ?";
-    $stmt = $dbh->prepare($query);
-    $stmt->bindValue(1, $maNhanVien);
-    $stmt->execute();
-    $admin = $stmt->fetch(PDO::FETCH_ASSOC);
-} else {
-    echo "<script>alert('Vui lòng đăng nhập lại.'); window.location.href = '../index.php';</script>";
-    exit();
-}
-
-// Xử lý khi người dùng cập nhật thông tin
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $tenQt = $_POST['tenQt'];
-    $SDT = $_POST['SDT'];
-    $gender = $_POST['gender'];
-    $ngaySinh = $_POST['ngaySinh'];
-    $matKhau = $_POST['matKhau'];
-
-
-    // Cập nhật thông tin nhân viên trong DB
-    $updateQuery = "UPDATE NhanVien SET HoTen = ?, SDT = ?, GioiTinh = ?, NgaySinh = ?, Password = ? WHERE MaNhanVien = ?";
-    $stmt = $dbh->prepare($updateQuery);
-    $stmt->bindValue(1, $tenQt);
-    $stmt->bindValue(2, $SDT);
-    $stmt->bindValue(3, $gender);
-    $stmt->bindValue(4, $ngaySinh);
-    $stmt->bindValue(5, $matKhau);
-    $stmt->bindValue(6, $maNhanVien); // MaNhanVien nên là tham số cuối cùng trong câu lệnh
-    $stmt->execute();
-
-
-    echo "<script>alert('Cập nhật thông tin thành công!'); window.location.href = './admin_profile.php';</script>";
-}
 ?>
-
 <body>
     <div class="container-fluid">
         <div class="row flex-nowrap">
             <?php include_once __DIR__ . '/sidebar.php'; ?>
+            <?php
+            if (isset($_SESSION['MaNhanVien'])) {
+                $maNhanVien = $_SESSION['MaNhanVien'];
+
+                // Truy vấn thông tin nhân viên từ DB
+                $query = "SELECT MaNhanVien, HoTen, SDT, GioiTinh, NgaySinh, Password FROM NhanVien WHERE MaNhanVien = ?";
+                $stmt = $dbh->prepare($query);
+                $stmt->bindValue(1, $maNhanVien);
+                $stmt->execute();
+                $admin = $stmt->fetch(PDO::FETCH_ASSOC);
+            } else {
+                echo "<script>alert('Vui lòng đăng nhập lại.'); window.location.href = '../index.php';</script>";
+                exit();
+            }
+
+            // Xử lý khi người dùng cập nhật thông tin
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $tenQt = $_POST['tenQt'];
+                $SDT = $_POST['SDT'];
+                $gender = $_POST['gender'];
+                $ngaySinh = $_POST['ngaySinh'];
+                $matKhau = $_POST['matKhau'];
+
+
+                // Cập nhật thông tin nhân viên trong DB
+                $updateQuery = "UPDATE NhanVien SET HoTen = ?, SDT = ?, GioiTinh = ?, NgaySinh = ?, Password = ? WHERE MaNhanVien = ?";
+                $stmt = $dbh->prepare($updateQuery);
+                $stmt->bindValue(1, $tenQt);
+                $stmt->bindValue(2, $SDT);
+                $stmt->bindValue(3, $gender);
+                $stmt->bindValue(4, $ngaySinh);
+                $stmt->bindValue(5, $matKhau);
+                $stmt->bindValue(6, $maNhanVien); // MaNhanVien nên là tham số cuối cùng trong câu lệnh
+                $stmt->execute();
+
+
+                echo "<script>alert('Cập nhật thông tin thành công!'); window.location.href = './admin_profile.php';</script>";
+            }
+            ?>
 
             <div class="col px-0">
                 <!-- Nội dung chính -->
@@ -83,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
 
                             <div class="row row-add">
-                            <div class="col-md-6">
+                                <div class="col-md-6">
                                     <label for="gioiTinh" class="form-label">Giới tính</label>
                                     <select class="form-select" id="gioiTinh" name="gioiTinh">
                                         <option value="Nam" <?php echo (isset($admin['GioiTinh']) && $admin['GioiTinh'] === 'Nam') ? 'selected' : ''; ?>>Nam</option>
@@ -146,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Đóng tất cả các dropdown nếu click bên ngoài
-    window.onclick = function (event) {
+    window.onclick = function(event) {
         var dropdownMenu = document.getElementById("dropdownMenu");
 
         // Đóng dropdown của tên admin nếu click bên ngoài
