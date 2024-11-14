@@ -8,24 +8,20 @@ $message = '';
 
 $currentPhong = '';
 
-
-
-
-
-
 // Xử lý form gửi đi
-if (isset($_POST['MaDay']) && isset($_POST['TenDay']) && isset($_POST['MaKhuKTX'])) {
+if (isset($_POST['HocKi']) && isset($_POST['NamHoc']) && isset($_POST['BatDau']) && isset($_POST['KetThuc'])) {
+    $hocKi = $_POST['HocKi'];
+    $namHoc = $_POST['NamHoc'];
+    $batDau = $_POST['BatDau'];
+    $ketThuc = $_POST['KetThuc'];
 
-    $maKhu = strtoupper(trim($_POST['MaDay']));
-    $tenKhu = $_POST['TenDay'];
-    $makhuktx = $_POST['MaKhuKTX'];
-    echo '<script>alert("' . $makhuktx . '")</script>';
     try {
-        $stmt = $dbh->prepare("CALL ThemDay(:maKhu, :tenKhu,:makhuktx, @message, @errorCode)");
+        $stmt = $dbh->prepare("CALL ThemHocKi(:hocKi, :namHoc, :batDau, :ketThuc, @message, @errorCode)");
         $stmt->execute([
-            ':maKhu' => $maKhu,
-            ':tenKhu' => $tenKhu,
-            ':makhuktx' => $makhuktx,
+            ':hocKi' => $hocKi,
+            ':namHoc' => $namHoc,
+            ':batDau' => $batDau,
+            ':ketThuc' => $ketThuc,
         ]);
 
         $result = $dbh->query("SELECT @message AS message, @errorCode AS errorCode")->fetch(PDO::FETCH_ASSOC);
@@ -38,8 +34,12 @@ if (isset($_POST['MaDay']) && isset($_POST['TenDay']) && isset($_POST['MaKhuKTX'
     } catch (Exception $e) {
         $message = $e->getMessage();
     }
-    echo '<script>alert("' . $message . '");window.location.href="manage_day.php";</script>';
+    echo '<script>alert("' . $message . '");window.location.href="view_hocki.php";</script>';
 }
+
+
+
+
 
 ?>
 
@@ -54,10 +54,10 @@ if (isset($_POST['MaDay']) && isset($_POST['TenDay']) && isset($_POST['MaKhuKTX'
                     </div>
 
                     <div class="modal-user mt-3">
-                        <form action="add_day.php" method="POST">
+                        <form action="add_hocki.php" method="POST">
 
                             <div class="row row-add mb-3">
-                                <div class="col-md-6">
+                                <div class="col-md-3">
                                     <label for="HocKi" class="form-label">Học Kì</label>
                                     <select class="form-control" id="HocKi" name="HocKi" required>
                                         <option value="1">1</option>
@@ -65,14 +65,21 @@ if (isset($_POST['MaDay']) && isset($_POST['TenDay']) && isset($_POST['MaKhuKTX'
                                         <option value="3">3</option>
                                     </select>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-3">
 
                                     <label for="NamHoc" class="form-label">Năm Học</label>
                                     <?php
                                     $currentYear = date("Y");
                                     ?>
                                     <input type="text" class="form-control" id="NamHoc" name="NamHoc" required value="<?php echo $currentYear; ?>" readonly>
-
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="BatDau" class="form-label">Bắt Đầu</label>
+                                    <input type="date" class="form-control" id="BatDau" name="BatDau" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="KetThuc" class="form-label">Kết Thúc</label>
+                                    <input type="date" class="form-control" id="KetThuc" name="KetThuc" required>
                                 </div>
 
 
