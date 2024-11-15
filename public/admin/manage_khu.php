@@ -5,7 +5,7 @@ include_once __DIR__ . '/../../partials/heading.php';
 
 
 // Gọi function GetAllKhuKTX từ SQL
-$query = "SELECT * FROM GetAllKhuKTX()";
+$query = "SELECT * FROM KhuKTX";
 $stmt = $dbh->prepare($query);
 $stmt->execute();
 $areas = $stmt->fetchAll(PDO::FETCH_ASSOC);
