@@ -199,7 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         </div>
                                     <?php endif; ?>
                                     <div class="mx-2">
-                                        <a href="view_employees.php?mnv=<?php echo htmlspecialchars($maNhanVien); ?>" class="btn btn-secondary">Trở về</a>
+                                        <a href="employees_list.php" class="btn btn-secondary">Trở về</a>
                                     </div>
                                 </div>
                         </form>
