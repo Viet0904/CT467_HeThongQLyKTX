@@ -1,5 +1,0 @@
-Phí sử dụng của phòng (VNĐ) = (ChiSoCuoi - ChiSoDau) * DonGia
-Số tiền phải đóng của sinh viên (VNĐ) = (Phí sử dụng của phòng (VNĐ) )/ (Tổng số SinhVien của Phòng đó)
-Tổng số tiền phải đóng của sinh = Số tiền phải đóng của sinh viên (VNĐ) loại nước + Số tiền phải đóng của sinh viên (VNĐ) loại điện
-
-Tổng số tiền còn lại phải đóng của phòng (VNĐ) = Phí sử dụng của phòng (VNĐ) loại nước + Phí sử dụng của phòng (VNĐ) loại điện 
