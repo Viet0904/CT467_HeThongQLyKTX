@@ -298,26 +298,46 @@ INSERT INTO SinhVien (MaSinhVien, HoTen, SDT,Email, MaLop, DiaChi, GioiTinh,  Ng
 VALUES
 ('B2111908', 'Nguyễn Quốc Việt', '0123456789','vietb2111908@student.ctu.edu.vn' ,'V7', 'An Giang', 'Nam',  '2003-4-9', 'Thành Viên ANXK',  '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
 ('B2111893', 'Trương Huỳnh Tú Như', '0987654321','nhub211189@student.ctu.edu.vn'  ,'V7', 'Bạc Liêu', 'Nữ', '2003-12-9','Thành Viên ANXK','$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
-('B2111909', 'Lê Văn A', '0123456780', 'a.b2111909@student.ctu.edu.vn', 'V7', 'Cần Thơ', 'Nam', '2003-05-10', 'Thành Viên ANXK', ''),
-('B2111910', 'Trần Thị B', '0123456781', 'b.b2111910@student.ctu.edu.vn', 'V7', 'Hậu Giang', 'Nam', '2003-06-11', 'Thành Viên ANXK', ''),
-('B2111911', 'Nguyễn Văn C', '0123456782', 'c.b2111911@student.ctu.edu.vn', 'V7', 'Sóc Trăng', 'Nam', '2003-07-12', 'Thành Viên ANXK', ''),
-('B2111912', 'Phạm Thị D', '0123456783', 'd.b2111912@student.ctu.edu.vn', 'V7', 'Vĩnh Long', 'Nam', '2003-08-13', 'Thành Viên ANXK', ''),
-('B2111913', 'Hoàng Văn E', '0123456784', 'e.b2111913@student.ctu.edu.vn', 'V7', 'Đồng Tháp', 'Nam', '2003-09-14', 'Thành Viên ANXK', ''),
-('B2111914', 'Đỗ Thị F', '0123456785', 'f.b2111914@student.ctu.edu.vn', 'V7', 'Kiên Giang', 'Nam', '2003-10-15', 'Thành Viên ANXK', ''),
-('B2111915', 'Lý Văn G', '0123456786', 'g.b2111915@student.ctu.edu.vn', 'V7', 'Bến Tre', 'Nam', '2003-11-16', 'Thành Viên ANXK', ''),
-('B2111916', 'Ngô Thị H', '0123456787', 'h.b2111916@student.ctu.edu.vn', 'V7', 'Trà Vinh', 'Nam', '2003-12-17', 'Thành Viên ANXK', ''),
-('B2111917', 'Vũ Văn I', '0123456788', 'i.b2111917@student.ctu.edu.vn', 'V7', 'Tiền Giang', 'Nam', '2003-01-18', 'Thành Viên ANXK', ''),
-('B2111918', 'Phan Thị J', '0123456789', 'j.b2111918@student.ctu.edu.vn', 'V7', 'Long An', 'Nam', '2003-02-19', 'Thành Viên ANXK', ''),
-('B2111919', 'Trịnh Văn K', '0123456790', 'k.b2111919@student.ctu.edu.vn', 'V7', 'An Giang', 'Nữ', '2003-03-20', 'Thành Viên ANXK', ''),
-('B2111920', 'Lương Thị L', '0123456791', 'l.b2111920@student.ctu.edu.vn', 'V7', 'Bạc Liêu', 'Nữ', '2003-04-21', 'Thành Viên ANXK', ''),
-('B2111921', 'Tạ Văn M', '0123456792', 'm.b2111921@student.ctu.edu.vn', 'V7', 'Cà Mau', 'Nữ', '2003-05-22', 'Thành Viên ANXK', ''),
-('B2111922', 'Đinh Thị N', '0123456793', 'n.b2111922@student.ctu.edu.vn', 'V7', 'Cần Thơ', 'Nữ', '2003-06-23', 'Thành Viên ANXK', ''),
-('B2111923', 'Hồ Văn O', '0123456794', 'o.b2111923@student.ctu.edu.vn', 'V7', 'Hậu Giang', 'Nữ', '2003-07-24', 'Thành Viên ANXK', ''),
-('B2111924', 'Nguyễn Thị P', '0123456795', 'p.b2111924@student.ctu.edu.vn', 'V7', 'Sóc Trăng', 'Nữ', '2003-08-25', 'Thành Viên ANXK', ''),
-('B2111925', 'Trần Văn Q', '0123456796', 'q.b2111925@student.ctu.edu.vn', 'V7', 'Vĩnh Long', 'Nữ', '2003-09-26', 'Thành Viên ANXK', ''),
-('B2111926', 'Phạm Thị R', '0123456797', 'r.b2111926@student.ctu.edu.vn', 'V7', 'Đồng Tháp', 'Nữ', '2003-10-27', 'Thành Viên ANXK', ''),
-('B2111927', 'Hoàng Văn S', '0123456798', 's.b2111927@student.ctu.edu.vn', 'V7', 'Kiên Giang', 'Nữ', '2003-11-28', 'Thành Viên ANXK', ''),
-('B2111928', 'Đỗ Thị T', '0123456799', 't.b2111928@student.ctu.edu.vn', 'V7', 'Bến Tre', 'Nữ', '2003-12-29', 'Thành Viên ANXK', '');
+('B2111909', 'Lê Văn A', '0123456780', 'a.b2111909@student.ctu.edu.vn', 'V7', 'Cần Thơ', 'Nam', '2003-05-10', 'Thành Viên ANXK', '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO
+$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
+('B2111910', 'Trần Thị B', '0123456781', 'b.b2111910@student.ctu.edu.vn', 'V7', 'Hậu Giang', 'Nam', '2003-06-11', 'Thành Viên ANXK', '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO
+$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
+('B2111911', 'Nguyễn Văn C', '0123456782', 'c.b2111911@student.ctu.edu.vn', 'V7', 'Sóc Trăng', 'Nam', '2003-07-12', 'Thành Viên ANXK', '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO
+$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
+('B2111912', 'Phạm Thị D', '0123456783', 'd.b2111912@student.ctu.edu.vn', 'V7', 'Vĩnh Long', 'Nam', '2003-08-13', 'Thành Viên ANXK', '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO
+$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
+('B2111913', 'Hoàng Văn E', '0123456784', 'e.b2111913@student.ctu.edu.vn', 'V7', 'Đồng Tháp', 'Nam', '2003-09-14', 'Thành Viên ANXK', '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO
+$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
+('B2111914', 'Đỗ Thị F', '0123456785', 'f.b2111914@student.ctu.edu.vn', 'V7', 'Kiên Giang', 'Nam', '2003-10-15', 'Thành Viên ANXK', '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO
+$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
+('B2111915', 'Lý Văn G', '0123456786', 'g.b2111915@student.ctu.edu.vn', 'V7', 'Bến Tre', 'Nam', '2003-11-16', 'Thành Viên ANXK', '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO
+$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
+('B2111916', 'Ngô Thị H', '0123456787', 'h.b2111916@student.ctu.edu.vn', 'V7', 'Trà Vinh', 'Nam', '2003-12-17', 'Thành Viên ANXK', '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO
+$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
+('B2111917', 'Vũ Văn I', '0123456788', 'i.b2111917@student.ctu.edu.vn', 'V7', 'Tiền Giang', 'Nam', '2003-01-18', 'Thành Viên ANXK', '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO
+$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
+('B2111918', 'Phan Thị J', '0123456789', 'j.b2111918@student.ctu.edu.vn', 'V7', 'Long An', 'Nam', '2003-02-19', 'Thành Viên ANXK', '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO
+$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
+('B2111919', 'Trịnh Văn K', '0123456790', 'k.b2111919@student.ctu.edu.vn', 'V7', 'An Giang', 'Nữ', '2003-03-20', 'Thành Viên ANXK', '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO
+$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
+('B2111920', 'Lương Thị L', '0123456791', 'l.b2111920@student.ctu.edu.vn', 'V7', 'Bạc Liêu', 'Nữ', '2003-04-21', 'Thành Viên ANXK', '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO
+$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
+('B2111921', 'Tạ Văn M', '0123456792', 'm.b2111921@student.ctu.edu.vn', 'V7', 'Cà Mau', 'Nữ', '2003-05-22', 'Thành Viên ANXK', '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO
+$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
+('B2111922', 'Đinh Thị N', '0123456793', 'n.b2111922@student.ctu.edu.vn', 'V7', 'Cần Thơ', 'Nữ', '2003-06-23', 'Thành Viên ANXK', '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO
+$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
+('B2111923', 'Hồ Văn O', '0123456794', 'o.b2111923@student.ctu.edu.vn', 'V7', 'Hậu Giang', 'Nữ', '2003-07-24', 'Thành Viên ANXK', '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO
+$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
+('B2111924', 'Nguyễn Thị P', '0123456795', 'p.b2111924@student.ctu.edu.vn', 'V7', 'Sóc Trăng', 'Nữ', '2003-08-25', 'Thành Viên ANXK', '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO
+$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
+('B2111925', 'Trần Văn Q', '0123456796', 'q.b2111925@student.ctu.edu.vn', 'V7', 'Vĩnh Long', 'Nữ', '2003-09-26', 'Thành Viên ANXK', '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO
+$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
+('B2111926', 'Phạm Thị R', '0123456797', 'r.b2111926@student.ctu.edu.vn', 'V7', 'Đồng Tháp', 'Nữ', '2003-10-27', 'Thành Viên ANXK', '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO
+$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
+('B2111927', 'Hoàng Văn S', '0123456798', 's.b2111927@student.ctu.edu.vn', 'V7', 'Kiên Giang', 'Nữ', '2003-11-28', 'Thành Viên ANXK', '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO
+$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO'),
+('B2111928', 'Đỗ Thị T', '0123456799', 't.b2111928@student.ctu.edu.vn', 'V7', 'Bến Tre', 'Nữ', '2003-12-29', 'Thành Viên ANXK', '$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO
+$2y$10$7QH.c6EoG0As1W0ree6DnugSCeBvc/9PNHR13VNm7IXhcxMjyZCaO');
 
 INSERT INTO NhanVien (MaNhanVien, HoTen, SDT, GioiTinh, NgaySinh,Role, Password)
 VALUES
